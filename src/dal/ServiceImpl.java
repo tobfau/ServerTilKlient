@@ -37,14 +37,38 @@ public class ServiceImpl implements Service {
         ResultSet resultSet = null;
 
         StudentDTO user = null;
+        try{
 
-        PreparedStatement approveUser = dbConnection.prepareStatement("");
+        PreparedStatement approveUser = dbConnection.prepareStatement("SELECT * FROM user WHERE cbs_mail = ? AND password = ?");
 
+        approveUser.setString(1, username);
+        approveUser.setString(2, password);
+
+        resultSet = approveUser.executeQuery();
+
+        while (resultSet.next()) {
+            user = new StudentDTO();
+            user.setuser(resultSet.getString("cbs_mail"));
+            user.setpassword(resultSet.getString("password"));
+            user.settype(resultSet.getString("type"));
+        }
+    }catch(SQLException e)
+
+    {
+        e.printStackTrace();
+    } finally {
+            try {
+                resultSet.close();
+            }catch (SQLException e){
+                e.printStackTrace();
+                close();
+            }
+
+        }
+return user;
 
     }
-    public TeacherDTO loginTeacher(String username, String password) throws SQLException {
 
-    }
 
 
 }
