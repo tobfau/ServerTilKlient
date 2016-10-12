@@ -1,6 +1,7 @@
 package dal;
 
 import service.Service;
+import shared.LectureDTO;
 import shared.StudentDTO;
 import shared.TeacherDTO;
 
@@ -32,6 +33,25 @@ public class ServiceImpl implements Service {
             e.printStackTrace();
         }
     }
+
+    /*
+
+
+    //Forberedt main-metode, til test af diverse metoder.
+
+    public static void main(String[] args) {
+        ServiceImpl d = new ServiceImpl();
+        ArrayList<StudentDTO> arr = d.getStudents();
+        for (StudentDTO studentDTO : arr) {
+            System.out.println(studentDTO.getUsername());
+
+
+        }
+    }
+
+
+    */
+
 
     public StudentDTO loginStudent(String username, String password) throws SQLException {
         ResultSet resultSet = null;
@@ -68,6 +88,32 @@ public class ServiceImpl implements Service {
 return user;
 
     }
+
+    public LectureDTO getLecture(String placeholder, String placeholder2) throws SQLException{
+        ResultSet resultSet = null;
+        LectureDTO lecture = null;
+
+        try {
+            PreparedStatement Lecture = dbConnection.prepareStatement("SELECT * FROM placeholder where placeholder = ?");
+
+            Lecture.setString(1, placeholder);
+            Lecture.setString(2, placeholder2);
+
+            resultSet = Lecture.executeQuery();
+
+            while (resultSet.next()) {
+                lecture = new LectureDTO();
+                lecture.setplaceholder(resultSet.getString("placeholder"));
+                lecture.setplaceholder2(resultSet.getString("placeholder2"));
+
+
+            }
+        }
+
+    return lecture;
+    }
+
+
 
 
 
