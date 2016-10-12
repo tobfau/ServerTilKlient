@@ -627,7 +627,7 @@
       <updated>1476256212228</updated>
       <workItem from="1476256215622" duration="312000" />
       <workItem from="1476261111370" duration="1057000" />
-      <workItem from="1476262651683" duration="91000" />
+      <workItem from="1476262651683" duration="115000" />
     </task>
     <task id="LOCAL-00001" summary="serviceimpl update">
       <created>1476262092067</created>
@@ -650,11 +650,18 @@
       <option name="project" value="LOCAL" />
       <updated>1476262678355</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Merge remote-tracking branch 'origin/serviceimpl' into serviceimpl&#10;&#10;# Conflicts:&#10;#&#9;src/dal/ServiceImpl.java&#10;">
+      <created>1476262760716</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1476262760716</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1460000" />
+    <option name="totallyTimeSpent" value="1484000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1920" height="1005" extended-state="6" />
@@ -700,7 +707,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="serviceimpl update" />
     <MESSAGE value="serviceimpl update test" />
-    <option name="LAST_COMMIT_MESSAGE" value="serviceimpl update test" />
+    <MESSAGE value="Merge remote-tracking branch 'origin/serviceimpl' into serviceimpl&#10;&#10;# Conflicts:&#10;#&#9;src/dal/ServiceImpl.java&#10;" />
+    <option name="LAST_COMMIT_MESSAGE" value="Merge remote-tracking branch 'origin/serviceimpl' into serviceimpl&#10;&#10;# Conflicts:&#10;#&#9;src/dal/ServiceImpl.java&#10;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
