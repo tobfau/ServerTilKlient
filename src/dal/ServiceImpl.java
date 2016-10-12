@@ -9,5 +9,7 @@ public class ServiceImpl {
 
     Connection dbConnection =null;
 
+    int db = 2;
+
 
 }
