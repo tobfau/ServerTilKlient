@@ -116,5 +116,48 @@ return user;
 
 
 
+    public boolean addReview (StudentDTO user) throws IllegalArgumentException {
+
+        try {
+            //Prepared statement der bruges i databasen
+            PreparedStatement addReview = connection.prepareStatement(
+                    "INSERT INTO review (rating, comment) VALUES (?, ?)");
+
+            addReview.setString(1, user.getRating());
+            addReview.setString(2, user.getComment());
+
+            int rowsAffected = addReview.executeUpdate();
+            if (rowsAffected == 1) {
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
+    public boolean addReview (StudentDTO user) throws IllegalArgumentException {
+
+        try {
+            //Prepared statement der bruges i databasen
+            PreparedStatement addReview = connection.prepareStatement(
+                    "INSERT INTO review (rating, comment) VALUES (?, ?)");
+
+            addReview.setString(1, user.getRating());
+            addReview.setString(2, user.getComment());
+
+            int rowsAffected = addReview.executeUpdate();
+            if (rowsAffected == 1) {
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
+
 
 }
