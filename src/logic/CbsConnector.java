@@ -18,6 +18,7 @@ public class CbsConnector {
     public static void main(String []args) {
         CbsConnector sc = new CbsConnector();
         sc.start();
+
     }
     public void start() {
         try {
@@ -28,14 +29,10 @@ public class CbsConnector {
             ArrayList<LectureDTO> arrayListLectureDTOs = new ArrayList<LectureDTO>();
 
             LectureDTO lectureDTO = new LectureDTO();
-            CourseDTO courseDTO = new CourseDTO();
             for (String string : getLectureDTOArray()) {
 
                 lectureDTO = gson.fromJson(string, lectureDTO.getClass());
                 System.out.println(lectureDTO.toString());
-
-                courseDTO = gson.fromJson(string, courseDTO.getClass());
-                System.out.println(courseDTO.toString());
 
                 arrayListLectureDTOs.add(lectureDTO);
             }
@@ -49,7 +46,7 @@ public class CbsConnector {
     public static ArrayList<String> getLectureDTOArray() throws Exception {
         ArrayList<String> lectureDTOArray = new ArrayList<String>();
         StringBuilder result = new StringBuilder();
-        URL url = new URL("https://calendar.cbs.dk/events.php?format=json&groups=BINTO1067U_LA_E16,BINTO2056U_LA_E16,BINTO1051U_LA_E16,BINTO1035U_LA_E16");
+        URL url = new URL("https://calendar.cbs.dk/courses.php?format=json&field=id");
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
 
@@ -58,6 +55,8 @@ public class CbsConnector {
         String line;
         String lineCommaRemoved;
         while ((line = rd.readLine()) != null) {
+
+            System.out.println(line);
             result.append(line);
             lineCommaRemoved = line.substring(0, line.length()-1);
             lectureDTOArray.add(lineCommaRemoved);
