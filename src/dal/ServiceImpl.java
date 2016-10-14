@@ -1,4 +1,4 @@
-package dal;
+/**package dal;
 
 import service.Service;
 import shared.LectureDTO;
@@ -9,7 +9,7 @@ import java.sql.*;
 
 /**
  * Created by emilstepanian on 12/10/2016.
- */
+
 public class ServiceImpl implements Service {
 
     private static Connection dbConnection =null;
@@ -50,7 +50,7 @@ public class ServiceImpl implements Service {
     }
 
 
-    */
+
 
 
     public StudentDTO loginStudent(String username, String password) throws SQLException {
@@ -161,3 +161,5 @@ return user;
 
 
 }
+
+**/
