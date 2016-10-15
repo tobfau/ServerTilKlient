@@ -35,7 +35,6 @@ public class CbsConTest {
             //Læs Json filen og opret array med CourseDTO objekter
             JsonReader reader = new JsonReader(new FileReader("resources/courses.json"));
             courseArray = gson.fromJson(reader, CourseDTO[].class);
-            System.out.println(courseArray.length);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -55,11 +54,13 @@ public class CbsConTest {
                 conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("GET");
                 br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                //course.setLectures(gson.fromJson(br, new TypeToken<ArrayList<LectureDTO>>(){}.getType()));
+                //course.setLectures(gson.fromJson(br, LectureDTO[].class));
+                LectureDTO lectureArray = gson.fromJson(br, LectureDTO.class);
 
-
-
-
+                for(LectureDTO lecture : lectureArray){
+                    System.out.println(lecture);
+                }
+                System.out.println("---------------------------------------------------");
 
             }
         }
@@ -73,29 +74,11 @@ public class CbsConTest {
     }
 
 
-
-
-
-/*
-    public void sortCoursesById() {
-        for (CourseDTO course : courseArray) {
-            if (course.getId().contains(coursePrefix)) {
-                sortedCourses.add(course);
-            }
-        }
-    }
-*/
-
-
-
-
-
-
-
     public static void main(String args[]) {
 
         CbsConTest conTest = new CbsConTest();
         conTest.parseCoursesToArray();
+        conTest.parseLectures();
     }
 
 

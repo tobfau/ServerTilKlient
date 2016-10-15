@@ -10,7 +10,8 @@ public class CourseDTO {
 
     @SerializedName("events")
     @Expose
-    private List<LectureDTO> lectures = new ArrayList<LectureDTO>();
+    //private List<LectureDTO> lectures = new ArrayList<LectureDTO>();
+    private LectureDTO[] lectures;
 
     private String id;
     private String displaytext;
@@ -18,20 +19,26 @@ public class CourseDTO {
     public CourseDTO() {
     }
 
-    public CourseDTO(List<LectureDTO> lectures) {
-        this.lectures = lectures;
-    }
-
     public CourseDTO(String id, String displaytext) {
         this.id = id;
         this.displaytext = displaytext;
     }
 
-    public List<LectureDTO> getLectures() {
+    /*public List<LectureDTO> getLectures() {
+        return lectures;
+    }
+    */
+
+    /*public void setLectures(List<LectureDTO> lectures) {
+        this.lectures = lectures;
+    }
+    */
+
+    public LectureDTO[] getLectures() {
         return lectures;
     }
 
-    public void setLectures(List<LectureDTO> lectures) {
+    public void setLectures(LectureDTO[] lectures) {
         this.lectures = lectures;
     }
 
