@@ -49,19 +49,30 @@ public class CbsConTest {
 
 
             //Læs Json fra calendar.cbs.dk for hvert kursus og fyld lektioner ind i kursets arrayliste.
-            for(CourseDTO course : courseArray){
+            for(CourseDTO course : courseArray) {
                 url = new URL(urlPrefix + course.getId());
                 conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("GET");
                 br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                //course.setLectures(gson.fromJson(br, LectureDTO[].class));
-                LectureDTO lectureArray = gson.fromJson(br, LectureDTO.class);
 
-                for(LectureDTO lecture : lectureArray){
-                    System.out.println(lecture);
-                }
-                System.out.println("---------------------------------------------------");
 
+                course = gson.fromJson(br,CourseDTO.class);
+                System.out.println(course);
+
+
+                // course.setLectures(gson.fromJson(br, LectureDTO[].class));
+
+               // JsonReader jreader = new JsonReader(new InputStreamReader(conn.getInputStream()));
+
+
+
+               // LectureDTO[] lectureArray = gson.fromJson(jreader, LectureDTO[].class);
+
+             /*   for (int i = 0; i < lectureArray.length; i++) {
+
+                    System.out.println("---------------------------------------------------");
+
+                }*/
             }
         }
         catch(MalformedURLException ex){
