@@ -55,24 +55,10 @@ public class CbsConTest {
                 conn.setRequestMethod("GET");
                 br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
+                //Tomt kursus-object nødvendigt for at indlæse JSON
+                CourseDTO tempCourse = gson.fromJson(br, CourseDTO.class);
+                course.setEvents(tempCourse.getEvents());
 
-                course = gson.fromJson(br,CourseDTO.class);
-                System.out.println(course);
-
-
-                // course.setLectures(gson.fromJson(br, LectureDTO[].class));
-
-               // JsonReader jreader = new JsonReader(new InputStreamReader(conn.getInputStream()));
-
-
-
-               // LectureDTO[] lectureArray = gson.fromJson(jreader, LectureDTO[].class);
-
-             /*   for (int i = 0; i < lectureArray.length; i++) {
-
-                    System.out.println("---------------------------------------------------");
-
-                }*/
             }
         }
         catch(MalformedURLException ex){
