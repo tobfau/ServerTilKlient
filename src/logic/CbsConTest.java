@@ -14,11 +14,10 @@ import java.util.HashMap;
  * Created by Kasper on 15/10/2016.
  */
 public class CbsConTest {
-    private HashMap courses;
+    private final String coursePrefix = "BINTO";
 
 
     public CbsConTest(){
-        this.courses = new HashMap<String, CourseDTO>();
     }
 
 
@@ -29,9 +28,11 @@ public class CbsConTest {
             JsonReader reader = new JsonReader(new FileReader("resources/courses.json"));
             CourseDTO[] courseArray = gson.fromJson(reader, CourseDTO[].class);
 
-            //Opret hashmap med courseID som key og course som value
+            //Sorterer Ha(it.) fag
             for(CourseDTO course : courseArray){
-                courses.put(course.getId(), course);
+                if(course.getId().contains(coursePrefix))
+                    System.out.println(course.getId());
+                //getLecturesFromCourse(course.getId());
             }
         }
         catch (Exception e){
