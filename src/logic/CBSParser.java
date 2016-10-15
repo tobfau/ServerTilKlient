@@ -1,31 +1,24 @@
 package logic;
 
 import com.google.gson.*;
-import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import shared.CourseDTO;
-import shared.LectureDTO;
 
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by Kasper on 15/10/2016.
  */
-public class CbsConTest {
-    //private final String coursePrefix = "BINTO";
+public class CBSParser {
     private CourseDTO[] courseArray;
-    private ArrayList<CourseDTO> sortedCourses;
     private Gson gson;
 
 
 
-    public CbsConTest() {
+    public CBSParser() {
         gson = new Gson();
     }
 
@@ -59,7 +52,12 @@ public class CbsConTest {
                 CourseDTO tempCourse = gson.fromJson(br, CourseDTO.class);
                 course.setEvents(tempCourse.getEvents());
 
+               /* for (LectureDTO lecture : course.getEvents()) {
+                    System.out.println(lecture.toString());
+                }*/
+
             }
+
         }
         catch(MalformedURLException ex){
             ex.printStackTrace();
@@ -73,9 +71,10 @@ public class CbsConTest {
 
     public static void main(String args[]) {
 
-        CbsConTest conTest = new CbsConTest();
+        CBSParser conTest = new CBSParser();
         conTest.parseCoursesToArray();
         conTest.parseLectures();
+
     }
 
 
