@@ -1,6 +1,7 @@
 package logic;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import shared.CourseDTO;
 import shared.LectureDTO;
 
@@ -44,11 +45,13 @@ public class CbsConnector {
     }
 
     public static ArrayList<String> getLectureDTOArray() throws Exception {
+
         ArrayList<String> lectureDTOArray = new ArrayList<String>();
         StringBuilder result = new StringBuilder();
         URL url = new URL("https://calendar.cbs.dk/events.php?format=json&groups=BINTO1067U_LA_E16,BINTO2056U_LA_E16,BINTO1063U_LA_E16,BINTO1064U_LA_E16");
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
+
 
         BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 

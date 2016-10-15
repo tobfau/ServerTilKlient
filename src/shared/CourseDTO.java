@@ -11,7 +11,7 @@ public class CourseDTO {
     @SerializedName("events")
     @Expose
     //private List<LectureDTO> lectures = new ArrayList<LectureDTO>();
-    private LectureDTO[] lectures;
+    private LectureDTO[] events;
 
     private String id;
     private String displaytext;
@@ -34,12 +34,12 @@ public class CourseDTO {
     }
     */
 
-    public LectureDTO[] getLectures() {
-        return lectures;
+    public LectureDTO[] getEvents() {
+        return events;
     }
 
-    public void setLectures(LectureDTO[] lectures) {
-        this.lectures = lectures;
+    public void setEvents(LectureDTO[] events) {
+        this.events = events;
     }
 
     public String getId() {
@@ -69,9 +69,8 @@ public class CourseDTO {
     @Override
     public String toString() {
         return "CourseDTO{" +
-                "lectures=" + lectures +
-                ", databaseId=" + id +
-                ", id='" + id + '\'' +
+                "lectures=" + events +
+                ", id=" + id +
                 ", displaytext='" + displaytext + '\'' +
                 '}';
     }
