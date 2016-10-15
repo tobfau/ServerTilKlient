@@ -8,57 +8,47 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 
 /**
  * Created by Kasper on 15/10/2016.
  */
 public class CbsConTest {
+    private HashMap courses;
+
+
+    public CbsConTest(){
+        this.courses = new HashMap<String, CourseDTO>();
+    }
+
+
+    public void parseCourses(){
+        try{
+            //Læs Json filen og opret array med CourseDTO objekter
+            Gson gson = new Gson();
+            JsonReader reader = new JsonReader(new FileReader("resources/courses.json"));
+            CourseDTO[] courseArray = gson.fromJson(reader, CourseDTO[].class);
+
+            //Opret hashmap med fagkode og CourseDTO objektet som key-value pair
+            for(CourseDTO course : courseArray){
+                courses.put(course.getId(), course);
+            }
+
+            CourseDTO chineseCourse = (CourseDTO) courses.get("BALKO1001U_LA_E16");
+            System.out.println(chineseCourse.getName());
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+    }
+
 
 
 
     public static void main(String args[]) {
-        try {
 
-            Gson gson = new Gson();
-            System.out.println("sdf");
-            JsonReader reader = new JsonReader(new FileReader("resources/courses.json"));
-
-            System.out.println("hej");
-
-
-            CourseDTO[] courses = gson.fromJson(reader, CourseDTO[].class);
-
-            System.out.println(courses[0]);
-
-
-            reader.beginObject();
-
-            System.out.println(reader.nextString().toString());
-
-
-
-            String name;
-
-
-            while (reader.hasNext()){
-                name = reader.nextName();
-                System.out.println(name);
-
-                if (name.equals("id")) {
-                    System.out.println(reader.nextString());
-                } else if (name.equals("displaytext")) {
-                    System.out.println(reader.nextString());
-                } else
-                    reader.skipValue();
-            }
-
-            reader.endObject();
-            reader.close();
-
-        } catch (Exception e){
-
-        }
-
+        CbsConTest conTest = new CbsConTest();
+        conTest.parseCourses();
     }
 
 
