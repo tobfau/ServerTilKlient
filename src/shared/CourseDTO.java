@@ -12,9 +12,9 @@ public class CourseDTO {
     @Expose
     private List<LectureDTO> lectures = new ArrayList<LectureDTO>();
 
-    private int id;
-    private String bint;
-    private String name;
+    private int databaseId;
+    private String id;
+    private String displaytext;
 
     public CourseDTO() {
     }
@@ -33,36 +33,36 @@ public class CourseDTO {
     }
 
     public int getId() {
-        return id;
+        return databaseId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setId(int databaseId) {
+        this.databaseId = databaseId;
     }
 
     public String getBint() {
-        return bint;
+        return id;
     }
 
-    public void setBint(String bint) {
-        this.bint = bint;
+    public void setBint(String id) {
+        this.id = id;
     }
 
     public String getName() {
-        return name;
+        return displaytext;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setName(String displaytext) {
+        this.displaytext = displaytext;
     }
 
     @Override
     public String toString() {
         return "CourseDTO{" +
                 "lectures=" + lectures +
-                ", id=" + id +
-                ", bint='" + bint + '\'' +
-                ", name='" + name + '\'' +
+                ", databaseId=" + databaseId +
+                ", id='" + id + '\'' +
+                ", displaytext='" + displaytext + '\'' +
                 '}';
     }
 }

@@ -15,11 +15,11 @@ import java.util.ArrayList;
  * Created by emilstepanian on 12/10/2016
  */
 public class CbsConnector {
-    public static void main(String []args) {
-        CbsConnector sc = new CbsConnector();
-        sc.start();
+   // public static void main(String []args) {
+     //   CbsConnector sc = new CbsConnector();
+       // sc.start();
 
-    }
+   // }
     public void start() {
         try {
 
