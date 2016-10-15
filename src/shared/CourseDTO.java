@@ -12,7 +12,6 @@ public class CourseDTO {
     @Expose
     private List<LectureDTO> lectures = new ArrayList<LectureDTO>();
 
-    private int databaseId;
     private String id;
     private String displaytext;
 
@@ -23,6 +22,10 @@ public class CourseDTO {
         this.lectures = lectures;
     }
 
+    public CourseDTO(String id, String displaytext) {
+        this.id = id;
+        this.displaytext = displaytext;
+    }
 
     public List<LectureDTO> getLectures() {
         return lectures;
@@ -32,12 +35,12 @@ public class CourseDTO {
         this.lectures = lectures;
     }
 
-    public int getId() {
-        return databaseId;
+    public String getId() {
+        return id;
     }
 
-    public void setId(int databaseId) {
-        this.databaseId = databaseId;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getBint() {
@@ -60,7 +63,7 @@ public class CourseDTO {
     public String toString() {
         return "CourseDTO{" +
                 "lectures=" + lectures +
-                ", databaseId=" + databaseId +
+                ", databaseId=" + id +
                 ", id='" + id + '\'' +
                 ", displaytext='" + displaytext + '\'' +
                 '}';
