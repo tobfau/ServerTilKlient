@@ -1,5 +1,10 @@
-/**
- * Created by emilstepanian on 12/10/2016.
- */
 public class Run {
+
+    public static void main(String args[]){
+
+        WebServer webServer = new WebServer(5000);
+        webServer.start();
+
+    }
+
 }
