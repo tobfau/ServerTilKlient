@@ -37,7 +37,7 @@ public class TeacherDTO extends UserDTO {
 
 	@Override
 	public String toString() {
-		return "TeacherDTO [getId()=" + getId() + ", getMail()=" + getMail() + ", getPassword()=" + getPassword()
+		return "TeacherDTO [getId()=" + getId() + ", getCbsMail()=" + getCbsMail() + ", getPassword()=" + getPassword()
 				+ ", getType()=" + getType() + "]" + ", getStudy()=" + getStudy() + "]" + ", getCourses()=" + getCourses() + "]";
 	}
 }

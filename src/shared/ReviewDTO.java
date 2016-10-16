@@ -12,7 +12,6 @@ public class ReviewDTO {
     private String cbsMail;
 
     public ReviewDTO(){
-
     }
 
     public ReviewDTO(int id, int rating, String comment, int lectureId, String cbsMail) {
@@ -74,4 +73,3 @@ public class ReviewDTO {
                 '}';
     }
 }
-

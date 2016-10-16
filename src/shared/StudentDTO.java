@@ -25,8 +25,7 @@ public class StudentDTO extends UserDTO {
 	
 	@Override
 	public String toString() {
-		return "StudentDTO [getId()=" + getId() + ", getMail()=" + getMail() + ", getPassword()=" + getPassword()
+		return "StudentDTO [getId()=" + getId() + ", getCbsMail()=" + getCbsMail() + ", getPassword()=" + getPassword()
 				+ ", getType()=" + getType() + "]" + ", getStudy()=" + getStudy() + "]";
 	}
-
 }

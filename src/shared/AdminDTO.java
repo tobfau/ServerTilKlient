@@ -8,13 +8,13 @@ public class AdminDTO extends UserDTO {
 		super();
 	}
 
-	public AdminDTO(int id, String mail, String password, String type) {
-		super(id, mail, password, type);
+	public AdminDTO(int id, String cbsMail, String password, String type) {
+		super(id, cbsMail, password, type);
 	}
 
 	@Override
 	public String toString() {
-		return "AdminDTO [getId()=" + getId() + ", getMail()=" + getMail() + ", getPassword()=" + getPassword()
+		return "AdminDTO [getId()=" + getId() + ", getCbsMail()=" + getCbsMail() + ", getPassword()=" + getPassword()
 				+ ", getType()=" + getType() + "]";
 	}
 }

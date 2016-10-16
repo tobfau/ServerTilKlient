@@ -18,7 +18,6 @@ public abstract class UserDTO implements Serializable {
     
     //Must be defined
     public UserDTO() {
-
     }
 
     public int getId() {
