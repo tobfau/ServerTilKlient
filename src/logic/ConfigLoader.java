@@ -1,5 +1,5 @@
 package logic;
-
+//TODO: Dokumentation needed for this class!
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
