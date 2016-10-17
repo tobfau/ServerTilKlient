@@ -5,6 +5,7 @@ import service.Service;
 import shared.*;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 
 //Created by emilstepanian on 12/10/2016.
@@ -16,6 +17,8 @@ public class ServiceImpl implements Service{
     private static final String USERNAME = "root";
     private static final String PASSWORD = "repsej";
 
+
+    /*Vi opretter DriveManager, som opretter forbindelse til SQL serveren.*/
     public ServiceImpl() {
         try {
             dbConnection = DriverManager.getConnection(URL,USERNAME,PASSWORD);
@@ -130,6 +133,9 @@ return user;
             //Events køres.
             insertCourses.executeUpdate();
 
+
+            resultSet = getCourses.executeQuery();
+
             while (resultSet.next()) {
                 courses = new CourseDTO();
                 courses.setId(resultSet.getString("id"));
@@ -137,14 +143,62 @@ return user;
                 courses.setName(resultSet.getString("name"));
             }
 
-            getCourses.executeQuery();
-
 
         }catch (SQLException e) {
             e.printStackTrace();
             close();
         }
         return courses;
+    }
+
+    public void insertReview (ReviewDTO review) throws SQLException {
+
+
+        try {
+            //Laver to preparedstatements, som først skal indsætte reviews og efterfølgende hente dem ned.
+            PreparedStatement insertReview =
+                    dbConnection.prepareStatement("INSERT INTO review (rating, comment, cbsmail, lectureid) VALUES (?,?,?,?)");
+
+            //Sætter PS, så vi akn indsætte nye reviews.
+            insertReview.setInt(1, review.getRating());
+            insertReview.setString(2, review.getComment());
+            insertReview.setString(3, review.getCbsMail());
+            insertReview.setInt(4, review.getLectureId());
+
+            //Events køres.
+            insertReview.executeUpdate();
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            close();
+        }
+        return;
+    }
+
+    public ArrayList<ReviewDTO> getReviews (ReviewDTO review) throws SQLException {
+        ResultSet resultSet = null;
+        ArrayList<ReviewDTO> reviews = new ArrayList();
+
+        try{
+            PreparedStatement getReviews =
+                    dbConnection.prepareStatement("SELECT * FROM review");
+
+            resultSet = getReviews.executeQuery();
+            while (resultSet.next()){
+                ReviewDTO allreview = new ReviewDTO();
+                allreview.setLectureId(resultSet.getInt("lectureid"));
+                allreview.setCbsMail(resultSet.getString("cbsmail"));
+                allreview.setComment(resultSet.getString("comment"));
+                allreview.setRating(resultSet.getInt("rating"));
+
+                reviews.add(allreview);
+            }
+        }catch (SQLException e) {
+            e.printStackTrace();
+            close();
+        }
+        return reviews;
     }
 
 
