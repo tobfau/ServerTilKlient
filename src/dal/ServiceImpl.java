@@ -255,13 +255,21 @@ public class ServiceImpl implements Service {
     }
 
 
-    public ArrayList<ReviewDTO> getReviews(ReviewDTO review) throws SQLException {
+    public ArrayList<ReviewDTO> getReviews(ReviewDTO review, String name) throws SQLException {
         ResultSet resultSet = null;
         ArrayList<ReviewDTO> reviews = new ArrayList();
 
         try {
             PreparedStatement getReviews =
-                    dbConnection.prepareStatement("SELECT * FROM review");
+                    dbConnection.prepareStatement(
+                            "SELECT r.* FROM review r " +
+                                    "INNER JOIN  lecture l " +
+                                    "ON r.lecture_id = l.id " +
+                                    "INNER JOIN course c " +
+                                    "ON l.course_id = c.id " +
+                                    "INNER JOIN study s "  +
+                                    "ON c.study_id = s.id " +
+                                    "WHERE s.name == '"+ name +"'");
 
             resultSet = getReviews.executeQuery();
             while (resultSet.next()) {
@@ -269,6 +277,7 @@ public class ServiceImpl implements Service {
                 allreview.setLectureId(resultSet.getInt("lectureid"));
                 allreview.setComment(resultSet.getString("comment"));
                 allreview.setRating(resultSet.getInt("rating"));
+                allreview.setId(resultSet.getInt("study_id"));
 
                 reviews.add(allreview);
             }
@@ -313,6 +322,8 @@ public class ServiceImpl implements Service {
         }
         return;
     }
+
+
 
 
 
