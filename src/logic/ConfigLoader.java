@@ -29,6 +29,7 @@ public class ConfigLoader {
     public static String COURSES_JSON;
     public static String HASH_SALT;
     public static String ENCRYPT_KEY;
+    public static String SERVER_ADDRESS;
     public static String SERVER_PORT;
     public static String DEBUG;
 

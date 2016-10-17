@@ -13,14 +13,13 @@ import java.net.URL;
  * Created by Kasper on 15/10/2016.
  */
 public class CBSParser {
-    private CourseDTO[] courseArray;
-    private Gson gson;
+    private static CourseDTO[] courseArray;
+    private static Gson gson = new Gson();
 
     public CBSParser() {
-        gson = new Gson();
     }
 
-    public void parseCoursesToArray() {
+    public static void parseCoursesToArray() {
         try {
             //Læs Json filen og opret array med CourseDTO objekter
             JsonReader reader = new JsonReader(new FileReader("resources/courses.json"));
@@ -30,7 +29,7 @@ public class CBSParser {
         }
     }
 
-    public void parseLectures(){
+    public static void parseLectures(){
         try{
             String urlPrefix = ConfigLoader.CBS_API_LINK;
             URL url;
