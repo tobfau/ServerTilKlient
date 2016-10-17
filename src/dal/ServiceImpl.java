@@ -88,6 +88,56 @@ public class ServiceImpl implements Service {
 
     }
 
+
+
+
+    public UserDTO createUser(UserDTO user) throws SQLException {
+
+        StudentDTO userStudent = null;
+        try {
+
+            PreparedStatement createStudentStatement = dbConnection.prepareStatement("INSERT INTO user (cbs_mail, password, type)" +
+                    "VALUES (?, ?, 1)");
+
+
+            createStudentStatement.setString(1, userStudent.getCbsMail());
+            createStudentStatement.setString(2, userStudent.getPassword());
+
+            createStudentStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+        return user;
+        }
+
+    public UserDTO deleteUser(UserDTO user) throws SQLException {
+
+        StudentDTO userStudent = null;
+
+        try {
+
+            PreparedStatement deleteStudentStatement = dbConnection.prepareStatement("DELETE FROM user WHERE id = ?");
+
+            deleteStudentStatement.setInt(1, userStudent.getId());
+
+
+            deleteStudentStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+        return user;
+    }
+
+
+
+
+
     public boolean addReview(ReviewDTO review) throws IllegalArgumentException {
 
         try {
@@ -203,6 +253,9 @@ public class ServiceImpl implements Service {
         return reviews;
     }
 
+
+
+
     public void deleteReview(ReviewDTO delete) throws SQLException {
 
         try {
@@ -219,4 +272,24 @@ public class ServiceImpl implements Service {
         }
         return;
     }
+
+    public void deleteReviewComment(ReviewDTO deletecomment) throws SQLException {
+
+        try {
+            PreparedStatement deleteReview =
+                    dbConnection.prepareStatement("UPDATE review SET comment_is_deleted = 1");
+
+            deleteReview.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            close();
+        }
+        return;
+    }
+
+
+
+
+
 }
