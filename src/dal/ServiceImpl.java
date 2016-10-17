@@ -184,6 +184,14 @@ public class ServiceImpl implements Service {
         return false;
     }
 
+    public UserDTO login(String username, String password) {
+        return null;
+    }
+
+    public boolean addReview(ReviewDTO review) {
+        return false;
+    }
+
     public CourseDTO insertCourses(CourseDTO courses) throws SQLException {
 
         try {
@@ -230,6 +238,10 @@ public class ServiceImpl implements Service {
             close();
         }
         return courses;
+    }
+
+    public boolean insertReview(ReviewDTO review) {
+        return false;
     }
 
     public ArrayList<ReviewDTO> getReviews(LectureDTO lecture) throws SQLException {
@@ -300,6 +312,10 @@ public class ServiceImpl implements Service {
             close();
         }
         return true;
+    }
+
+    public ArrayList<LectureDTO> getLectures(UserDTO users) {
+        return null;
     }
 
     public boolean insertLectures(int rating, String comment, int lectureid) throws SQLException {
