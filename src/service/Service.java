@@ -1,6 +1,8 @@
 package service;
+//TODO: Class and methods needs comments and documentation.
 
-import com.sun.tools.internal.xjc.reader.xmlschema.bindinfo.BIConversion;
+
+//TODO: Cleanup unused imports.
 import shared.CourseDTO;
 import shared.LectureDTO;
 import shared.ReviewDTO;
