@@ -1,21 +1,17 @@
 package dal;
 
-
 import service.Service;
 import shared.*;
-
 import java.sql.*;
 import java.util.ArrayList;
 
 
-//Created by emilstepanian on 12/10/2016.
-
-public class ServiceImpl implements Service {
+public class ServiceImpl {
 
     private static Connection dbConnection = null;
-    private static final String URL = "jdbc:mysql://localhost:3306/mydb";
+    private static final String URL = "jdbc:mysql://localhost:8889/undervisning";
     private static final String USERNAME = "root";
-    private static final String PASSWORD = "repsej";
+    private static final String PASSWORD = "root";
 
 
     //Vi opretter DriveManager, som opretter forbindelse til SQL serveren.
@@ -36,21 +32,6 @@ public class ServiceImpl implements Service {
             e.printStackTrace();
         }
     }
-
-
-    //Forberedt main-metode, til test af diverse metoder.
-
-
-/*    public static void main(String[] args) {
-        ServiceImpl d = new ServiceImpl();
-        ArrayList<StudentDTO> arr = d.getStudents();
-        for (StudentDTO studentDTO : arr) {
-            System.out.println(studentDTO.getUsername());
-
-
-        }
-    }*/
-
 
     public UserDTO loginStudent(String username, String password) throws SQLException {
         ResultSet resultSet = null;
@@ -88,91 +69,17 @@ public class ServiceImpl implements Service {
 
     }
 
-
-    public ArrayList<UserDTO> getUsers(UserDTO users) throws SQLException {
-        ResultSet resultSet = null;
-        ArrayList<UserDTO> usersArr = new ArrayList();
-
-        try {
-            PreparedStatement getcourses =
-                    dbConnection.prepareStatement("SELECT (id,cbs_mail,type)  FROM user");
-
-            resultSet = getcourses.executeQuery();
-
-            while (resultSet.next()) {
-
-                UserDTO allUsers = new UserDTO();
-                allUsers.setCbsMail(resultSet.getString("cbs_mail"));
-                allUsers.setType(resultSet.getString("type"));
-                allUsers.setId(resultSet.getInt("id"));
-                usersArr.add(allUsers);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            close();
-        }
-        return usersArr;
-    }
-
-
-
-
-    public UserDTO createUser(UserDTO user) throws SQLException {
-
-        StudentDTO userStudent = null;
-        try {
-
-            PreparedStatement createStudentStatement = dbConnection.prepareStatement("INSERT INTO user (cbs_mail, password, type)" +
-                    "VALUES (?, ?, ?)");
-
-
-            createStudentStatement.setString(1, userStudent.getCbsMail());
-            createStudentStatement.setString(2, userStudent.getPassword());
-
-            createStudentStatement.executeUpdate();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-
-        return user;
-        }
-
-    public UserDTO deleteUser(UserDTO user) throws SQLException {
-
-        StudentDTO userStudent = null;
-
-        try {
-
-            PreparedStatement deleteStudentStatement = dbConnection.prepareStatement("DELETE FROM user WHERE id = ?");
-
-            deleteStudentStatement.setInt(1, userStudent.getId());
-
-
-            deleteStudentStatement.executeUpdate();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-
-        return user;
-    }
-
-
-
-
-
-    public boolean addReview(ReviewDTO review) throws IllegalArgumentException {
+    //HER
+    public boolean addReview(ReviewDTO review, UserDTO user, int rating, String comment) throws IllegalArgumentException {
 
         try {
             //Prepared statement der bruges i databasen
             PreparedStatement addReview = dbConnection.prepareStatement(
-                    "INSERT INTO review (rating, comment) VALUES (?, ?)");
+                    "INSERT INTO review (lecture_id, rating, comment) VALUES (?, ?, ?)");
 
-            addReview.setInt(1, review.getRating());
-            addReview.setString(2, review.getComment());
+            addReview.setInt(1, review.getId());
+            addReview.setInt(2, rating);
+            addReview.setString(3, comment);
 
             int rowsAffected = addReview.executeUpdate();
             if (rowsAffected == 1) {
@@ -184,7 +91,20 @@ public class ServiceImpl implements Service {
         return false;
     }
 
+<<<<<<< HEAD
+    public UserDTO login(String username, String password) {
+        return null;
+    }
+
+    public boolean addReview(ReviewDTO review) {
+        return false;
+    }
+
     public CourseDTO insertCourses(CourseDTO courses) throws SQLException {
+=======
+
+    public boolean insertCourse(CourseDTO course) throws SQLException {
+>>>>>>> service
 
         try {
             //Laver to preparedstatements, som først skal indsætte courses og efterfølgende hente dem ned.
@@ -192,29 +112,33 @@ public class ServiceImpl implements Service {
                     dbConnection.prepareStatement("INSERT INTO course (study_id, name) VALUES (?,?)");
 
 
-            insertCourses.setString(1, courses.getId());
-            insertCourses.setString(2, courses.getName());
-            //insertCourses.setArray(4, courses.getEvents());
+            insertCourses.setString(1, course.getId());
+            insertCourses.setString(2, course.getName());
 
-            //Events køres.
-            insertCourses.executeUpdate();
-
+            int rowsAffected = insertCourses.executeUpdate();
+            if (rowsAffected == 1) {
+                return true;
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();
             close();
         }
-        return courses;
+        return false;
     }
 
-    public ArrayList<CourseDTO> getCourses(CourseDTO course) throws SQLException {
+    public ArrayList<CourseDTO> getCourses(UserDTO user) throws SQLException {
         ResultSet resultSet = null;
         ArrayList<CourseDTO> courses = new ArrayList();
 
         try {
             PreparedStatement getcourses =
-                    dbConnection.prepareStatement("SELECT * FROM course");
+                    dbConnection.prepareStatement("SELECT c.name,c.id FROM course c" +
+                            "JOIN course_attendant ca" +
+                            "ON c.id = ca.course_id" +
+                            "WHERE ca.user_id = ?");
 
+            getcourses.setInt(1,user.getId());
             resultSet = getcourses.executeQuery();
 
             while (resultSet.next()) {
@@ -230,46 +154,53 @@ public class ServiceImpl implements Service {
         return courses;
     }
 
-    public void insertReview(ReviewDTO review) throws SQLException {
-
+<<<<<<< HEAD
+    public boolean insertReview(ReviewDTO review) {
+        return false;
+=======
+    public ArrayList<LectureDTO> getLectures(CourseDTO course) throws SQLException {
+        ResultSet resultSet = null;
+        ArrayList<LectureDTO> lectures = new ArrayList();
 
         try {
-            //Laver to preparedstatements, som først skal indsætte reviews og efterfølgende hente dem ned.
-            PreparedStatement insertReview =
-                    dbConnection.prepareStatement("INSERT INTO review (rating, comment, lectureid) VALUES (?,?,?)");
+            PreparedStatement getLectures =
+                    dbConnection.prepareStatement("SELECT l.description, l.location, l.start, l.end FROM lecture l WHERE course_id = ?");
 
-            //Sætter PS, så vi akn indsætte nye reviews.
-            insertReview.setInt(1, review.getRating());
-            insertReview.setString(2, review.getComment());
-            insertReview.setInt(3, review.getLectureId());
+            getLectures.setString(1,course.getId());
+            resultSet = getLectures.executeQuery();
 
-            //Events køres.
-            insertReview.executeUpdate();
-
+            while (resultSet.next()) {
+                LectureDTO lecture = new LectureDTO();
+                lecture.setDescription(resultSet.getString("description"));
+                lecture.setLocation(resultSet.getString("location"));
+                lectures.add(lecture);
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();
             close();
         }
-        return;
+
+        return lectures;
+>>>>>>> service
     }
 
-
-    public ArrayList<ReviewDTO> getReviews(ReviewDTO review, String name) throws SQLException {
+    public ArrayList<ReviewDTO> getReviews(LectureDTO lecture) throws SQLException {
         ResultSet resultSet = null;
         ArrayList<ReviewDTO> reviews = new ArrayList();
 
         try {
             PreparedStatement getReviews =
-                    dbConnection.prepareStatement(
-                            "SELECT r.* FROM review r " +
-                                    "INNER JOIN  lecture l " +
+                    dbConnection.prepareStatement("SELECT * FROM review r " +
+                                    "JOIN lecture l " +
                                     "ON r.lecture_id = l.id " +
-                                    "INNER JOIN course c " +
+                                    "JOIN course c " +
                                     "ON l.course_id = c.id " +
-                                    "INNER JOIN study s "  +
-                                    "ON c.study_id = s.id " +
-                                    "WHERE s.name == '"+ name +"'");
+                                    "JOIN course_attendant ca " +
+                                    "ON ca.course_id = c.id " +
+                                    "WHERE l.id = ?");
+
+            getReviews.setInt(1,lecture.getId());
 
             resultSet = getReviews.executeQuery();
             while (resultSet.next()) {
@@ -288,44 +219,37 @@ public class ServiceImpl implements Service {
         return reviews;
     }
 
-
-
-
-    public void deleteReview(ReviewDTO delete) throws SQLException {
+    public boolean deleteReview(ReviewDTO review) throws SQLException {
 
         try {
             PreparedStatement deleteReview =
                     dbConnection.prepareStatement("DELETE FROM review WHERE id = ?");
 
-            deleteReview.setInt(1, delete.getId());
+            deleteReview.setInt(1, review.getId());
 
-            deleteReview.executeUpdate();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            close();
-        }
-        return;
-    }
-
-    public void deleteReviewComment(ReviewDTO deletecomment) throws SQLException {
-
-        try {
-            PreparedStatement deleteReview =
-                    dbConnection.prepareStatement("UPDATE review SET comment_is_deleted = 0 WHERE id = ?");
-
-            deleteReview.executeUpdate();
+            int rowsAffected = deleteReview.executeUpdate();
+            if (rowsAffected == 1) {
+                return true;
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();
             close();
         }
-        return;
+<<<<<<< HEAD
+        return true;
     }
 
+    public ArrayList<LectureDTO> getLectures(UserDTO users) {
+        return null;
+    }
 
+    public boolean insertLectures(int rating, String comment, int lectureid) throws SQLException {
+=======
+>>>>>>> service
 
-
+        return false;
+    }
 
 
 
