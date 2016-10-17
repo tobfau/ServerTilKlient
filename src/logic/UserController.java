@@ -22,7 +22,7 @@ public class UserController {
 
     public ArrayList<LectureDTO> getLectures(int courseId){
 
-        ArrayList<LectureDTO> lectures = new ArrayList<>();
+        ArrayList<LectureDTO> lectures = new ArrayList<LectureDTO>();
 
         try {
             Map<String, String> params = new HashMap();

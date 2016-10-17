@@ -1,4 +1,4 @@
-package logic;
+/**package logic;
 
 import dal.ServiceImpl;
 import security.Digester;
@@ -11,7 +11,7 @@ import java.sql.SQLException;
 
 /**
  * Created by emilstepanian on 12/10/2016.
- */
+
 public class MainController {
 
     private UserDTO user;
@@ -50,4 +50,4 @@ public class MainController {
             //DataOutputStream OutToClient = new DataOutputStream();
         }
     }
-}
+}*/
