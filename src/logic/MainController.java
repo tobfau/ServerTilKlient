@@ -15,37 +15,37 @@ import java.sql.SQLException;
 public class MainController {
 
     private UserDTO user;
-    private ServiceImpl servicelmpl;
+    private ServiceImpl serviceImpl;
     private Digester digester;
-    private AdminController adminController;
-    private StudentController studentController;
-    private TeacherController teacherController;
+    private AdminController adminCtrl;
+    private StudentController studentCtrl;
+    private TeacherController teacherCtrl;
 
     public void logIn (String mail, String password) throws SQLException {
 
         //hashing
         String passwor = Digester.hashWithSalt(password);
 
-        //Komminukation med databasen, servicelmpl klassen bliver kaldt og metoden loginstudent køres.
-        servicelmpl.loginStudent(mail, password);
+        //Kommunikation med databasen, servicelmpl klassen bliver kaldt og metoden loginstudent køres.
+        serviceImpl.loginStudent(mail, password);
 
-        String mail1 = servicelmpl.loginStudent(mail, password).getCbsMail();
-        String password1 = servicelmpl.loginStudent(mail, password).getPassword();
+        String mailFromDb = serviceImpl.loginStudent(mail, password).getCbsMail();
+        String passwordFromDb = serviceImpl.loginStudent(mail, password).getPassword();
 
         //Validering med mail og password gennem databasen
-        if(mail.equals(mail1) && password.equals(password1) ){
-            if (servicelmpl.loginStudent(mail, password).getType() == "student"){
-                studentController = new StudentController();
+        if(mail.equals(mailFromDb) && password.equals(passwordFromDb) ){
+            if (serviceImpl.loginStudent(mail, password).getType() == "admin"){
+                adminCtrl = new AdminController();
             }
-            if (servicelmpl.loginStudent(mail, password).getType() == "teacher" ){
-                teacherController = new TeacherController();
+            if (serviceImpl.loginStudent(mail, password).getType() == "teacher" ){
+                teacherCtrl = new TeacherController();
             }
-            if (servicelmpl.loginStudent(mail, password).getType() == "admin"){
-                adminController = new AdminController();
+            if (serviceImpl.loginStudent(mail, password).getType() == "student"){
+                studentCtrl = new StudentController();
             }
         }
         //else træder i kraft ved forkert mail eller password, der er her mulighed for et output til klienten om fejl ved login.
-        else{
+        else {
             System.out.println("Forkert log in!!!!!!!!!!!!!!!!!");
             //DataOutputStream OutToClient = new DataOutputStream();
         }
