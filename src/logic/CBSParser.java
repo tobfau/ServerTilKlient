@@ -31,7 +31,7 @@ public class CBSParser {
 
     public void parseLectures(){
         try{
-            String urlPrefix = "https://calendar.cbs.dk/events.php?format=json&groups=";
+            String urlPrefix = ConfigLoader.CBS_API_LINK;
             URL url;
             HttpURLConnection conn;
             BufferedReader br;
