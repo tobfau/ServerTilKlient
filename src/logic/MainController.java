@@ -21,12 +21,12 @@ public class MainController {
     private StudentController studentCtrl;
     private TeacherController teacherCtrl;
 
-    public void logIn (String mail, String password) throws SQLException {
+    public void login (String mail, String password) throws SQLException {
 
         //hashing
         String securedPassword = Digester.hashWithSalt(password);
 
-        //Kommunikation med databasen, servicelmpl klassen bliver kaldt og metoden loginstudent køres.
+        //Kommunikation med databasen, serviceImpl klassen bliver kaldt og metoden loginStudent køres.
         serviceImpl.loginStudent(mail, securedPassword);
 
         String mailFromDb = serviceImpl.loginStudent(mail, securedPassword).getCbsMail();
@@ -46,7 +46,7 @@ public class MainController {
         }
         //else træder i kraft ved forkert mail eller password, der er her mulighed for et output til klienten om fejl ved login.
         else {
-            System.out.println("Forkert log in!!!!!!!!!!!!!!!!!");
+            System.out.println("Forkert log in!");
             //DataOutputStream OutToClient = new DataOutputStream();
         }
     }
