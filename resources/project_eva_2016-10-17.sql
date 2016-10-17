@@ -7,7 +7,7 @@
 #
 # Host: localhost (MySQL 5.7.11)
 # Database: project_eva
-# Generation Time: 2016-10-17 06:11:46 +0000
+# Generation Time: 2016-10-17 07:36:40 +0000
 # ************************************************************
 
 
@@ -35,22 +35,15 @@ DROP TABLE IF EXISTS `course`;
 
 CREATE TABLE `course` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `bint` varchar(255) NOT NULL DEFAULT '',
+  `code` varchar(255) NOT NULL DEFAULT '',
   `name` varchar(255) NOT NULL DEFAULT '',
-  PRIMARY KEY (`id`)
+  `study_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `code` (`code`),
+  KEY `study_id` (`study_id`),
+  CONSTRAINT `course_ibfk_1` FOREIGN KEY (`study_id`) REFERENCES `study` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-LOCK TABLES `course` WRITE;
-/*!40000 ALTER TABLE `course` DISABLE KEYS */;
-
-INSERT INTO `course` (`id`, `bint`, `name`)
-VALUES
-	(1,'bint.1234','Distribuerede Systemer'),
-	(2,'bint.5678','VOES 9000'),
-	(3,'bint.91011','Makro');
-
-/*!40000 ALTER TABLE `course` ENABLE KEYS */;
-UNLOCK TABLES;
 
 
 # Dump of table lecture
@@ -93,11 +86,24 @@ CREATE TABLE `review` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `lecture_id` int(11) NOT NULL,
   `rating` int(11) NOT NULL,
-  `comment` varchar(255) NOT NULL DEFAULT '',
-  `is_deleted` bit(1) NOT NULL,
+  `comment` varchar(500) NOT NULL DEFAULT '',
+  `comment_is_deleted` bit(1) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `lecture_id` (`lecture_id`),
   CONSTRAINT `review_ibfk_1` FOREIGN KEY (`lecture_id`) REFERENCES `lecture` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
+# Dump of table study
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `study`;
+
+CREATE TABLE `study` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
@@ -112,53 +118,28 @@ CREATE TABLE `user` (
   `cbs_mail` varchar(255) NOT NULL DEFAULT '',
   `password` varchar(255) NOT NULL DEFAULT '',
   `type` varchar(255) NOT NULL DEFAULT '',
-  `study` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   UNIQUE KEY `cbs_mail` (`cbs_mail`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-LOCK TABLES `user` WRITE;
-/*!40000 ALTER TABLE `user` DISABLE KEYS */;
-
-INSERT INTO `user` (`id`, `cbs_mail`, `password`, `type`, `study`)
-VALUES
-	(1,'kafr15ae@student.cbs.dk','1234','admin',''),
-	(2,'test@student.cbs.dk','pass','student',''),
-	(3,'testmail@student.cbs.dk','pass','student','');
-
-/*!40000 ALTER TABLE `user` ENABLE KEYS */;
-UNLOCK TABLES;
 
 
-# Dump of table usercourse
+# Dump of table attendant
 # ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `usercourse`;
+DROP TABLE IF EXISTS `attendant`;
 
-CREATE TABLE `usercourse` (
+CREATE TABLE `attendant` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
-  `course_id` int(11) NOT NULL,
+  `study_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
-  KEY `course_id` (`course_id`),
-  CONSTRAINT `course_id` FOREIGN KEY (`course_id`) REFERENCES `course` (`id`),
+  KEY `study_id` (`study_id`),
+  CONSTRAINT `study_id` FOREIGN KEY (`study_id`) REFERENCES `study` (`id`),
   CONSTRAINT `user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-LOCK TABLES `usercourse` WRITE;
-/*!40000 ALTER TABLE `usercourse` DISABLE KEYS */;
-
-INSERT INTO `usercourse` (`id`, `user_id`, `course_id`)
-VALUES
-	(1,1,1),
-	(4,1,2),
-	(5,2,1),
-	(6,2,2),
-	(7,2,3);
-
-/*!40000 ALTER TABLE `usercourse` ENABLE KEYS */;
-UNLOCK TABLES;
 
 
 

@@ -14,7 +14,7 @@ public class LectureDTO {
     public LectureDTO() {
     }
 
-    public LectureDTO(String activityid, String eventid, String type, String title, String description, List<String> start, List<String> end, String location) {
+    public LectureDTO(String type, String description, List<String> start, List<String> end, String location) {
         this.type = type;
         this.description = description;
         this.start = start;

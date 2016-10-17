@@ -7,7 +7,11 @@ public class CourseDTO {
 
     @SerializedName("events")
     @Expose
-    //private List<LectureDTO> lectures = new ArrayList<LectureDTO>();
+
+    /*
+        Events er vores samling af LectureDTO objekter. Det havde givet mere mening at kalde denne variabel
+        for "lectures", men "events" var nødvendigt for at kunne parse Json dataen ind i CBS parser
+     */
     private LectureDTO[] events;
 
     private String id;
@@ -21,20 +25,18 @@ public class CourseDTO {
         this.displaytext = displaytext;
     }
 
-    /*public List<LectureDTO> getLectures() {
-        return lectures;
-    }
-    */
-
-    /*public void setLectures(List<LectureDTO> lectures) {
-        this.lectures = lectures;
-    }
-    */
-
+    /**
+     * Kaldes for at hente lektioner for kurset.
+     * @return Et array af LectureDTO objekter
+     */
     public LectureDTO[] getEvents() {
         return events;
     }
 
+    /**
+     * Fylder LectureDTO objekter ind i CourseDTO objektets events variabel.
+     * @param events Array'et af LectureDTO objekter der skal fyldes ind i CourseDTO objektets events variabel.
+     */
     public void setEvents(LectureDTO[] events) {
         this.events = events;
     }
@@ -47,15 +49,6 @@ public class CourseDTO {
         this.id = id;
     }
 
-    /*
-    public String getBint() {
-        return id;
-    }
-
-    public void setBint(String id) {
-        this.id = id;
-    }
-    */
 
     public String getName() {
         return displaytext;

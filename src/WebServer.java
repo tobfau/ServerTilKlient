@@ -2,11 +2,13 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+//TODO: Kommentarer mangler i denne klasse. Overvej javadoc.
 public class WebServer {
 
   private int port;
   private ServerSocket serverSocket;
 
+  //TODO: Set port in config.
   public WebServer(){
     this.port = 1337; //default port
   }
