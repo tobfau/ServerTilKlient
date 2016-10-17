@@ -91,7 +91,6 @@ public class ServiceImpl {
         return false;
     }
 
-<<<<<<< HEAD
     public UserDTO login(String username, String password) {
         return null;
     }
@@ -101,10 +100,10 @@ public class ServiceImpl {
     }
 
     public CourseDTO insertCourses(CourseDTO courses) throws SQLException {
-=======
+        return courses;
+    }
 
     public boolean insertCourse(CourseDTO course) throws SQLException {
->>>>>>> service
 
         try {
             //Laver to preparedstatements, som først skal indsætte courses og efterfølgende hente dem ned.
@@ -128,6 +127,8 @@ public class ServiceImpl {
     }
 
     public ArrayList<CourseDTO> getCourses(UserDTO user) throws SQLException {
+
+
         ResultSet resultSet = null;
         ArrayList<CourseDTO> courses = new ArrayList();
 
@@ -154,10 +155,10 @@ public class ServiceImpl {
         return courses;
     }
 
-<<<<<<< HEAD
     public boolean insertReview(ReviewDTO review) {
         return false;
-=======
+    }
+
     public ArrayList<LectureDTO> getLectures(CourseDTO course) throws SQLException {
         ResultSet resultSet = null;
         ArrayList<LectureDTO> lectures = new ArrayList();
@@ -182,7 +183,6 @@ public class ServiceImpl {
         }
 
         return lectures;
->>>>>>> service
     }
 
     public ArrayList<ReviewDTO> getReviews(LectureDTO lecture) throws SQLException {
@@ -236,7 +236,6 @@ public class ServiceImpl {
             e.printStackTrace();
             close();
         }
-<<<<<<< HEAD
         return true;
     }
 
@@ -245,12 +244,6 @@ public class ServiceImpl {
     }
 
     public boolean insertLectures(int rating, String comment, int lectureid) throws SQLException {
-=======
->>>>>>> service
-
         return false;
     }
-
-
-
 }
