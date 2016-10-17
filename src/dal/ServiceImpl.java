@@ -1,6 +1,7 @@
 package dal;
 
 
+import service.Service;
 import shared.*;
 
 import java.sql.*;
@@ -8,7 +9,7 @@ import java.sql.*;
 
 //Created by emilstepanian on 12/10/2016.
 
-public class ServiceImpl {
+public class ServiceImpl implements Service{
 
     private static Connection dbConnection =null;
     private static final String URL = "jdbc:mysql://localhost:3306/mydb";
@@ -107,6 +108,43 @@ return user;
             e.printStackTrace();
         }
         return false;
+    }
+
+    public CourseDTO insertCourses (CourseDTO courses) throws SQLException {
+        ResultSet resultSet = null;
+
+
+        try{
+            //Laver to preparedstatements, som først skal indsætte courses og efterfølgende hente dem ned.
+            PreparedStatement insertCourses =
+                    dbConnection.prepareStatement("INSERT INTO course (id, bint, name) VALUES (?,?,?)");
+
+            PreparedStatement getCourses =
+                    dbConnection.prepareStatement("SELECT * FROM course");
+
+            insertCourses.setString(1, courses.getId());
+            insertCourses.setString(2, courses.getBint());
+            insertCourses.setString(3, courses.getName());
+            //insertCourses.setArray(4, courses.getEvents());
+
+            //Events køres.
+            insertCourses.executeUpdate();
+
+            while (resultSet.next()) {
+                courses = new CourseDTO();
+                courses.setId(resultSet.getString("id"));
+                courses.setBint(resultSet.getString("bint"));
+                courses.setName(resultSet.getString("name"));
+            }
+
+            getCourses.executeQuery();
+
+
+        }catch (SQLException e) {
+            e.printStackTrace();
+            close();
+        }
+        return courses;
     }
 
 
