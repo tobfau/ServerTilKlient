@@ -15,6 +15,8 @@ public class Digester {
   private final static String KEY = "40674244454045cb9a70040a30e1c007";
   private static MessageDigest digester;
 
+
+  //Opretter objekt, som benyttes af MD5 (hashfunktion)
   static {
     try {
       digester = MessageDigest.getInstance("MD5");
@@ -28,6 +30,8 @@ public class Digester {
    * @param str
    * @return MD5 hash of string
    */
+
+  //Hashing påbegyndes
   public static String hash(String str) {
     if (str == null || str.length() == 0) {
       throw new IllegalArgumentException("Error");
@@ -35,6 +39,7 @@ public class Digester {
     return Digester._hash(str);
   }
 
+  //Hashing + SALT påbegyndes
   public static String hashWithSalt(String str){
     if (str == null || str.length() == 0) {
       throw new IllegalArgumentException("Error");
@@ -44,7 +49,7 @@ public class Digester {
 
     return Digester._hash(str);
   }
-
+//konventerer hashværdien til hexidecimaler
   private static String _hash(String str){
     digester.update(str.getBytes());
     byte[] hash = digester.digest();
@@ -59,6 +64,7 @@ public class Digester {
     return hexString.toString();
   }
 
+
   public static String encrypt(String s) {
     return base64Encode(xorWithKey(s.getBytes(), KEY.getBytes()));
   }
@@ -66,7 +72,7 @@ public class Digester {
   public static String decrypt(String s) {
     return new String(xorWithKey(base64Decode(s), KEY.getBytes()));
   }
-
+//
   private static byte[] xorWithKey(byte[] a, byte[] key) {
     byte[] out = new byte[a.length];
     for (int i = 0; i < a.length; i++) {
@@ -74,7 +80,7 @@ public class Digester {
     }
     return out;
   }
-
+//Metode til at dekryptering
   private static byte[] base64Decode(String s) {
     try {
       BASE64Decoder d = new BASE64Decoder();
@@ -82,6 +88,7 @@ public class Digester {
     } catch (IOException e) {throw new RuntimeException(e);}
   }
 
+  //metode til kryptering
   private static String base64Encode(byte[] bytes) {
     BASE64Encoder enc = new BASE64Encoder();
     return enc.encode(bytes).replaceAll("\\s", "");
