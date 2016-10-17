@@ -1,5 +1,7 @@
 package logic;
 
+
+//TODO: Fix imports not being used.
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import shared.CourseDTO;
@@ -15,8 +17,6 @@ import java.net.URL;
 public class CBSParser {
     private CourseDTO[] courseArray;
     private Gson gson;
-
-
 
     public CBSParser() {
         gson = new Gson();
@@ -69,18 +69,13 @@ public class CBSParser {
 
     }
 
-    //TODO: Har vi mere end en main-metode?
+    //TODO: Brugt til testing - udkommenteret men får lige lov at stå her lidt.
+    /*
     public static void main(String args[]) {
-
         CBSParser conTest = new CBSParser();
         conTest.parseCoursesToArray();
         conTest.parseLectures();
 
     }
-
-
-
-
-
-
+    */
 }
