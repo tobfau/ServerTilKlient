@@ -89,6 +89,32 @@ public class ServiceImpl implements Service {
     }
 
 
+    public ArrayList<UserDTO> getUsers(UserDTO users) throws SQLException {
+        ResultSet resultSet = null;
+        ArrayList<UserDTO> usersArr = new ArrayList();
+
+        try {
+            PreparedStatement getcourses =
+                    dbConnection.prepareStatement("SELECT (id,cbs_mail,type)  FROM user");
+
+            resultSet = getcourses.executeQuery();
+
+            while (resultSet.next()) {
+
+                UserDTO allUsers = new UserDTO();
+                allUsers.setCbsMail(resultSet.getString("cbs_mail"));
+                allUsers.setType(resultSet.getString("type"));
+                allUsers.setId(resultSet.getInt("id"));
+                usersArr.add(allUsers);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            close();
+        }
+        return usersArr;
+    }
+
+
 
 
     public UserDTO createUser(UserDTO user) throws SQLException {
@@ -97,7 +123,7 @@ public class ServiceImpl implements Service {
         try {
 
             PreparedStatement createStudentStatement = dbConnection.prepareStatement("INSERT INTO user (cbs_mail, password, type)" +
-                    "VALUES (?, ?, 1)");
+                    "VALUES (?, ?, ?)");
 
 
             createStudentStatement.setString(1, userStudent.getCbsMail());
@@ -277,7 +303,7 @@ public class ServiceImpl implements Service {
 
         try {
             PreparedStatement deleteReview =
-                    dbConnection.prepareStatement("UPDATE review SET comment_is_deleted = 1");
+                    dbConnection.prepareStatement("UPDATE review SET comment_is_deleted = 0 WHERE id = ?");
 
             deleteReview.executeUpdate();
 
