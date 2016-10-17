@@ -124,19 +124,19 @@ CREATE TABLE `user` (
 
 
 
-# Dump of table attendant
+# Dump of table course_attendant
 # ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `attendant`;
+DROP TABLE IF EXISTS `course_attendant`;
 
-CREATE TABLE `attendant` (
+CREATE TABLE `course_attendant` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
-  `study_id` int(11) NOT NULL,
+  `course_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
-  KEY `study_id` (`study_id`),
-  CONSTRAINT `study_id` FOREIGN KEY (`study_id`) REFERENCES `study` (`id`),
+  KEY `course_id` (`course_id`),
+  CONSTRAINT `course_id` FOREIGN KEY (`course_id`) REFERENCES `course` (`id`),
   CONSTRAINT `user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
