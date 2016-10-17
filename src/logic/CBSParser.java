@@ -1,4 +1,5 @@
 package logic;
+//TODO: Class and methods needs documentation!
 
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
