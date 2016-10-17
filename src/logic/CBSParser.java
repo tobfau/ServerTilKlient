@@ -51,11 +51,6 @@ public class CBSParser {
                 //Tomt kursus-object nødvendigt for at indlæse JSON
                 CourseDTO tempCourse = gson.fromJson(br, CourseDTO.class);
                 course.setEvents(tempCourse.getEvents());
-
-               /* for (LectureDTO lecture : course.getEvents()) {
-                    System.out.println(lecture.toString());
-                }*/
-
             }
 
         }
@@ -68,18 +63,15 @@ public class CBSParser {
 
     }
 
-
+/*
+    //Brugt til testing - udkommenteret men får lige lov at stå her lidt.
     public static void main(String args[]) {
-
         CBSParser conTest = new CBSParser();
         conTest.parseCoursesToArray();
         conTest.parseLectures();
 
     }
-
-
-
-
-
+*/
+    
 
 }
