@@ -1,5 +1,5 @@
 package logic;
-
+//TODO: Dokumentation needed for this class!
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -48,14 +48,13 @@ public class ConfigLoader {
     }
     */
 
-
     public static void parseConfig() {
 
         JsonParser jparser = new JsonParser();
         JsonReader jsonReader;
 
         try {
-            jsonReader = new JsonReader(new FileReader("config.dist.json"));
+            jsonReader = new JsonReader(new FileReader("config.json"));
             JsonObject jsonObject = jparser.parse(jsonReader).getAsJsonObject();
 
 
