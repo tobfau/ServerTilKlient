@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.security.MessageDigest;
 
 
-//TODO: Add comments to this class, in order for everyone to understand the code.
+
 public class Digester {
 
   //TODO: Set SALT and KEY in config-file.
