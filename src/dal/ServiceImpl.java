@@ -5,7 +5,6 @@ import service.Service;
 import shared.*;
 
 import java.sql.*;
-import java.util.ArrayList;
 
 
 //Created by emilstepanian on 12/10/2016.
@@ -72,7 +71,7 @@ public class ServiceImpl implements Service{
 
         while (resultSet.next()) {
             user = new StudentDTO();
-            user.setMail(resultSet.getString("cbs_mail"));
+            user.setCbsMail(resultSet.getString("cbs_mail"));
             user.setPassword(resultSet.getString("password"));
             user.setType(resultSet.getString("type"));
         }
@@ -114,37 +113,46 @@ return user;
     }
 
     public CourseDTO insertCourses (CourseDTO courses) throws SQLException {
-        ResultSet resultSet = null;
-
 
         try{
             //Laver to preparedstatements, som først skal indsætte courses og efterfølgende hente dem ned.
             PreparedStatement insertCourses =
-                    dbConnection.prepareStatement("INSERT INTO course (id, bint, name) VALUES (?,?,?)");
+                    dbConnection.prepareStatement("INSERT INTO course (id, name) VALUES (?,?)");
 
-            PreparedStatement getCourses =
-                    dbConnection.prepareStatement("SELECT * FROM course");
+
 
             insertCourses.setString(1, courses.getId());
-            insertCourses.setString(2, courses.getBint());
-            insertCourses.setString(3, courses.getName());
+            insertCourses.setString(2, courses.getName());
             //insertCourses.setArray(4, courses.getEvents());
 
             //Events køres.
             insertCourses.executeUpdate();
 
 
-            resultSet = getCourses.executeQuery();
-
-            while (resultSet.next()) {
-                courses = new CourseDTO();
-                courses.setId(resultSet.getString("id"));
-                courses.setBint(resultSet.getString("bint"));
-                courses.setName(resultSet.getString("name"));
-            }
-
-
         }catch (SQLException e) {
+            e.printStackTrace();
+            close();
+        }
+        return courses;
+    }
+
+    public ArrayList<CourseDTO> getCourses (CourseDTO course) throws SQLException {
+        ResultSet resultSet = null;
+        ArrayList<CourseDTO> courses = new ArrayList();
+
+        try{
+            PreparedStatement getcourses =
+                    dbConnection.prepareStatement("SELECT * FROM courses");
+
+            resultSet = getcourses.executeQuery();
+
+            while (resultSet.next()){
+                CourseDTO allCourses = new CourseDTO();
+                allCourses.setName(resultSet.getString("name"));
+                allCourses.setId(resultSet.getString("id"));
+                courses.add(allCourses);
+            }
+        }catch (SQLException e){
             e.printStackTrace();
             close();
         }
@@ -176,6 +184,7 @@ return user;
         return;
     }
 
+
     public ArrayList<ReviewDTO> getReviews (ReviewDTO review) throws SQLException {
         ResultSet resultSet = null;
         ArrayList<ReviewDTO> reviews = new ArrayList();
@@ -203,4 +212,3 @@ return user;
 
 
 }
-
