@@ -5,7 +5,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import security.Digester;
 
-
+//TODO: Mangler dokumentation.
 public class ResponseHandler implements Runnable {
 
   private Socket remoteSocket;

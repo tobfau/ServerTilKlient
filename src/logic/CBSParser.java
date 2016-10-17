@@ -52,6 +52,7 @@ public class CBSParser {
                 CourseDTO tempCourse = gson.fromJson(br, CourseDTO.class);
                 course.setEvents(tempCourse.getEvents());
 
+                //TODO: Lav debug på anden måde end at skrive strengen ud. Så dette skal fjernes.
                /* for (LectureDTO lecture : course.getEvents()) {
                     System.out.println(lecture.toString());
                 }*/
@@ -68,7 +69,7 @@ public class CBSParser {
 
     }
 
-
+    //TODO: Har vi mere end en main-metode?
     public static void main(String args[]) {
 
         CBSParser conTest = new CBSParser();
