@@ -24,10 +24,10 @@ public class MainController {
     public void logIn (String mail, String password) throws SQLException {
 
         //hashing
-        String passwor = Digester.hashWithSalt(password);
+        String securedPassword = Digester.hashWithSalt(password);
 
         //Kommunikation med databasen, servicelmpl klassen bliver kaldt og metoden loginstudent køres.
-        serviceImpl.loginStudent(mail, password);
+        serviceImpl.loginStudent(mail, securedPassword);
 
         String mailFromDb = serviceImpl.loginStudent(mail, password).getCbsMail();
         String passwordFromDb = serviceImpl.loginStudent(mail, password).getPassword();

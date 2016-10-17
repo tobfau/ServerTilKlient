@@ -1,18 +1,15 @@
-/**package dal;
+package dal;
+
 
 import service.Service;
-import shared.LectureDTO;
-import shared.StudentDTO;
-import shared.TeacherDTO;
+import shared.*;
 
 import java.sql.*;
-import java.util.ArrayList;
-
-/**
- * Created by emilstepanian on 12/10/2016.
 
 
-public class ServiceImpl implements Service {
+//Created by emilstepanian on 12/10/2016.
+
+public class ServiceImpl implements Service{
 
     private static Connection dbConnection =null;
     private static final String URL = "jdbc:mysql://localhost:3306/mydb";
@@ -41,6 +38,7 @@ public class ServiceImpl implements Service {
 
     //Forberedt main-metode, til test af diverse metoder.
 
+/*
     public static void main(String[] args) {
         ServiceImpl d = new ServiceImpl();
         ArrayList<StudentDTO> arr = d.getStudents();
@@ -52,33 +50,34 @@ public class ServiceImpl implements Service {
     }
 
 
+*/
 
 
 
-    public StudentDTO loginStudent(String username, String password) throws SQLException {
+    public UserDTO loginStudent(String username, String password) throws SQLException {
         ResultSet resultSet = null;
 
         StudentDTO user = null;
         try{
 
-        PreparedStatement approveUser = dbConnection.prepareStatement("SELECT * FROM user WHERE cbs_mail = ? AND password = ?");
+            PreparedStatement approveUser = dbConnection.prepareStatement("SELECT * FROM user WHERE cbs_mail = ? AND password = ?");
 
-        approveUser.setString(1, username);
-        approveUser.setString(2, password);
+            approveUser.setString(1, username);
+            approveUser.setString(2, password);
 
-        resultSet = approveUser.executeQuery();
+            resultSet = approveUser.executeQuery();
 
-        while (resultSet.next()) {
-            user = new StudentDTO();
-            user.setuser(resultSet.getString("cbs_mail"));
-            user.setpassword(resultSet.getString("password"));
-            user.settype(resultSet.getString("type"));
-        }
-    }catch(SQLException e)
+            while (resultSet.next()) {
+                user = new StudentDTO();
+                user.setCbsMail(resultSet.getString("cbs_mail"));
+                user.setPassword(resultSet.getString("password"));
+                user.setType(resultSet.getString("type"));
+            }
+        }catch(SQLException e)
 
-    {
-        e.printStackTrace();
-    } finally {
+        {
+            e.printStackTrace();
+        } finally {
             try {
                 resultSet.close();
             }catch (SQLException e){
@@ -87,80 +86,62 @@ public class ServiceImpl implements Service {
             }
 
         }
-return user;
+        return user;
 
     }
 
-    public LectureDTO getLecture(String placeholder, String placeholder2) throws SQLException{
-        ResultSet resultSet = null;
-        LectureDTO lecture = null;
+    public boolean addReview (ReviewDTO review) throws IllegalArgumentException {
 
         try {
-            PreparedStatement Lecture = dbConnection.prepareStatement("SELECT * FROM placeholder where placeholder = ?");
+            //Prepared statement der bruges i databasen
+            PreparedStatement addReview = dbConnection.prepareStatement(
+                    "INSERT INTO review (rating, comment) VALUES (?, ?)");
 
-            Lecture.setString(1, placeholder);
-            Lecture.setString(2, placeholder2);
+            addReview.setInt(1, review.getRating());
+            addReview.setString(2, review.getComment());
 
-            resultSet = Lecture.executeQuery();
+            int rowsAffected = addReview.executeUpdate();
+            if (rowsAffected == 1) {
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public CourseDTO insertCourses (CourseDTO courses) throws SQLException {
+        ResultSet resultSet = null;
+
+
+        try{
+            //Laver to preparedstatements, som først skal indsætte courses og efterfølgende hente dem ned.
+            PreparedStatement insertCourses =
+                    dbConnection.prepareStatement("INSERT INTO course (id, bint, name) VALUES (?,?,?)");
+
+            PreparedStatement getCourses =
+                    dbConnection.prepareStatement("SELECT * FROM course");
+
+            insertCourses.setString(1, courses.getId());
+            insertCourses.setString(2, courses.getName());
+            //insertCourses.setArray(3, courses.getEvents());
+
+            //Events køres.
+            insertCourses.executeUpdate();
 
             while (resultSet.next()) {
-                lecture = new LectureDTO();
-                lecture.setplaceholder(resultSet.getString("placeholder"));
-                lecture.setplaceholder2(resultSet.getString("placeholder2"));
-
-
+                courses = new CourseDTO();
+                courses.setId(resultSet.getString("id"));
+                courses.setName(resultSet.getString("name"));
             }
-        }
 
-    return lecture;
-    }
+            getCourses.executeQuery();
 
 
-
-
-    public boolean addReview (StudentDTO user) throws IllegalArgumentException {
-
-        try {
-            //Prepared statement der bruges i databasen
-            PreparedStatement addReview = connection.prepareStatement(
-                    "INSERT INTO review (rating, comment) VALUES (?, ?)");
-
-            addReview.setString(1, user.getRating());
-            addReview.setString(2, user.getComment());
-
-            int rowsAffected = addReview.executeUpdate();
-            if (rowsAffected == 1) {
-                return true;
-            }
-        } catch (SQLException e) {
+        }catch (SQLException e) {
             e.printStackTrace();
+            close();
         }
-        return false;
+        return courses;
     }
-
-
-    public boolean addReview (StudentDTO user) throws IllegalArgumentException {
-
-        try {
-            //Prepared statement der bruges i databasen
-            PreparedStatement addReview = connection.prepareStatement(
-                    "INSERT INTO review (rating, comment) VALUES (?, ?)");
-
-            addReview.setString(1, user.getRating());
-            addReview.setString(2, user.getComment());
-
-            int rowsAffected = addReview.executeUpdate();
-            if (rowsAffected == 1) {
-                return true;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-
-
-
 }
-**/
