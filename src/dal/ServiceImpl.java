@@ -6,9 +6,11 @@ import shared.StudentDTO;
 import shared.TeacherDTO;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 /**
  * Created by emilstepanian on 12/10/2016.
+
 
 public class ServiceImpl implements Service {
 
@@ -34,7 +36,7 @@ public class ServiceImpl implements Service {
         }
     }
 
-    /*
+
 
 
     //Forberedt main-metode, til test af diverse metoder.
@@ -161,5 +163,4 @@ return user;
 
 
 }
-
 **/
