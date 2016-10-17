@@ -7,9 +7,9 @@ import com.sun.jersey.api.container.httpserver.HttpServerFactory;
 public class Run {
 
     @GET
-    @Path("/test")
-    public String test() {
-        return "test";
+    @Path("/getLectures/{userId}")
+    public int getLectures(@PathParam("userId") int userId) {
+        return userId;
     }
 
     public static void main(String[] args) throws IOException {
