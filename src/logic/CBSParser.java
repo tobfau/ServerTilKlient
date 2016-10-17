@@ -3,7 +3,6 @@ package logic;
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import shared.CourseDTO;
-
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -16,12 +15,9 @@ public class CBSParser {
     private CourseDTO[] courseArray;
     private Gson gson;
 
-
-
     public CBSParser() {
         gson = new Gson();
     }
-
 
     public void parseCoursesToArray() {
         try {
@@ -52,6 +48,7 @@ public class CBSParser {
                 CourseDTO tempCourse = gson.fromJson(br, CourseDTO.class);
                 course.setEvents(tempCourse.getEvents());
 
+                //TODO: Lav debug på anden måde end at skrive strengen ud. Så dette skal fjernes.
                /* for (LectureDTO lecture : course.getEvents()) {
                     System.out.println(lecture.toString());
                 }*/
@@ -68,18 +65,13 @@ public class CBSParser {
 
     }
 
-
+    //TODO: Brugt til testing - udkommenteret men får lige lov at stå her lidt.
+    /*
     public static void main(String args[]) {
-
         CBSParser conTest = new CBSParser();
         conTest.parseCoursesToArray();
         conTest.parseLectures();
 
     }
-
-
-
-
-
-
+    */
 }
