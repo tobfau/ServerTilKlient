@@ -2,8 +2,7 @@ package logic;
 
 import dal.ServiceImpl;
 import service.Service;
-import shared.AdminDTO;
-import shared.StudentDTO;
+import shared.*;
 
 import java.util.ArrayList;
 import java.util.InputMismatchException;
@@ -14,10 +13,16 @@ import java.util.Scanner;
  */
 public class AdminController extends UserController {
 
-    //currentUser
+    private Service service;
+    private UserDTO userDTO;
+    private LectureDTO lectureDTO;
+    private CourseDTO courseDTO;
+    private ReviewDTO reviewDTO;
+    private AdminDTO adminDTO;
+
 
     public AdminController () {
-        super(service);
+        super();
     }
 
     public void Menu(AdminDTO adminDTO){
@@ -52,6 +57,7 @@ public class AdminController extends UserController {
 
                 default:
                     System.out.println("Du indtastede en forkert vaerdi, proev igen.\n");
+                    Menu(adminDTO);
             }
 
 	/*Her er en catch som tr�der frem, hvis brugeren taster en forkert vaerdi. */
@@ -65,13 +71,47 @@ public class AdminController extends UserController {
 
     public void deleteComment() {
 
-       for (int i : i==loadLectures(); : i++){
-            //int idLectures =
-            System.out.println(idLectures + loadLectures());
+        for (LectureDTO lectures : service.getLectures(userDTO)) {
+
+            ArrayList<LectureDTO> idLectures = service.getLectures(userDTO);
+            System.out.println("id: " + idLectures + " " + lectures);
+
+        }
+
+        Scanner input = new Scanner(System.in);
+        System.out.println("Indtast id for ønskede forelæsning: ");
+
+        int idChoice = input.nextInt();
+
+
+        if (idChoice == /*lecture id*/ ){
+
+            for (CourseDTO courseDTO: service.getCourses(userDTO) ) {
+
+                ArrayList<CourseDTO> idCourse = service.getCourses(userDTO);
+                System.out.println("id: " + idCourse + " " + courseDTO);
+
+            }
+
+            Scanner input1 = new Scanner(System.in);
+            System.out.println("Indtast id for ønskede kommentar der skal slettes: ");
+
+            int idChoice1 = input1.nextInt();
+
+            ReviewDTO reviewDTO = new ReviewDTO();
+            reviewDTO.setId(idChoice1);
+
+            service.deleteReviewComment(reviewDTO);
+        }
+        else{
+            System.out.println("Invalid id");
+            deleteComment();
+            Menu(adminDTO);
         }
     }
 
-    public void deleteUser(StudentDTO student) {
+    public void deleteUser(StudentDTO studentDTO) {
+
         // ShowAllUsers
 
         // ServiceImpl.
@@ -99,18 +139,49 @@ public class AdminController extends UserController {
                     System.out.println("Programmet er stoppet.");
                     break;
                 case 1:
-
+                    deleteUser(studentDTO);
                     break;
                 case 2:
-
+                    Menu(adminDTO);
                     break;
                 default:
                     System.out.println("Du indtastede en forkert vaerdi, proev igen.\n");
+                    Menu(adminDTO);
             }
         }
     }
 
     public void createUser(){
+        Scanner mail_input = new Scanner(System.in);
+        System.out.println("Indtast CBS mail: ");
 
+        Scanner password_input = new Scanner(System.in);
+        System.out.println("Indtast password: ");
+
+        Scanner type_input = new Scanner(System.in);
+        System.out.println("Indtast type (Student, Teacher, Admin): ");
+
+        String mail = mail_input.nextLine();
+        String password = password_input.nextLine();
+        String type = type_input.nextLine();
+
+        UserDTO userDTO = new UserDTO();
+
+        //tjekker passwordet for tal og bogstaver, om det opfylder et normalt krav til et password
+        if (password.matches(".*\\d+.*") && (password.matches(".*[a-zA-Z]+.*"))) {
+
+            userDTO.setCbsMail(mail);
+            userDTO.setType(type);
+            userDTO.setPassword(password);
+        }
+        else{
+            System.out.println("Forkert værdi i password. Prøv igen ");
+            createUser();
+        }
+
+        //mangler metode i Service
+        //Service.createUser(userDTO);
+        System.out.println("Brugeren " + /* mail*/ + " er nu oprettet. ");
+        Menu(adminDTO);
     }
 }
