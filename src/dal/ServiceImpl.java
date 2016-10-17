@@ -1,16 +1,12 @@
 package dal;
 
-
 import service.Service;
 import shared.*;
-
 import java.sql.*;
 import java.util.ArrayList;
 
 
-//Created by emilstepanian on 12/10/2016.
-
-public class ServiceImpl implements Service {
+public class ServiceImpl {
 
     private static Connection dbConnection = null;
     private static final String URL = "jdbc:mysql://localhost:3306/mydb";
@@ -36,21 +32,6 @@ public class ServiceImpl implements Service {
             e.printStackTrace();
         }
     }
-
-
-    //Forberedt main-metode, til test af diverse metoder.
-
-
-/*    public static void main(String[] args) {
-        ServiceImpl d = new ServiceImpl();
-        ArrayList<StudentDTO> arr = d.getStudents();
-        for (StudentDTO studentDTO : arr) {
-            System.out.println(studentDTO.getUsername());
-
-
-        }
-    }*/
-
 
     public UserDTO loginStudent(String username, String password) throws SQLException {
         ResultSet resultSet = null;
