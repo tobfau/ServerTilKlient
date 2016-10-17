@@ -164,15 +164,15 @@ public class ServiceImpl implements Service {
 
 
 
-    public boolean addReview(ReviewDTO review) throws IllegalArgumentException {
+    public boolean addReview(int rating, String comment) throws IllegalArgumentException {
 
         try {
             //Prepared statement der bruges i databasen
             PreparedStatement addReview = dbConnection.prepareStatement(
                     "INSERT INTO review (rating, comment) VALUES (?, ?)");
 
-            addReview.setInt(1, review.getRating());
-            addReview.setString(2, review.getComment());
+            addReview.setInt(1, rating);
+            addReview.setString(2, comment);
 
             int rowsAffected = addReview.executeUpdate();
             if (rowsAffected == 1) {
@@ -207,13 +207,15 @@ public class ServiceImpl implements Service {
         return courses;
     }
 
-    public ArrayList<CourseDTO> getCourses(CourseDTO course) throws SQLException {
+    public ArrayList<CourseDTO> getCourses(UserDTO user) throws SQLException {
         ResultSet resultSet = null;
         ArrayList<CourseDTO> courses = new ArrayList();
 
         try {
             PreparedStatement getcourses =
-                    dbConnection.prepareStatement("SELECT * FROM course");
+                    dbConnection.prepareStatement("SELECT * FROM course c\n" +
+                            "JOIN course_attendant ca\n" +
+                            "ON ca.user_id =" + user.getId());
 
             resultSet = getcourses.executeQuery();
 
@@ -230,46 +232,23 @@ public class ServiceImpl implements Service {
         return courses;
     }
 
-    public void insertReview(ReviewDTO review) throws SQLException {
-
-
-        try {
-            //Laver to preparedstatements, som først skal indsætte reviews og efterfølgende hente dem ned.
-            PreparedStatement insertReview =
-                    dbConnection.prepareStatement("INSERT INTO review (rating, comment, lectureid) VALUES (?,?,?)");
-
-            //Sætter PS, så vi akn indsætte nye reviews.
-            insertReview.setInt(1, review.getRating());
-            insertReview.setString(2, review.getComment());
-            insertReview.setInt(3, review.getLectureId());
-
-            //Events køres.
-            insertReview.executeUpdate();
-
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            close();
-        }
-        return;
-    }
-
-
-    public ArrayList<ReviewDTO> getReviews(ReviewDTO review, String name) throws SQLException {
+    public ArrayList<ReviewDTO> getReviews(LectureDTO lecture) throws SQLException {
         ResultSet resultSet = null;
         ArrayList<ReviewDTO> reviews = new ArrayList();
 
         try {
             PreparedStatement getReviews =
                     dbConnection.prepareStatement(
-                            "SELECT r.* FROM review r " +
-                                    "INNER JOIN  lecture l " +
-                                    "ON r.lecture_id = l.id " +
-                                    "INNER JOIN course c " +
-                                    "ON l.course_id = c.id " +
-                                    "INNER JOIN study s "  +
-                                    "ON c.study_id = s.id " +
-                                    "WHERE s.name == '"+ name +"'");
+                            "SELECT * FROM review r" +
+                                    "JOIN lecture l" +
+                                    "ON r.lecture_id = l.id" +
+                                    "JOIN course c" +
+                                    "ON l.course_id = c.id" +
+                                    "JOIN course_attendant ca" +
+                                    "ON ca.course_id = c.id" +
+                                    "WHERE l.id = ?");
+
+            getReviews.setInt(1,lecture.getId());
 
             resultSet = getReviews.executeQuery();
             while (resultSet.next()) {
@@ -291,7 +270,7 @@ public class ServiceImpl implements Service {
 
 
 
-    public void deleteReview(ReviewDTO delete) throws SQLException {
+    public boolean deleteReview(ReviewDTO delete) throws SQLException {
 
         try {
             PreparedStatement deleteReview =
@@ -305,14 +284,14 @@ public class ServiceImpl implements Service {
             e.printStackTrace();
             close();
         }
-        return;
+        return true;
     }
 
-    public void deleteReviewComment(ReviewDTO deletecomment) throws SQLException {
+    public boolean deleteReviewComment(ReviewDTO deletecomment) throws SQLException {
 
         try {
             PreparedStatement deleteReview =
-                    dbConnection.prepareStatement("UPDATE review SET comment_is_deleted = 0 WHERE id = ?");
+                    dbConnection.prepareStatement("UPDATE review SET comment_is_deleted = 1 WHERE id = ?");
 
             deleteReview.executeUpdate();
 
@@ -320,7 +299,31 @@ public class ServiceImpl implements Service {
             e.printStackTrace();
             close();
         }
-        return;
+        return true;
+    }
+
+    public boolean insertLectures(int rating, String comment, int lectureid) throws SQLException {
+
+
+        try {
+            //Laver to preparedstatements, som først skal indsætte reviews og efterfølgende hente dem ned.
+            PreparedStatement insertReview =
+                    dbConnection.prepareStatement("INSERT INTO review (rating, comment, lectureid) VALUES (?,?,?)");
+
+            //Sætter PS, så vi akn indsætte nye reviews.
+            insertReview.setInt(1, rating);
+            insertReview.setString(2, comment);
+            insertReview.setInt(3, lectureid);
+
+            //Events køres.
+            insertReview.executeUpdate();
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            close();
+        }
+        return true;
     }
 
 
