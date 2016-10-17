@@ -29,18 +29,18 @@ public class MainController {
         //Kommunikation med databasen, servicelmpl klassen bliver kaldt og metoden loginstudent køres.
         serviceImpl.loginStudent(mail, securedPassword);
 
-        String mailFromDb = serviceImpl.loginStudent(mail, password).getCbsMail();
-        String passwordFromDb = serviceImpl.loginStudent(mail, password).getPassword();
+        String mailFromDb = serviceImpl.loginStudent(mail, securedPassword).getCbsMail();
+        String passwordFromDb = serviceImpl.loginStudent(mail, securedPassword).getPassword();
 
         //Validering med mail og password gennem databasen
-        if(mail.equals(mailFromDb) && password.equals(passwordFromDb) ){
-            if (serviceImpl.loginStudent(mail, password).getType() == "admin"){
+        if(mail.equals(mailFromDb) && securedPassword.equals(passwordFromDb) ){
+            if (serviceImpl.loginStudent(mail, securedPassword).getType() == "admin"){
                 adminCtrl = new AdminController();
             }
-            if (serviceImpl.loginStudent(mail, password).getType() == "teacher" ){
+            if (serviceImpl.loginStudent(mail, securedPassword).getType() == "teacher" ){
                 teacherCtrl = new TeacherController();
             }
-            if (serviceImpl.loginStudent(mail, password).getType() == "student"){
+            if (serviceImpl.loginStudent(mail, securedPassword).getType() == "student"){
                 studentCtrl = new StudentController();
             }
         }
