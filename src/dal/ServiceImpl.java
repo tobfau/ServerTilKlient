@@ -118,7 +118,7 @@ return user;
         try{
             //Laver to preparedstatements, som først skal indsætte courses og efterfølgende hente dem ned.
             PreparedStatement insertCourses =
-                    dbConnection.prepareStatement("INSERT INTO course (id, name) VALUES (?,?)");
+                    dbConnection.prepareStatement("INSERT INTO course (study_id, name) VALUES (?,?)");
 
 
 
@@ -143,7 +143,7 @@ return user;
 
         try{
             PreparedStatement getcourses =
-                    dbConnection.prepareStatement("SELECT * FROM courses");
+                    dbConnection.prepareStatement("SELECT * FROM course");
 
             resultSet = getcourses.executeQuery();
 
@@ -166,13 +166,12 @@ return user;
         try {
             //Laver to preparedstatements, som først skal indsætte reviews og efterfølgende hente dem ned.
             PreparedStatement insertReview =
-                    dbConnection.prepareStatement("INSERT INTO review (rating, comment, cbsmail, lectureid) VALUES (?,?,?,?)");
+                    dbConnection.prepareStatement("INSERT INTO review (rating, comment, lectureid) VALUES (?,?,?)");
 
             //Sætter PS, så vi akn indsætte nye reviews.
             insertReview.setInt(1, review.getRating());
             insertReview.setString(2, review.getComment());
-            insertReview.setString(3, review.getCbsMail());
-            insertReview.setInt(4, review.getLectureId());
+            insertReview.setInt(3, review.getLectureId());
 
             //Events køres.
             insertReview.executeUpdate();
@@ -198,7 +197,6 @@ return user;
             while (resultSet.next()){
                 ReviewDTO allreview = new ReviewDTO();
                 allreview.setLectureId(resultSet.getInt("lectureid"));
-                allreview.setCbsMail(resultSet.getString("cbsmail"));
                 allreview.setComment(resultSet.getString("comment"));
                 allreview.setRating(resultSet.getInt("rating"));
 
