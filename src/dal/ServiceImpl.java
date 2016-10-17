@@ -211,5 +211,22 @@ return user;
         return reviews;
     }
 
+    public void deleteReview (ReviewDTO delete) throws SQLException {
+
+        try{
+            PreparedStatement deleteReview =
+                    dbConnection.prepareStatement("DELETE FROM review WHERE id = ?");
+
+            deleteReview.setInt(1, delete.getId());
+
+            deleteReview.executeUpdate();
+
+        }catch (SQLException e) {
+            e.printStackTrace();
+            close();
+        }
+        return;
+    }
+
 
 }
