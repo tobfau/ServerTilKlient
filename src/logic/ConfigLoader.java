@@ -48,14 +48,13 @@ public class ConfigLoader {
     }
     */
 
-
     public static void parseConfig() {
 
         JsonParser jparser = new JsonParser();
         JsonReader jsonReader;
 
         try {
-            jsonReader = new JsonReader(new FileReader("config.dist.json"));
+            jsonReader = new JsonReader(new FileReader("config.json"));
             JsonObject jsonObject = jparser.parse(jsonReader).getAsJsonObject();
 
 
