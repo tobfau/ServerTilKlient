@@ -66,8 +66,13 @@ public class AdminController extends UserController {
     public void deleteComment() {
 
        for (int i : i==loadLectures(); : i++){
+            //først printes alle lektures
+            //derefter vælger du en lekture
+            // så bliver alle kommentarerne skrevet ud til det pågældene lecture.
+            //Herefter vælger du id på den comment der skal slettes.
             //int idLectures =
             System.out.println(idLectures + loadLectures());
+
         }
     }
 
