@@ -16,6 +16,8 @@ public class ServiceImpl implements Service{
     private static final String USERNAME = "root";
     private static final String PASSWORD = "repsej";
 
+
+    /*Vi opretter DriveManager, som opretter forbindelse til SQL serveren.*/
     public ServiceImpl() {
         try {
             dbConnection = DriverManager.getConnection(URL,USERNAME,PASSWORD);
@@ -60,22 +62,13 @@ public class ServiceImpl implements Service{
         StudentDTO user = null;
         try{
 
-            PreparedStatement approveUser = dbConnection.prepareStatement("SELECT * FROM user WHERE cbs_mail = ? AND password = ?");
+        PreparedStatement approveUser = dbConnection.prepareStatement("SELECT * FROM user WHERE cbs_mail = ? AND password = ?");
 
-            approveUser.setString(1, username);
-            approveUser.setString(2, password);
+        approveUser.setString(1, username);
+        approveUser.setString(2, password);
 
-            resultSet = approveUser.executeQuery();
+        resultSet = approveUser.executeQuery();
 
-<<<<<<< HEAD
-            while (resultSet.next()) {
-                user = new StudentDTO();
-                user.setCbsMail(resultSet.getString("cbs_mail"));
-                user.setPassword(resultSet.getString("password"));
-                user.setType(resultSet.getString("type"));
-            }
-        }catch(SQLException e)
-=======
         while (resultSet.next()) {
             user = new StudentDTO();
             user.setCbsMail(resultSet.getString("cbs_mail"));
@@ -83,11 +76,10 @@ public class ServiceImpl implements Service{
             user.setType(resultSet.getString("type"));
         }
     }catch(SQLException e)
->>>>>>> serviceimpllocal
 
-        {
-            e.printStackTrace();
-        } finally {
+    {
+        e.printStackTrace();
+    } finally {
             try {
                 resultSet.close();
             }catch (SQLException e){
@@ -96,7 +88,7 @@ public class ServiceImpl implements Service{
             }
 
         }
-        return user;
+return user;
 
     }
 
@@ -131,26 +123,11 @@ public class ServiceImpl implements Service{
 
             insertCourses.setString(1, courses.getId());
             insertCourses.setString(2, courses.getName());
-<<<<<<< HEAD
-            //insertCourses.setArray(3, courses.getEvents());
-=======
             //insertCourses.setArray(4, courses.getEvents());
->>>>>>> serviceimpllocal
 
             //Events køres.
             insertCourses.executeUpdate();
 
-<<<<<<< HEAD
-            while (resultSet.next()) {
-                courses = new CourseDTO();
-                courses.setId(resultSet.getString("id"));
-                courses.setName(resultSet.getString("name"));
-            }
-
-            getCourses.executeQuery();
-
-
-=======
 
         }catch (SQLException e) {
             e.printStackTrace();
@@ -226,11 +203,12 @@ public class ServiceImpl implements Service{
 
                 reviews.add(allreview);
             }
->>>>>>> serviceimpllocal
         }catch (SQLException e) {
             e.printStackTrace();
             close();
         }
-        return courses;
+        return reviews;
     }
+
+
 }
