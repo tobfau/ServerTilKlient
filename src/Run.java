@@ -8,9 +8,8 @@ public class Run {
 
     @GET
     @Path("/test")
-    @Produces("application/json")
-    public String getClichedMessage() {
-        return "Hello World!";
+    public String test() {
+        return "test";
     }
 
     public static void main(String[] args) throws IOException {
