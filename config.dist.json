@@ -1,3 +1,4 @@
 {
-    "CBS_API_link":"https://calendar.cbs.dk/events.php?format=json&groups="
-}
+    "CBS_API_link":"https://calendar.cbs.dk/events.php?format=json&groups=",
+    "port":"5000"
+ }

@@ -35,7 +35,7 @@ public class CBSParser {
 
     public void parseLectures(){
         try{
-            String urlPrefix = Config.getCBSPrefix();
+            String urlPrefix = ConfigLoader.CBS_API_link;
             URL url;
             HttpURLConnection conn;
             BufferedReader br;
