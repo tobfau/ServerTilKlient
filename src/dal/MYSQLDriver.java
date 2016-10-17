@@ -1,5 +1,7 @@
 package dal;
 
+import logic.ConfigLoader;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -10,9 +12,9 @@ import java.sql.SQLException;
  */
 public class MYSQLDriver {
     private static Connection dbConnection = null;
-    private static final String URL = "jdbc:mysql://localhost:3306/mydb";
-    private static final String USERNAME = "root";
-    private static final String PASSWORD = "repsej";
+    private static final String URL = ConfigLoader.DB_TYPE+ConfigLoader.DB_HOST+ConfigLoader.DB_PORT+"/"+ConfigLoader.DB_NAME;
+    private static final String USERNAME = ConfigLoader.DB_USER;
+    private static final String PASSWORD = ConfigLoader.DB_PASS;
 
 
     public MYSQLDriver(){
