@@ -1,5 +1,8 @@
+import dal.ServiceImpl;
+import logic.MainController;
+import service.Service;
 
-//TODO: Mangler dokumentation. 
+//TODO: Mangler dokumentation.
 public class Run {
 
 
@@ -9,6 +12,8 @@ public class Run {
         WebServer webServer = new WebServer(5000);
         webServer.start();
 
+        Service service = new ServiceImpl();
+        new MainController(service);
     }
 
 }
