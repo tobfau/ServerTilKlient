@@ -4,7 +4,7 @@ package shared;
  * Created by emilstepanian on 12/10/2016.
  */
 public class ReviewDTO {
-
+    //penis
     private int id;
     private int rating;
     private String comment;
