@@ -5,9 +5,9 @@
 # http://www.sequelpro.com/
 # https://github.com/sequelpro/sequelpro
 #
-# Host: localhost (MySQL 5.7.11)
+# Host: localhost (MySQL 5.7.15)
 # Database: project_eva
-# Generation Time: 2016-10-17 07:36:40 +0000
+# Generation Time: 2016-10-17 20:55:26 +0000
 # ************************************************************
 
 
@@ -19,6 +19,7 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
+
 # Dump of database project_eva
 # ------------------------------------------------------------
 
@@ -27,6 +28,7 @@ DROP DATABASE IF EXISTS `project_eva`;
 CREATE DATABASE `project_eva`;
 
 USE project_eva;
+
 
 # Dump of table course
 # ------------------------------------------------------------
@@ -42,6 +44,34 @@ CREATE TABLE `course` (
   UNIQUE KEY `code` (`code`),
   KEY `study_id` (`study_id`),
   CONSTRAINT `course_ibfk_1` FOREIGN KEY (`study_id`) REFERENCES `study` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+LOCK TABLES `course` WRITE;
+/*!40000 ALTER TABLE `course` DISABLE KEYS */;
+
+INSERT INTO `course` (`id`, `code`, `name`, `study_id`)
+VALUES
+	(1,'BINT2020','DIS',1),
+	(2,'BINT2021','ITF',2);
+
+/*!40000 ALTER TABLE `course` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump of table course_attendant
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `course_attendant`;
+
+CREATE TABLE `course_attendant` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `course_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `course_id` (`course_id`),
+  CONSTRAINT `course_id` FOREIGN KEY (`course_id`) REFERENCES `course` (`id`),
+  CONSTRAINT `user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
@@ -69,9 +99,9 @@ LOCK TABLES `lecture` WRITE;
 
 INSERT INTO `lecture` (`id`, `course_id`, `type`, `description`, `start`, `end`, `location`)
 VALUES
-	(1,1,'0','0','0000-00-00 00:00:00','0000-00-00 00:00:00',''),
-	(2,2,'0','0','0000-00-00 00:00:00','0000-00-00 00:00:00',''),
-	(3,3,'0','0','0000-00-00 00:00:00','0000-00-00 00:00:00','');
+	(1,1,'0','Case competition','0000-00-00 00:00:00','0000-00-00 00:00:00',''),
+	(2,2,'0','Waste competition','0000-00-00 00:00:00','0000-00-00 00:00:00',''),
+	(3,3,'0','Taste competition','0000-00-00 00:00:00','0000-00-00 00:00:00','');
 
 /*!40000 ALTER TABLE `lecture` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -106,6 +136,16 @@ CREATE TABLE `study` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+LOCK TABLES `study` WRITE;
+/*!40000 ALTER TABLE `study` DISABLE KEYS */;
+
+INSERT INTO `study` (`id`, `name`)
+VALUES
+	(1,'HA(it.)'),
+	(2,'BA(im.)');
+
+/*!40000 ALTER TABLE `study` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 # Dump of table user
@@ -120,24 +160,6 @@ CREATE TABLE `user` (
   `type` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   UNIQUE KEY `cbs_mail` (`cbs_mail`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-
-
-# Dump of table course_attendant
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `course_attendant`;
-
-CREATE TABLE `course_attendant` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
-  `course_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`),
-  KEY `course_id` (`course_id`),
-  CONSTRAINT `course_id` FOREIGN KEY (`course_id`) REFERENCES `course` (`id`),
-  CONSTRAINT `user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
