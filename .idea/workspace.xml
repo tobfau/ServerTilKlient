@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4403e7d9-0098-4388-9dbe-f11019023eee" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/project_eva.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/security/Digester.java" afterPath="$PROJECT_DIR$/src/security/Digester.java" />
     </list>
     <ignored path="Undervisningsevaluering.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -29,9 +29,11 @@
       <file leaf-file-name="Digester.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/security/Digester.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="390">
-              <caret line="30" column="5" selection-start-line="30" selection-start-column="5" selection-end-line="30" selection-end-column="5" />
-              <folding />
+            <state relative-caret-position="223">
+              <caret line="87" column="25" selection-start-line="87" selection-start-column="25" selection-end-line="87" selection-end-column="25" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -70,6 +72,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="PREVIOUS_COMMIT_AUTHORS">
+      <list>
+        <option value="Benjamin" />
+      </list>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
@@ -740,12 +747,20 @@
       <workItem from="1476256947458" duration="41000" />
       <workItem from="1476257032371" duration="94000" />
       <workItem from="1476257214339" duration="1184000" />
-      <workItem from="1476684931384" duration="1666000" />
+      <workItem from="1476684931384" duration="4125000" />
     </task>
+    <task id="LOCAL-00001" summary="Branch til kommentering">
+      <created>1476686833102</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1476686833102</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="3297000" />
+    <option name="totallyTimeSpent" value="5756000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1" y="23" width="1279" height="772" extended-state="6" />
@@ -787,6 +802,10 @@
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Branch til kommentering" />
+    <option name="LAST_COMMIT_MESSAGE" value="Branch til kommentering" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1110,9 +1129,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/security/Digester.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="30" column="5" selection-start-line="30" selection-start-column="5" selection-end-line="30" selection-end-column="5" />
-          <folding />
+        <state relative-caret-position="223">
+          <caret line="87" column="25" selection-start-line="87" selection-start-column="25" selection-end-line="87" selection-end-column="25" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
