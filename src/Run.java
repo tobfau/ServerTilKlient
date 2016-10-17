@@ -1,11 +1,13 @@
 import javax.ws.rs.*;
 
+import com.google.gson.Gson;
 import com.sun.deploy.config.Config;
 import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
 import com.sun.jersey.api.container.httpserver.HttpServerFactory;
 import logic.CBSParser;
 import logic.ConfigLoader;
+import logic.UserController;
 import service.Service;
 //TODO: Missing documentation and use of config variables.
 
@@ -13,10 +15,13 @@ import service.Service;
 public class Run {
 
     @GET
-    @Path("/getLectures/{userId}")
-    public int getLectures(@PathParam("userId") int userId) {
+    @Path("/getLectures/{courseId}")
+    public String getLectures(@PathParam("courseId") int courseId) {
+        Gson gson = new Gson();
 
-        return 34243242;
+        UserController ctrl = new UserController();
+
+        return gson.toJson(ctrl.getLectures(courseId));
     }
 
     public static void main(String[] args) throws IOException {

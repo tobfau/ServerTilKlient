@@ -1,4 +1,4 @@
-package dal;
+/**package dal;
 
 
 import service.Service;
@@ -49,7 +49,7 @@ public class ServiceImpl implements Service {
 
 
         }
-    }*/
+    }
 
 
     public UserDTO loginStudent(String username, String password) throws SQLException {
@@ -348,4 +348,4 @@ public class ServiceImpl implements Service {
 
 
 
-}
+}*/

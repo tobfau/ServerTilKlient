@@ -10,40 +10,43 @@ import java.util.Map;
  * Created by Kasper on 17/10/2016.
  */
 public class DBWrapper {
-    private MYSQLDriver dbDriver;
+    private static MYSQLDriver dbDriver;
 
-    public  DBWrapper(MYSQLDriver dbDriver){
+    public DBWrapper(MYSQLDriver dbDriver){
         this.dbDriver = dbDriver;
 
     }
 
-    public ResultSet getRecords (String table, Map params, int limit){
+    public static ResultSet getRecords (String table, Map params, int limit){
         String sql = "SELECT * FROM " + table;
+        sql = buildWhere(params, sql);
 
+        return dbDriver.executeSQL(sql);
 
     }
 
-    private String buildWhere(Map<String, String> params, String sql){
+    private static String buildWhere(Map<String, String> params, String sql){
         StringBuilder builder = new StringBuilder(sql);
 
         if(!params.isEmpty()){
-            builder.append("WHERE ");
+            builder.append(" WHERE ");
             //for (Map.Entry<String, String> entry : params.entrySet())
             Iterator iterator = params.entrySet().iterator();
-
-
             while(iterator.hasNext())
             {
-                Map.Entry<String, String> entry = iterator.next();
-                builder.append(iterator.next().
+                Map.Entry<String, String> entry = (Map.Entry<String, String>) iterator.next();
+                builder.append(entry.getKey());
                 builder.append(" = ");
                 builder.append(entry.getValue());
-                if(params.entrySet().)
-                builder.append(" AND ");
+
+                //Tjek om der er flere entries i params
+                if(iterator.hasNext()){
+                    builder.append(" AND ");
+                }
             }
             builder.append(";");
         }
-        return
+        return builder.toString();
     }
 
 
