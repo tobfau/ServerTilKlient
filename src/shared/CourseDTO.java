@@ -25,10 +25,18 @@ public class CourseDTO {
         this.displaytext = displaytext;
     }
 
+    /**
+     * Kaldes for at hente lektioner for kurset.
+     * @return Et array af LectureDTO objekter
+     */
     public LectureDTO[] getEvents() {
         return events;
     }
 
+    /**
+     * Fylder LectureDTO objekter ind i CourseDTO objektets events variabel.
+     * @param events Array'et af LectureDTO objekter der skal fyldes ind i CourseDTO objektets events variabel.
+     */
     public void setEvents(LectureDTO[] events) {
         this.events = events;
     }
