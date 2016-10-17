@@ -2,6 +2,7 @@ import javax.ws.rs.*;
 import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
 import com.sun.jersey.api.container.httpserver.HttpServerFactory;
+//TODO: Missing documentation and use of config variables.
 
 @Path("/api")
 public class Run {
