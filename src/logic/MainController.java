@@ -18,36 +18,48 @@ public class MainController {
     private ServiceImpl serviceImpl;
     private Digester digester;
     private AdminController adminCtrl;
-    private StudentController studentCtrl;
     private TeacherController teacherCtrl;
+    private StudentController studentCtrl;
 
-    public void login (String mail, String password) throws SQLException {
+    public MainController(ServiceImpl serviceImpl) {
+        this.serviceImpl = serviceImpl;
+        adminCtrl = new AdminController();
+        teacherCtrl = new TeacherController();
+        studentCtrl = new StudentController();
+
+        login();
+    }
+
+    public void login () {
+
+        String mail = "as";
+        String password = "123456";
 
         //hashing
         String securedPassword = Digester.hashWithSalt(password);
 
-        //Kommunikation med databasen, serviceImpl klassen bliver kaldt og metoden loginStudent køres.
-        serviceImpl.loginStudent(mail, securedPassword);
-
-        String mailFromDb = serviceImpl.loginStudent(mail, securedPassword).getCbsMail();
-        String passwordFromDb = serviceImpl.loginStudent(mail, securedPassword).getPassword();
-
-        //Validering med mail og password gennem databasen
-        if(mail.equals(mailFromDb) && securedPassword.equals(passwordFromDb) ){
-            if (serviceImpl.loginStudent(mail, securedPassword).getType() == "admin"){
-                adminCtrl = new AdminController();
-            }
-            if (serviceImpl.loginStudent(mail, securedPassword).getType() == "teacher" ){
-                teacherCtrl = new TeacherController();
-            }
-            if (serviceImpl.loginStudent(mail, securedPassword).getType() == "student"){
-                studentCtrl = new StudentController();
-            }
+        try {
+            //Kommunikation med databasen, serviceImpl klassen bliver kaldt og metoden loginStudent køres.
+            user = serviceImpl.loginStudent(mail, securedPassword);
+        } catch (SQLException e){
+            System.out.print(e.getMessage());
         }
-        //else træder i kraft ved forkert mail eller password, der er her mulighed for et output til klienten om fejl ved login.
+            if (user.getType().equals("admin")) {
+                adminCtrl = new AdminController();
+                //adminCtrl.loadAdmin(user);
+            }
+            if (user.getType().equals("teacher")) {
+                teacherCtrl = new TeacherController();
+                //teacherCtrl.loadTeacher(user);
+            }
+            if (user.getType().equals("student")) {
+                studentCtrl = new StudentController();
+                //studentCtrl.loadStudent(user);
+            }
+    }
+      /*  //else træder i kraft ved forkert mail eller password, der er her mulighed for et output til klienten om fejl ved login.
         else {
             System.out.println("Forkert log in!");
             //DataOutputStream OutToClient = new DataOutputStream();
-        }
-    }
+        }*/
 }

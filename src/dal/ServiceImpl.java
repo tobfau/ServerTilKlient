@@ -73,11 +73,10 @@ public class ServiceImpl implements Service{
                 user.setPassword(resultSet.getString("password"));
                 user.setType(resultSet.getString("type"));
             }
-        }catch(SQLException e)
-
-        {
-            e.printStackTrace();
-        } finally {
+        }catch(SQLException e) {
+            throw new SQLException ("De indtastede oplysninger er ugyldige.");
+        }
+            finally {
             try {
                 resultSet.close();
             }catch (SQLException e){
