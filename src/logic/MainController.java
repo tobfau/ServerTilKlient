@@ -2,6 +2,7 @@ package logic;
 
 import dal.ServiceImpl;
 import security.Digester;
+import service.Service;
 import shared.AdminDTO;
 import shared.StudentDTO;
 import shared.TeacherDTO;
@@ -20,14 +21,14 @@ import java.util.Scanner;
 public class MainController {
 
     private UserDTO user;
-    private ServiceImpl serviceImpl;
+    private Service service;
     private Digester digester;
     private AdminController adminCtrl;
     private TeacherController teacherCtrl;
     private StudentController studentCtrl;
 
-    public MainController(ServiceImpl serviceImpl) {
-        this.serviceImpl = serviceImpl;
+    public MainController(Service service) {
+        this.service = service;
         adminCtrl = new AdminController();
         teacherCtrl = new TeacherController();
         studentCtrl = new StudentController();
@@ -39,6 +40,7 @@ public class MainController {
         String securedPassword = Digester.hashWithSalt(password);
 
         try {
+
             //Kommunikation med databasen, serviceImpl klassen bliver kaldt og metoden loginStudent køres.
             user = serviceImpl.loginStudent(mail, securedPassword);
         } catch (SQLException e){
