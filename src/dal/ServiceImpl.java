@@ -1,4 +1,4 @@
-package dal;
+/*package dal;
 
 
 import service.Service;
@@ -55,7 +55,7 @@ public class ServiceImpl implements Service{
 
 */
 
-
+/*
 
     public UserDTO loginStudent(String username, String password) throws SQLException {
         ResultSet resultSet = null;
@@ -227,4 +227,9 @@ return user;
     }
 
 
+<<<<<<< HEAD
+}*/
+
+=======
 }
+>>>>>>> 08b1666405ec4b8bb20d6e50c6439dc74637b72a
