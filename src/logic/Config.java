@@ -26,7 +26,7 @@ public class Config {
             jsonReader = new JsonReader(new FileReader("config.dist.json"));
             gson = new Gson();
             System.out.println("sdagdf");
-            CBS_API_link = gson.fromJson(jsonReader, Config.CBS_API_link.getClass());
+            CBS_API_link = gson.fromJson(jsonReader, (String) CBS_API_link);
 
             System.out.println("2");
             System.out.println(CBS_API_link);

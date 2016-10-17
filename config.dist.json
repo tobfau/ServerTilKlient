@@ -1,5 +1,3 @@
 {
-  "Config": {
     "CBS_API_link":"https://calendar.cbs.dk/events.php?format=json&groups="
-  }
 }
