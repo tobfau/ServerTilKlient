@@ -1,15 +1,14 @@
 package service;
 //TODO: Class and methods needs comments and documentation.
 
-
 //TODO: Cleanup unused imports.
+import dal.ServiceImpl;
 import shared.CourseDTO;
 import shared.LectureDTO;
 import shared.ReviewDTO;
 import shared.UserDTO;
 
 import java.util.ArrayList;
-
 
 public interface Service {
 
@@ -22,6 +21,4 @@ public interface Service {
     public boolean deleteReview(ReviewDTO review);
     public boolean deleteReviewComment(ReviewDTO review);
     public ArrayList<LectureDTO> getLectures(UserDTO users);
-
-
 }

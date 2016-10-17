@@ -94,5 +94,4 @@ public class Digester {
     return enc.encode(bytes).replaceAll("\\s", "");
 
   }
-
 }
