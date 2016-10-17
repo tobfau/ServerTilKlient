@@ -26,42 +26,38 @@ public class MainController {
         adminCtrl = new AdminController();
         teacherCtrl = new TeacherController();
         studentCtrl = new StudentController();
-
-
     }
 
-    public void login (String mail, String password) throws Exception {
+    public void login () {
 
-
+        String mail = "as";
+        String password = "123456";
 
         //hashing
         String securedPassword = Digester.hashWithSalt(password);
 
-
+        try {
             //Kommunikation med databasen, serviceImpl klassen bliver kaldt og metoden loginStudent køres.
             user = serviceImpl.loginStudent(mail, securedPassword);
-
-
-
-                if (user.getType().equals("admin")) {
-                    adminCtrl = new AdminController();
-                    //adminCtrl.loadAdmin(user);
-                }
-                if (user.getType().equals("teacher")) {
-                    teacherCtrl = new TeacherController();
-                    //teacherCtrl.loadTeacher(user);
-                }
-                if (user.getType().equals("student")) {
-                    studentCtrl = new StudentController();
-                    //studentCtrl.loadStudent(user);
-                }
-
+        } catch (SQLException e){
+            System.out.print(e.getMessage());
+        }
+            if (user.getType().equals("admin")) {
+                adminCtrl = new AdminController();
+                //adminCtrl.loadAdmin(user);
+            }
+            if (user.getType().equals("teacher")) {
+                teacherCtrl = new TeacherController();
+                //teacherCtrl.loadTeacher(user);
+            }
+            if (user.getType().equals("student")) {
+                studentCtrl = new StudentController();
+                //studentCtrl.loadStudent(user);
+            }
     }
-    /**
-        //else træder i kraft ved forkert mail eller password, der er her mulighed for et output til klienten om fejl ved login.
+      /*  //else træder i kraft ved forkert mail eller password, der er her mulighed for et output til klienten om fejl ved login.
         else {
             System.out.println("Forkert log in!");
             //DataOutputStream OutToClient = new DataOutputStream();
-        }
-     **/
+        }*/
 }
