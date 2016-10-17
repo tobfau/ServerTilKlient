@@ -10,14 +10,14 @@ import java.util.Map;
  * Created by Kasper on 17/10/2016.
  */
 public class DBWrapper {
-    private static MYSQLDriver dbDriver;
+    private MYSQLDriver dbDriver;
 
     public DBWrapper(MYSQLDriver dbDriver){
         this.dbDriver = dbDriver;
 
     }
 
-    public static ResultSet getRecords (String table, Map params, int limit){
+    public ResultSet getRecords (String table, Map params, int limit){
         String sql = "SELECT * FROM " + table;
         sql = buildWhere(params, sql);
 
@@ -25,7 +25,7 @@ public class DBWrapper {
 
     }
 
-    private static String buildWhere(Map<String, String> params, String sql){
+    private String buildWhere(Map<String, String> params, String sql){
         StringBuilder builder = new StringBuilder(sql);
 
         if(!params.isEmpty()){

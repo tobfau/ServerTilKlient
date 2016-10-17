@@ -1,5 +1,6 @@
 package logic;
 
+import dal.MYSQLDriver;
 import service.DBWrapper;
 import shared.LectureDTO;
 import shared.UserDTO;
@@ -16,6 +17,9 @@ import java.util.Map;
  */
 public class UserController {
 
+    MYSQLDriver driver = new MYSQLDriver();
+    DBWrapper dbWrapper = new DBWrapper(driver);
+
     public UserController(){
     }
 
@@ -30,7 +34,7 @@ public class UserController {
             params.put("id", String.valueOf(courseId));
 
 
-            ResultSet rs = DBWrapper.getRecords("lecture", params, 0);
+            ResultSet rs = dbWrapper.getRecords("lecture", params, 0);
 
 
             while (rs.next()){
