@@ -1,11 +1,8 @@
 package logic;
 
-
-//TODO: Fix imports not being used.
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import shared.CourseDTO;
-
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -21,7 +18,6 @@ public class CBSParser {
     public CBSParser() {
         gson = new Gson();
     }
-
 
     public void parseCoursesToArray() {
         try {
