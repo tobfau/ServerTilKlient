@@ -2,6 +2,7 @@ import javax.ws.rs.*;
 import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
 import com.sun.jersey.api.container.httpserver.HttpServerFactory;
+import service.Service;
 //TODO: Missing documentation and use of config variables.
 
 @Path("/api")
@@ -10,6 +11,7 @@ public class Run {
     @GET
     @Path("/getLectures/{userId}")
     public int getLectures(@PathParam("userId") int userId) {
+        //System.out.println(getLectures(3));
         return userId;
     }
 
