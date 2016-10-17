@@ -6,11 +6,18 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
+import com.sun.deploy.config.Config;
 
 import java.io.FileReader;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
-public abstract class ConfigLoader {
+public class ConfigLoader {
+
+    /* Static variable indlæses alle som String. ServerPort skal egentlig være en int, men det må løses med en
+       Integer.parseInt() metode, hvor den skal bruges.
+     */
 
     public static String DB_TYPE;
     public static String DB_HOST;
@@ -22,18 +29,26 @@ public abstract class ConfigLoader {
     public static String COURSES_JSON;
     public static String HASH_SALT;
     public static String ENCRYPT_KEY;
-    public static int SERVER_PORT;
+    public static String SERVER_PORT;
     public static String DEBUG;
 
-    public static void main(String args[]){
+    private static final ConfigLoader SINGLETON = new ConfigLoader();
 
-        parseConfig();
-
+    public ConfigLoader getInstance(){
+        return SINGLETON;
     }
 
-    /**
-     * Køres når server starter op. Parser configurationsfilen op i static variabler.
-     */
+    private ConfigLoader(){
+        parseConfig();
+    }
+
+    /*
+    public static void main(String args[]){
+
+    }
+    */
+
+
     public static void parseConfig() {
 
         JsonParser jparser = new JsonParser();
@@ -44,19 +59,19 @@ public abstract class ConfigLoader {
             JsonObject jsonObject = jparser.parse(jsonReader).getAsJsonObject();
 
 
+            Set<Map.Entry<String, JsonElement>> entries = jsonObject.entrySet();//will return members of your object
 
-            for(Iterator iterator = jsonObject.entrySet().iterator(); iterator.hasNext();) {
-                String key = (String) iterator.next();
+            for (Map.Entry<String, JsonElement> entry: entries) {
+                try {
+                    ConfigLoader.class.getDeclaredField(entry.getKey()).set(SINGLETON, entry.getValue().getAsString());
 
-                ConfigLoader.class.getField(key).set(key, jsonObject.get(key));
-
+                } catch (Exception e){
+                    System.out.println(e.getMessage());
+                }
             }
-
-
-          //  CBS_API_link = object.get("CBS_API_link").getAsString();
-           // port = object.get("port").getAsInt();
+            
         } catch (Exception e){
-
+            e.printStackTrace();
         }
     }
 }
