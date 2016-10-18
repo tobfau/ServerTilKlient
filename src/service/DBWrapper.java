@@ -121,13 +121,15 @@ public class DBWrapper {
         StringBuilder builder = new StringBuilder();
         builder.append(sql);
         builder.append(table);
-        builder.append(appendValues(builder, values));
+        builder.append(appendValues(values));
         builder.append(";");
 
-
+        System.out.println("Printer builder: " + builder.toString());
+        dbDriver.insertSQL(builder.toString());
     }
 
-    private String appendValues(StringBuilder builder, Map<String, String> values){
+    private String appendValues(Map<String, String> values){
+        StringBuilder builder = new StringBuilder();
         builder.append(" (");
 
         for(Iterator iterator = values.entrySet().iterator(); iterator.hasNext();){
@@ -144,7 +146,9 @@ public class DBWrapper {
 
         for(Iterator iterator = values.entrySet().iterator(); iterator.hasNext();) {
             Map.Entry<String, String> entry = (Map.Entry<String, String>) iterator.next();
+            builder.append("'");
             builder.append(entry.getValue());
+            builder.append("'");
 
             if (iterator.hasNext()) {
                 builder.append(", ");

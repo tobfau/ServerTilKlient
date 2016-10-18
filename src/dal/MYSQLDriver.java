@@ -12,7 +12,7 @@ import java.sql.SQLException;
  */
 public class MYSQLDriver {
     private static Connection dbConnection = null;
-    private static final String URL = ConfigLoader.DB_TYPE+ConfigLoader.DB_HOST+ConfigLoader.DB_PORT+"/"+ConfigLoader.DB_NAME;
+    private static final String URL = ConfigLoader.DB_TYPE+ConfigLoader.DB_HOST+ConfigLoader.DB_PORT+"/"+ConfigLoader.DB_NAME+"?autoReconnect=true&useSSL=false";
     private static final String USERNAME = ConfigLoader.DB_USER;
     private static final String PASSWORD = ConfigLoader.DB_PASS;
 
@@ -35,6 +35,15 @@ public class MYSQLDriver {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public void insertSQL(String sql){
+        try{
+            dbConnection.prepareStatement(sql).executeUpdate();
+
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
     }
 
 }
