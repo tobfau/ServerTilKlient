@@ -1,6 +1,8 @@
 import javax.ws.rs.*;
 import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
+import java.io.PrintStream;
+
 import com.sun.jersey.api.container.httpserver.HttpServerFactory;
 import service.Service;
 //TODO: Missing documentation and use of config variables.
@@ -16,7 +18,18 @@ public class Run {
     }
 
     public static void main(String[] args) throws IOException {
-        HttpServer server = HttpServerFactory.create("http://localhost:9998/");
+        HttpServer server = null;
+
+
+        try {
+            PrintStream stdout = System.out;
+            System.setOut(null);
+            server = HttpServerFactory.create("http://localhost:9998/");
+            System.setOut(stdout);
+        }catch(ArrayIndexOutOfBoundsException a){
+            System.out.println(a.getMessage());
+            System.exit(20);
+        }
 
         server.start();
 
