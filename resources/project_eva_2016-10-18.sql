@@ -5,9 +5,9 @@
 # http://www.sequelpro.com/
 # https://github.com/sequelpro/sequelpro
 #
-# Host: localhost (MySQL 5.7.15)
+# Host: localhost (MySQL 5.7.11)
 # Database: project_eva
-# Generation Time: 2016-10-17 20:55:26 +0000
+# Generation Time: 2016-10-18 13:01:37 +0000
 # ************************************************************
 
 
@@ -18,7 +18,6 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
 
 # Dump of database project_eva
 # ------------------------------------------------------------
@@ -52,7 +51,15 @@ LOCK TABLES `course` WRITE;
 INSERT INTO `course` (`id`, `code`, `name`, `study_id`)
 VALUES
 	(1,'BINT2020','DIS',1),
-	(2,'BINT2021','ITF',2);
+	(2,'BINT2021','ITF',1),
+	(3,'BINT2022','VØS2',1),
+	(4,'BINT2023','MAK',1),
+	(5,'BBLS0101','INTC',2),
+	(6,'BBAL0202','DLS',2),
+	(7,'BBTS','ITP',3),
+	(8,'BBNT','DLT',3),
+	(9,'BBST','MOB',4),
+	(10,'BBMS','FBGM',4);
 
 /*!40000 ALTER TABLE `course` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -74,6 +81,37 @@ CREATE TABLE `course_attendant` (
   CONSTRAINT `user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+LOCK TABLES `course_attendant` WRITE;
+/*!40000 ALTER TABLE `course_attendant` DISABLE KEYS */;
+
+INSERT INTO `course_attendant` (`id`, `user_id`, `course_id`)
+VALUES
+	(1,1,1),
+	(2,1,2),
+	(3,1,3),
+	(4,1,4),
+	(5,2,1),
+	(6,2,2),
+	(7,2,3),
+	(8,2,4),
+	(9,3,5),
+	(10,3,6),
+	(11,4,5),
+	(12,4,6),
+	(13,5,5),
+	(14,5,6),
+	(15,6,7),
+	(16,6,8),
+	(17,7,7),
+	(18,7,8),
+	(19,11,1),
+	(20,12,1),
+	(21,13,1),
+	(22,14,2),
+	(23,15,2);
+
+/*!40000 ALTER TABLE `course_attendant` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 # Dump of table lecture
@@ -99,9 +137,14 @@ LOCK TABLES `lecture` WRITE;
 
 INSERT INTO `lecture` (`id`, `course_id`, `type`, `description`, `start`, `end`, `location`)
 VALUES
-	(1,1,'0','Case competition','0000-00-00 00:00:00','0000-00-00 00:00:00',''),
-	(2,2,'0','Waste competition','0000-00-00 00:00:00','0000-00-00 00:00:00',''),
-	(3,3,'0','Taste competition','0000-00-00 00:00:00','0000-00-00 00:00:00','');
+	(1,1,'LA','Lecture','2016-10-02 10:00:00','2016-10-02 11:30:00',''),
+	(2,2,'XB','Exercise','2016-10-02 11:40:00','2016-10-02 13:20:00',''),
+	(3,3,'LA','Lecture','2016-10-01 12:30:00','2016-10-01 14:00:00',''),
+	(4,1,'XB','Excercise','2016-10-01 11:00:00','2016-10-01 12:30:00',''),
+	(5,1,'LA','Lecture','2016-10-03 10:00:00','2016-10-01 11:30:00',''),
+	(6,2,'LA','Lecture','2016-10-03 13:30:00','2016-10-03 15:10:00',''),
+	(7,2,'LA','Lecture','2016-10-04 08:00:00','2016-10-04 09:50:00',''),
+	(8,3,'XB','Exercise','2016-10-04 10:00:00','2016-10-04 11:30:00','');
 
 /*!40000 ALTER TABLE `lecture` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -116,13 +159,39 @@ CREATE TABLE `review` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `lecture_id` int(11) NOT NULL,
   `rating` int(11) NOT NULL,
-  `comment` varchar(500) NOT NULL DEFAULT '',
+  `comment` varchar(500) DEFAULT '',
   `comment_is_deleted` bit(1) NOT NULL,
+  `cbs_mail` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `lecture_id` (`lecture_id`),
-  CONSTRAINT `review_ibfk_1` FOREIGN KEY (`lecture_id`) REFERENCES `lecture` (`id`)
+  KEY `cbs_mail` (`cbs_mail`),
+  CONSTRAINT `review_ibfk_1` FOREIGN KEY (`lecture_id`) REFERENCES `lecture` (`id`),
+  CONSTRAINT `review_ibfk_2` FOREIGN KEY (`cbs_mail`) REFERENCES `user` (`cbs_mail`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+LOCK TABLES `review` WRITE;
+/*!40000 ALTER TABLE `review` DISABLE KEYS */;
+
+INSERT INTO `review` (`id`, `lecture_id`, `rating`, `comment`, `comment_is_deleted`, `cbs_mail`)
+VALUES
+	(1,1,3,'',b'0','ab1cd@student.cbs.dk'),
+	(2,1,4,'',b'0','ab2cd@student.cbs.dk'),
+	(3,1,5,'Fed time',b'0','ab4cd@student.cbs.dk'),
+	(4,1,1,'ubrugelig time',b'0','ab5cd@student.cbs.dk'),
+	(5,1,5,'rigtig godt lærer',b'0','ab3cd@student.cbs.dk'),
+	(6,2,1,'dårlig time',b'0','te1bo@student.cbs.dk'),
+	(7,2,1,'Læreren er til grin',b'1','te1bo@student.cbs.dk'),
+	(8,2,2,'mangler forståelse',b'0','te1bo@student.cbs.dk'),
+	(9,2,2,'',b'0','te1bo@student.cbs.dk'),
+	(10,2,2,'',b'0','te1bo@student.cbs.dk'),
+	(11,3,5,'super time',b'0','te1bo@student.cbs.dk'),
+	(12,3,4,'rigtig godt',b'0','te1bo@student.cbs.dk'),
+	(13,3,5,'',b'0','te1bo@student.cbs.dk'),
+	(14,3,5,'',b'0','te1bo@student.cbs.dk'),
+	(15,3,1,'fik ikke noget ud af det',b'0','te1bo@student.cbs.dk');
+
+/*!40000 ALTER TABLE `review` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 # Dump of table study
@@ -142,7 +211,11 @@ LOCK TABLES `study` WRITE;
 INSERT INTO `study` (`id`, `name`)
 VALUES
 	(1,'HA(it.)'),
-	(2,'BA(im.)');
+	(2,'BA(im.)'),
+	(3,'HA(mat.)'),
+	(4,'HA(jur.)'),
+	(5,'HA(psyk.)'),
+	(6,'HA(kom.)');
 
 /*!40000 ALTER TABLE `study` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -162,6 +235,32 @@ CREATE TABLE `user` (
   UNIQUE KEY `cbs_mail` (`cbs_mail`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+LOCK TABLES `user` WRITE;
+/*!40000 ALTER TABLE `user` DISABLE KEYS */;
+
+INSERT INTO `user` (`id`, `cbs_mail`, `password`, `type`)
+VALUES
+	(1,'te1bo@student.cbs.dk','1','student'),
+	(2,'ab1cd@student.cbs.dk','1','student'),
+	(3,'ab2cd@student.cbs.dk','1','student'),
+	(4,'ab3cd@student.cbs.dk','1','student'),
+	(5,'ab4cd@student.cbs.dk','1','student'),
+	(6,'ab5cd@student.cbs.dk','1','student'),
+	(7,'ab6cd@student.cbs.dk','1','student'),
+	(8,'ab7cd@student.cbs.dk','1','student'),
+	(9,'ab8cd@student.cbs.dk','1','student'),
+	(10,'ab9cd@student.cbs.dk','1','student'),
+	(11,'jbh.itm@cbs.dk','1','teacher'),
+	(12,'ht.itm@cbs.dk','1','teacher'),
+	(13,'kt.itm@cbs.dk','1','teacher'),
+	(14,'ihf.itm@cbs.dk','1','teacher'),
+	(15,'jss.itm@cbs.dk','1','teacher'),
+	(16,'admin@admin.cbs.dk','1','admin'),
+	(17,'jas.om@cbs.dk','1','teacher'),
+	(18,'phh.om@cbs.dk','1','teacher');
+
+/*!40000 ALTER TABLE `user` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 

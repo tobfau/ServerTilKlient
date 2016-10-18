@@ -86,11 +86,6 @@ public class CBSParser {
 
         for (CourseDTO course : courseArray){
 
-            int counter = 0;
-            counter++;
-            if(counter == 50){
-            }
-
             //Tjek om studiet er blevet oprettet. Hvis ikke, da opret i database og tilføj til Set for at markere, det er oprettet.
             studyName = course.getId().substring(0,5);
             if(!studyNames.contains(studyName)){
@@ -101,37 +96,39 @@ public class CBSParser {
                 dbWrapper.insertIntoRecords("study",studyValues);
             }
 
+
+            /**
             String[] string = {};
             ResultSet rs = dbWrapper.getRecords("study",string,null,null,0);
             int i;
+
             try{
+
                 while (rs.next()) {
                     if(studyName == rs.getString("name")){
                         i = rs.getInt("id");
                         courseValues.put("code", course.getId());
                         courseValues.put("name", course.getName());
                         courseValues.put("study_id", String.valueOf(i));
+                        System.out.println("Inde i while");
                         dbWrapper.insertIntoRecords("course", courseValues);
                     }
                 }
 
             } catch (Exception e ){
 
-            }
-
-
-            //Opret kursus i database og tilknyt det fagkoden
+            }*/
 
         }
     }
 
     //TODO: Brugt til testing - udkommenteret men får lige lov at stå her lidt.
 
-
+/*
     public static void main(String args[]) {
         CBSParser.parseCBSData();
 
 
-    }
+    }*/
 
 }
