@@ -163,7 +163,8 @@ public class DBWrapper {
 
 
     /**
-     * Metoden bruges når man skal INSERT ind i databasen.
+     * En generisk metode der bygger en INSERT String op ud fra den data, der ønskes hentet.
+     * Herved kan vi nøjes med at kalde denne ene metode, der bygger alle INSERT strenge op.
      * @param table Tabellen der skal INSERT i.
      * @param values Et Map<K,V> der indeholder et selvvalgt antal set 'Keys' med specificeret 'Values' - "INSERT INTO (key) VALUES ("value")".
      */
