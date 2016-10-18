@@ -17,15 +17,23 @@ public class DBWrapper {
 
     }
 
-    public ResultSet getRecords (String table, Map params, Map joins, int limit){
-        String sql = "SELECT * FROM " + table;
+    public ResultSet getRecords (String table, String[] attributes, Map whereStmts, Map joinStmts, int limit){
 
-        if(joins != null) {
-            sql = joinOn(joins, sql);
+        String sql = "SELECT ";
+
+        sql = appendAttributes(sql, attributes, table);
+
+
+        if(joinStmts != null ){
+            sql = joinOn(joinStmts, sql);
         }
 
-        sql = buildWhere(params, sql);
+        if(whereStmts != null){
+            sql = buildWhere(whereStmts, sql);
+        }
 
+        //lav lige en builder senere
+        sql += ";";
         return dbDriver.executeSQL(sql);
 
     }
@@ -49,7 +57,7 @@ public class DBWrapper {
                     builder.append(" AND ");
                 }
             }
-            builder.append(";");
+
         }
         return builder.toString();
     }
@@ -67,11 +75,32 @@ public class DBWrapper {
                 builder.append(" ON ");
                 builder.append(entry.getValue());
             }
-            builder.append(";");
+
         }
 
         return builder.toString();
     }
 
+    private String appendAttributes(String sql, String[] attributes, String table) {
+        StringBuilder builder = new StringBuilder(sql);
+
+        if(attributes.length == 0) {
+
+            builder.append(" * ");
+
+        } else {
+            for(int i=0;i<attributes.length;i++) {
+                builder.append(attributes[i]);
+                if (i != attributes.length -1){
+                    builder.append(", ");
+                }
+            }
+            builder.append(" FROM ");
+            builder.append(table);
+
+        }
+
+        return builder.toString();
+    }
 
 }

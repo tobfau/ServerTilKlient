@@ -21,6 +21,11 @@ public class UserController {
     MYSQLDriver driver = new MYSQLDriver();
     DBWrapper dbWrapper = new DBWrapper(driver);
 
+    public static void main(String[] args) {
+        UserController controller = new UserController();
+        controller.getCourses(1);
+    }
+
     public UserController(){
     }
 
@@ -35,7 +40,7 @@ public class UserController {
             params.put("id", String.valueOf(courseId));
 
 
-            ResultSet rs = dbWrapper.getRecords("lecture", params, null, 0);
+            ResultSet rs = dbWrapper.getRecords("lecture", null, params, null, 0);
 
 
             while (rs.next()){
@@ -64,15 +69,15 @@ public class UserController {
             params.put("id", String.valueOf(userId));
             joins.put("table","course_attendant");
 
-
-            ResultSet rs = dbWrapper.getRecords("course", params, null, 0);
+            String[] attributes = new String[]{"name", "code"};
+            ResultSet rs = dbWrapper.getRecords("course", attributes, params, null, 0);
 
 
             while (rs.next()){
                 CourseDTO course = new CourseDTO();
 
                 course.setName(rs.getString("name"));
-                //course.set(rs.getString("code"));
+                course.setId(rs.getString("code"));
                 courses.add(course);
             }
 
