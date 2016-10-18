@@ -3,6 +3,7 @@ package service;
 import dal.MYSQLDriver;
 
 import java.sql.ResultSet;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -14,6 +15,18 @@ public class DBWrapper {
 
     public DBWrapper(MYSQLDriver dbDriver){
         this.dbDriver = dbDriver;
+
+    }
+
+    public static void main(String[] args) {
+        MYSQLDriver dbDriver = new MYSQLDriver();
+        DBWrapper dbWrapper = new DBWrapper(dbDriver);
+
+        HashMap values = new HashMap();
+        values.put("cbs_mail", "lol@cbs.dk");
+        values.put("password", "1234");
+        values.put("type", "Student");
+        dbWrapper.insertIntoRecords("user", values);
 
     }
 
@@ -101,6 +114,57 @@ public class DBWrapper {
         }
 
         return builder.toString();
+    }
+
+    public void insertIntoRecords(String table, Map<String, String> values){
+        String sql = "INSERT INTO ";
+        StringBuilder builder = new StringBuilder();
+        builder.append(sql);
+        builder.append(table);
+        builder.append(appendValues(builder, values));
+        builder.append(";");
+
+
+    }
+
+    private String appendValues(StringBuilder builder, Map<String, String> values){
+        builder.append(" (");
+
+        for(Iterator iterator = values.entrySet().iterator(); iterator.hasNext();){
+            Map.Entry<String, String> entry = (Map.Entry<String, String>) iterator.next();
+            builder.append(entry.getKey());
+
+            if(iterator.hasNext()){
+                builder.append(", ");
+            }
+        }
+        builder.append(")");
+        builder.append(" VALUES ");
+        builder.append(" (");
+
+        for(Iterator iterator = values.entrySet().iterator(); iterator.hasNext();) {
+            Map.Entry<String, String> entry = (Map.Entry<String, String>) iterator.next();
+            builder.append(entry.getValue());
+
+            if (iterator.hasNext()) {
+                builder.append(", ");
+            }
+        }
+
+        builder.append(")");
+        return builder.toString();
+
+    }
+
+
+    public void updateRecords(){
+
+
+    }
+
+
+    public void deleteRecords(){
+
     }
 
 }
