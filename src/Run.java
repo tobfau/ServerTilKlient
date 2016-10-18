@@ -9,6 +9,8 @@ import logic.CBSParser;
 import logic.ConfigLoader;
 import logic.UserController;
 import service.Service;
+import java.io.PrintStream;
+
 //TODO: Missing documentation and use of config variables.
 
 @Path("/api")
@@ -37,6 +39,23 @@ public class Run {
 
     public static void main(String[] args) throws IOException {
 
+        HttpServer server = null;
+
+
+        try {
+            PrintStream stdout = System.out;
+            System.setOut(null);
+            server = HttpServerFactory.create("http://localhost:9999/");
+            System.setOut(stdout);
+        }catch(ArrayIndexOutOfBoundsException a){
+            System.out.println(a.getMessage());
+            System.exit(20);
+        }
+
+        server.start();
+
+
+
         //Loader configfilen
         ConfigLoader.parseConfig();
 
@@ -45,10 +64,6 @@ public class Run {
         System.out.println("Det kan tage op til 40 sekunder...");
        // CBSParser.parseCoursesToArray();
         //CBSParser.parseLectures();
-
-        //Starter server
-        HttpServer server = HttpServerFactory.create("http://"+ConfigLoader.SERVER_ADDRESS+":"+ConfigLoader.SERVER_PORT+"/");
-        server.start();
 
         //Starter MainController
         //Service service = new ServiceImpl();
@@ -59,7 +74,7 @@ public class Run {
 
 
         System.out.println("Server running");
-        System.out.println("Visit: http://localhost:9998/api");
+        System.out.println("Visit: http://localhost:9999/api");
         System.out.println("Hit return to stop...");
         System.in.read();
         System.out.println("Stopping server");
