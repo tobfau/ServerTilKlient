@@ -24,6 +24,17 @@ public class Run {
         return gson.toJson(ctrl.getLectures(courseId));
     }
 
+    @GET
+    @Path("/getCourses/{userId}")
+    public String getCourses(@PathParam("userId") int userId) {
+        Gson gson = new Gson();
+
+        UserController ctrl = new UserController();
+
+        return gson.toJson(ctrl.getCourses(userId));
+    }
+
+
     public static void main(String[] args) throws IOException {
 
         //Loader configfilen

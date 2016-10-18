@@ -2,6 +2,7 @@ package logic;
 
 import dal.MYSQLDriver;
 import service.DBWrapper;
+import shared.CourseDTO;
 import shared.LectureDTO;
 import shared.UserDTO;
 
@@ -50,5 +51,33 @@ public class UserController {
 
             }
         return lectures;
+    }
+
+    public ArrayList<CourseDTO> getCourses(int userId){
+
+        ArrayList<CourseDTO> courses = new ArrayList<CourseDTO>();
+
+        try {
+            Map<String, String> params = new HashMap();
+
+            params.put("id", String.valueOf(userId));
+
+
+            ResultSet rs = dbWrapper.getRecords("course", params, 0);
+
+
+            while (rs.next()){
+                CourseDTO course = new CourseDTO();
+
+                course.setName(rs.getString("name"));
+                //course.set(rs.getString("code"));
+                courses.add(course);
+            }
+
+
+        } catch (SQLException e){
+
+        }
+        return courses;
     }
 }
