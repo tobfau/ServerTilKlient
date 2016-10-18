@@ -17,8 +17,13 @@ public class DBWrapper {
 
     }
 
-    public ResultSet getRecords (String table, Map params, int limit){
+    public ResultSet getRecords (String table, Map params, Map joins, int limit){
         String sql = "SELECT * FROM " + table;
+
+        if(joins != null) {
+            sql = joinOn(joins, sql);
+        }
+
         sql = buildWhere(params, sql);
 
         return dbDriver.executeSQL(sql);
@@ -49,6 +54,24 @@ public class DBWrapper {
         return builder.toString();
     }
 
+    private String joinOn(Map<String, String> joins, String sql){
+        StringBuilder builder = new StringBuilder(sql);
+
+        if(!joins.isEmpty()){
+            Iterator iterator = joins.entrySet().iterator();
+            while(iterator.hasNext())
+            {
+                builder.append(" JOIN ");
+                Map.Entry<String, String> entry = (Map.Entry<String, String>) iterator.next();
+                builder.append(entry.getKey());
+                builder.append(" ON ");
+                builder.append(entry.getValue());
+            }
+            builder.append(";");
+        }
+
+        return builder.toString();
+    }
 
 
 }

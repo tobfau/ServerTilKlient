@@ -35,7 +35,7 @@ public class UserController {
             params.put("id", String.valueOf(courseId));
 
 
-            ResultSet rs = dbWrapper.getRecords("lecture", params, 0);
+            ResultSet rs = dbWrapper.getRecords("lecture", params, null, 0);
 
 
             while (rs.next()){
@@ -59,11 +59,13 @@ public class UserController {
 
         try {
             Map<String, String> params = new HashMap();
+            Map<String, String> joins = new HashMap();
 
             params.put("id", String.valueOf(userId));
+            joins.put("table","course_attendant");
 
 
-            ResultSet rs = dbWrapper.getRecords("course", params, 0);
+            ResultSet rs = dbWrapper.getRecords("course", params, null, 0);
 
 
             while (rs.next()){
