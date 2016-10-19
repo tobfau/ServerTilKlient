@@ -27,7 +27,7 @@ public class ConfigLoader {
     public static String DB_PASS;
     public static String CBS_API_LINK;
     public static String COURSES_JSON;
-    public static String COURSES_WITH_DATA_JSON;
+    public static String STUDY_DATA;
     public static String HASH_SALT;
     public static String ENCRYPT_KEY;
     public static String SERVER_ADDRESS;

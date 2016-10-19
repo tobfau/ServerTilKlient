@@ -7,7 +7,7 @@
     "DB_PASS":"YOUR_PASSWORD",
     "CBS_API_LINK":"https://calendar.cbs.dk/events.php?format=json&groups=",
     "COURSES_JSON":"resources/courses.json",
-    "COURSES_WITH_DATA_JSON" : "resources/courses-with-data.json",
+    "STUDY_DATA_JSON": "resources/study_data.json",
     "HASH_SALT":"n0zaCTADRUuTb@JUp01n%5@(l@IAaLlZ",
     "ENCRYPT_KEY":"40674244454045cb9a70040a30e1c007",
     "SERVER_ADDRESS":"localhost",
