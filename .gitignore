@@ -3,3 +3,4 @@
 target/
 target/*
 config.json
+application.log
