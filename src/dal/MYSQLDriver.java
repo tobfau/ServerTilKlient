@@ -27,9 +27,8 @@ public class MYSQLDriver {
             return dbConnection.prepareStatement(sql).executeQuery();
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            dbConnection.close();
         }
+        dbConnection.close();
         return null;
     }
 
