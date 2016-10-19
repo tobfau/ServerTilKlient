@@ -1,6 +1,5 @@
-package logic;
+/*package logic;
 
-import dal.ServiceImpl;
 import security.Digester;
 import service.Service;
 import shared.AdminDTO;
@@ -17,9 +16,7 @@ import java.sql.SQLException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-/**
- * MainControlleren er den første controlleren der bliver kørt.
- **/
+
 public class MainController {
 
     private UserDTO user;
@@ -40,18 +37,18 @@ public class MainController {
 
   /**
   * Dette er login metoden som er baseret på variablerne mail og password, som er indtastet af den studerende eller læreren.
-  **/
+  **//*
     public void login (String mail, String password) {
 
   /**
   * Her hashes passwordet (med salt), som så derefter er et sikkret password, (det er her anden gang det hashes)
-  **/
+  **//*
         String securedPassword = Digester.hashWithSalt(password);
 
         try {
 /**
  * Databasen bliver kaldt, for og validere om passwordet og mailen er en eksisterende bruger.
- **/
+ **//*
             user = serviceImpl.loginStudent(mail, securedPassword);
         } catch (SQLException e){
             System.out.print(e.getMessage());
@@ -59,7 +56,7 @@ public class MainController {
 
  /**
  * Der tjekkes her i en if, om brugeren der logger ind er en teacher eller student. Disse to brugere er dem som kan logge ind i klienten, hvor admin kun er tilhørende i TUI
- **/
+ **//*
             if (user.getType().equals("teacher")) {
                 teacherCtrl = new TeacherController();
                 //teacherCtrl.loadTeacher(user);
@@ -86,9 +83,10 @@ public class MainController {
        * else træder i kraft ved forkert mail eller password, der er her mulighed for et output til klienten om fejl ved login.
         else {
             System.out.println("Forkert log in!");
+<<<<<<< HEAD
             DataOutputStream OutToClient = new DataOutputStream();
         }**/
-
+/*
       public void loginAdmin(){
 
           String mail = "";
@@ -97,7 +95,7 @@ public class MainController {
  /**
  * I dette tilfælde (hvor der logges ind gennem terminalen) er der ikke hashet første gang (hvor passwordet sendes fra klient til server)
  * Derfor hashes der to gange her for og få den rigtige sikkerhed.
- **/
+ **//*
           String securedPassword = Digester.hashWithSalt(password);
 
           String securedPassword1 = Digester.hashWithSalt(securedPassword);
@@ -105,7 +103,7 @@ public class MainController {
           try {
  /**
  *Kommunikation med databasen, serviceImpl klassen bliver kaldt og metoden loginStudent køres.
- **/
+ **//*
           user = serviceImpl.loginStudent(mail, securedPassword1);
           }
           catch (SQLException e) {
@@ -114,7 +112,7 @@ public class MainController {
 
  /**
  * En if statement der validere om brugeren der logger in er af typen admin eller kan der ikke logges ind i TUI.
- **/
+ **//*
           if (user.getType().equals("admin")) {
               adminCtrl = new AdminController();
               //adminCtrl.loadAdmin(user);
@@ -128,7 +126,7 @@ public class MainController {
 
  /**
  * En else statement der træder i kraft hvis der er indtastet et forkert mail eller password.
- **/
+ **//*
           else {
               System.out.println("Du indtastede en forkert vaerdi, proev igen. \n");
               tuiMainMenu.TUILogIn(mail, password);
@@ -137,3 +135,4 @@ public class MainController {
 
       }
 }
+*/

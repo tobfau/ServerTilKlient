@@ -2,7 +2,7 @@ package shared;
 
 import java.io.Serializable;
  
-public abstract class UserDTO implements Serializable {
+public class UserDTO implements Serializable {
 	
 	private int id;
     private String cbsMail, password, type;
