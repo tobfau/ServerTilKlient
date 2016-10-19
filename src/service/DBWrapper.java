@@ -182,7 +182,7 @@ public class DBWrapper {
         builder.append(appendValues(values));
         builder.append(";");
 
-        dbDriver.insertSQL(builder.toString());
+        dbDriver.updateSQL(builder.toString());
     }
 
     /**
@@ -238,7 +238,7 @@ public class DBWrapper {
         //lav lige en builder senere
         sql += ";";
         System.out.println(sql);
-        //dbDriver.executeSQL(sql);
+        dbDriver.updateSQL(sql);
     }
 
     private String createUpdateSQLStmt(String sql, Map<String, String> fields) {
