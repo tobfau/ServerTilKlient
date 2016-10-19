@@ -64,7 +64,7 @@ public class DBWrapper {
     private static String appendAttributes(String sql, String[] attributes, String table) {
         StringBuilder builder = new StringBuilder(sql);
 
-        if(attributes.length == 0) {
+        if(attributes == null) {
 
             builder.append(" * ");
 
