@@ -11,6 +11,8 @@ import logic.CBSParser;
 import logic.ConfigLoader;
 import logic.UserController;
 import service.Service;
+import shared.Logging;
+
 import java.io.PrintStream;
 import java.sql.SQLException;
 
@@ -25,7 +27,6 @@ public class Run {
         Gson gson = new Gson();
 
         UserController ctrl = new UserController();
-
 
         return gson.toJson(ctrl.getLectures(courseId));
     }
@@ -45,10 +46,13 @@ public class Run {
 
         HttpServer server = null;
 
+        //Loader configfilen
+        ConfigLoader.parseConfig();
+
         try {
             PrintStream stdout = System.out;
             System.setOut(null);
-            server = HttpServerFactory.create("http://localhost:9999/");
+            server = HttpServerFactory.create("http://" + ConfigLoader.SERVER_ADDRESS + ":" + ConfigLoader.SERVER_PORT + "/");
             System.setOut(stdout);
         }catch(ArrayIndexOutOfBoundsException a){
             System.out.println(a.getMessage());
@@ -57,13 +61,12 @@ public class Run {
 
         server.start();
 
-        //Loader configfilen
-        ConfigLoader.parseConfig();
+        //Setup logLevel and prepare to log
+        Logging.initiateLog(ConfigLoader.DEBUG);
 
         //Loader courses og lectures ind til databasen
         System.out.println("Server henter fag og lektioner.");
         System.out.println("Det kan tage op til 40 sekunder...");
-
 
         //Parse CBS data til database
         /**try {
@@ -78,12 +81,11 @@ public class Run {
         //new = MainController(service);
 
         System.out.println("Server running");
-        System.out.println("Visit: http://localhost:9999/api");
+        System.out.println("Visit: http://" + ConfigLoader.SERVER_ADDRESS + ":" + ConfigLoader.SERVER_PORT + "/");
         System.out.println("Hit return to stop...");
         System.in.read();
         System.out.println("Stopping server");
         System.out.println("Server stopped");
         System.out.println();
-
     }
 }

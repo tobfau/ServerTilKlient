@@ -33,7 +33,7 @@ public class CBSParser {
     private static void parseCoursesToArray() {
         try {
             //Læs Json filen og opret array med CourseDTO objekter
-            JsonReader reader = new JsonReader(new FileReader("resources/courses.json"));
+            JsonReader reader = new JsonReader(new FileReader(ConfigLoader.COURSES_JSON));
             courseArray = gson.fromJson(reader, CourseDTO[].class);
         } catch (Exception e) {
             System.out.println(e.getMessage());
