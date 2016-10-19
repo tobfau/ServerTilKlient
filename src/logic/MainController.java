@@ -1,53 +1,146 @@
-/**package logic;
+package logic;
 
-import dal.ServiceImpl;
 import security.Digester;
+import service.DBWrapper;
+import service.Service;
+import shared.AdminDTO;
+import shared.StudentDTO;
+import shared.TeacherDTO;
 import shared.UserDTO;
+import view.TUIAdminMenu;
+import view.TUIMainMenu;
 
-import java.io.*;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Created by emilstepanian on 12/10/2016.
+ * MainControlleren er den første controlleren der bliver kørt.
+ */
+
 
 public class MainController {
 
     private UserDTO user;
-    private ServiceImpl serviceImpl;
+    private Service service;
     private Digester digester;
     private AdminController adminCtrl;
-    private StudentController studentCtrl;
     private TeacherController teacherCtrl;
+    private StudentController studentCtrl;
+    private TUIMainMenu tuiMainMenu;
+    private TUIAdminMenu tuiAdminMenu;
 
-    public void login (String mail, String password) throws SQLException {
+    public MainController() {
+        this.service = service;
+        adminCtrl = new AdminController();
+        teacherCtrl = new TeacherController();
+        studentCtrl = new StudentController();
+    }
 
-        //hashing
+  /**
+  * Dette er login metoden som er baseret på variablerne mail og password, som er indtastet af den studerende eller læreren.
+  **/
+    public void login (String mail, String password) {
+
+        /**
+         * Her hashes passwordet (med salt), som så derefter er et sikkret password, (det er her anden gang det hashes)
+         **/
         String securedPassword = Digester.hashWithSalt(password);
 
-        //Kommunikation med databasen, serviceImpl klassen bliver kaldt og metoden loginStudent køres.
-        serviceImpl.loginStudent(mail, securedPassword);
+        try {
+            Map<String, String> loginMail = new HashMap<>();
 
-        String mailFromDb = serviceImpl.loginStudent(mail, securedPassword).getCbsMail();
-        String passwordFromDb = serviceImpl.loginStudent(mail, securedPassword).getPassword();
+            loginMail.put("cbs_mail", String.valueOf(mail));
+            loginMail.put("password", String.valueOf(password));
 
-        //Validering med mail og password gennem databasen
-        if(mail.equals(mailFromDb) && securedPassword.equals(passwordFromDb) ){
-            if (serviceImpl.loginStudent(mail, securedPassword).getType() == "admin"){
-                adminCtrl = new AdminController();
-            }
-            if (serviceImpl.loginStudent(mail, securedPassword).getType() == "teacher" ){
+            ResultSet result = DBWrapper.getRecords("user", null, loginMail, null, 0);
+
+                UserDTO type = new UserDTO();
+                type.setType(result.getString("type"));
+
+            if (type.equals("teacher")) {
                 teacherCtrl = new TeacherController();
+                TeacherDTO teacherDTO = new TeacherDTO();
+                teacherDTO.setCbsMail(mail);
+                teacherDTO.setPassword(securedPassword);
+
+                //teacherCtrl.loadTeacher(user);
+
             }
-            if (serviceImpl.loginStudent(mail, securedPassword).getType() == "student"){
+            if (type.equals("student")) {
                 studentCtrl = new StudentController();
+                StudentDTO studentDTO = new StudentDTO();
+                studentDTO.setCbsMail(mail);
+                studentDTO.setPassword(securedPassword);
+
+                //studentCtrl.loadStudent(user);
             }
+
         }
-        //else træder i kraft ved forkert mail eller password, der er her mulighed for et output til klienten om fejl ved login.
-        else {
-            System.out.println("Forkert log in!");
-            //DataOutputStream OutToClient = new DataOutputStream();
+
+        //hvis der ingen ens værdi findes med det indtastede id og id i DB vil denne catch kaste brugeren videre til tuiAdminMenuen, hvor man kan få muligheden for og prøve igen osv.
+        catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("invalid login.");
         }
     }
-}*/
+
+      public void loginAdmin(){
+
+          String mail = "";
+          String password = "";
+          tuiMainMenu.TUILogIn(mail, password);
+ /**
+ * I dette tilfælde (hvor der logges ind gennem terminalen) er der ikke hashet første gang (hvor passwordet sendes fra klient til server)
+ * Derfor hashes der to gange her for og få den rigtige sikkerhed.
+ **/
+          String securedPassword = Digester.hashWithSalt(password);
+
+          String securedPassword1 = Digester.hashWithSalt(securedPassword);
+
+ /**
+ *Kommunikation med databasen, serviceImpl klassen bliver kaldt og metoden loginStudent køres.
+ **/
+          try {
+              Map<String, String> loginMail = new HashMap<>();
+
+              loginMail.put("cbs_mail", String.valueOf(mail));
+              loginMail.put("password", String.valueOf(password));
+
+              DBWrapper.getRecords("user", null, loginMail, null, 0);
+
+              ResultSet result = DBWrapper.getRecords("user", null, loginMail, null, 0);
+
+              String type = result.getString("type");
+
+
+              /**
+               * En if statement der validere om brugeren der logger in er af typen admin eller kan der ikke logges ind i TUI.
+               **/
+              if (type.equals("admin")) {
+                  adminCtrl = new AdminController();
+                  //adminCtrl.loadAdmin(user);
+
+                  AdminDTO adminDTO = new AdminDTO();
+                  adminDTO.setCbsMail(mail);
+                  adminDTO.setPassword(securedPassword1);
+
+                  tuiAdminMenu.Menu(adminDTO);
+              }
+
+          }
+
+          catch (SQLException e) {
+          System.out.print(e.getMessage());
+              System.out.println("Du indtastede en forkert vaerdi, proev igen. \n");
+              tuiMainMenu.TUILogIn(mail, password);
+          }
+
+
+ /**
+ * En else statement der træder i kraft hvis der er indtastet et forkert mail eller password.
+ **/
+      }
+}
+

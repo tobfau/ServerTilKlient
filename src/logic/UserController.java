@@ -1,13 +1,13 @@
 package logic;
 
-import service.DBWrapper;
-import shared.CourseDTO;
 import shared.LectureDTO;
 import shared.ReviewDTO;
+import java.util.ArrayList;
+import service.DBWrapper;
+import shared.CourseDTO;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -62,7 +62,6 @@ public abstract class UserController {
 
             ResultSet rs = DBWrapper.getRecords("lecture", null, params, null, 0);
 
-
             while (rs.next()) {
                 LectureDTO lecture = new LectureDTO();
 
@@ -82,7 +81,6 @@ public abstract class UserController {
     public void softDeleteReview(ReviewDTO review) {
 
         try {
-
             Map<String, String> isDeleted = new HashMap();
 
             isDeleted.put("is_deleted", String.valueOf(review.isDeleted()));
@@ -109,6 +107,7 @@ public abstract class UserController {
             joins.put("table", "course_attendant");
 
             String[] attributes = new String[]{"name", "code"};
+            //Vi smider aldrig joins ind...
             ResultSet rs = DBWrapper.getRecords("course", attributes, params, null, 0);
 
 
