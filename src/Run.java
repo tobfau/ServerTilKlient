@@ -46,7 +46,7 @@ public class Run {
     public static void main(String[] args) throws IOException {
 
         //Setup logLevel and prepare to log
-        Logging.initiateLog(ConfigLoader.DEBUG);
+        //Logging.initiateLog(ConfigLoader.DEBUG);
 
         HttpServer server = null;
 
@@ -88,6 +88,5 @@ public class Run {
         System.out.println("Stopping server");
         System.out.println("Server stopped");
         System.out.println();
-
     }
 }
