@@ -10,6 +10,7 @@ import dal.MYSQLDriver;
 import service.DBWrapper;
 import shared.CourseDTO;
 import shared.LectureDTO;
+import shared.ReviewDTO;
 import shared.UserDTO;
 
 import java.sql.Array;
@@ -21,13 +22,6 @@ import java.util.Map;
 
 public class UserController {
 
-    MYSQLDriver driver = new MYSQLDriver();
-    DBWrapper dbWrapper = new DBWrapper(driver);
-
-    public static void main(String[] args) {
-        UserController controller = new UserController();
-        controller.getCourses(1);
-    }
 
     public UserController(){
     }
@@ -43,7 +37,7 @@ public class UserController {
             params.put("id", String.valueOf(courseId));
 
 
-            ResultSet rs = dbWrapper.getRecords("lecture", null, params, null, 0);
+            ResultSet rs = DBWrapper.getRecords("lecture", null, params, null, 0);
 
 
             while (rs.next()){
@@ -73,7 +67,7 @@ public class UserController {
             joins.put("table","course_attendant");
 
             String[] attributes = new String[]{"name", "code"};
-            ResultSet rs = dbWrapper.getRecords("course", attributes, params, null, 0);
+            ResultSet rs = DBWrapper.getRecords("course", attributes, params, null, 0);
 
 
             while (rs.next()){
@@ -90,4 +84,5 @@ public class UserController {
         }
         return courses;
     }
+
 }

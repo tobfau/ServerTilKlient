@@ -1,4 +1,3 @@
-import dal.ServiceImpl;
 import logic.MainController;
 import service.Service;
 
@@ -12,6 +11,11 @@ import java.io.PrintStream;
 
 import com.sun.jersey.api.container.httpserver.HttpServerFactory;
 import logic.ConfigLoader;
+import logic.UserController;
+import service.Service;
+import java.io.PrintStream;
+import java.sql.SQLException;
+
 
 //TODO: Missing documentation and use of config variables.
 
@@ -26,6 +30,7 @@ public class Run {
 
         UserController ctrl = new UserController();
 
+
         return gson.toJson(ctrl.getLectures(courseId));
     }
 
@@ -36,9 +41,9 @@ public class Run {
 
         UserController ctrl = new UserController();
 
-        Service service = new ServiceImpl();
+        /*Service service = new ServiceImpl();
         new MainController(service);
-        return gson.toJson(ctrl.getCourses(userId));
+        return gson.toJson(ctrl.getCourses(userId));*/
 
     }
 
@@ -65,8 +70,15 @@ public class Run {
         //Loader courses og lectures ind til databasen
         System.out.println("Server henter fag og lektioner.");
         System.out.println("Det kan tage op til 40 sekunder...");
-        // CBSParser.parseCoursesToArray();
-        //CBSParser.parseLectures();
+
+
+        //Parse CBS data til database
+        /**try {
+            CBSParser.parseCBSData();
+        } catch (SQLException e){
+            e.printStackTrace();
+        }*/
+
 
         //Starter MainController
         //Service service = new ServiceImpl();

@@ -11,6 +11,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 
 /**
@@ -20,13 +21,10 @@ public class CBSParser {
     private static CourseDTO[] courseArray;
     private static Gson gson = new Gson();
 
-    private static MYSQLDriver mysqlDriver = new MYSQLDriver();
-    private static DBWrapper dbWrapper = new DBWrapper(mysqlDriver);
-
     public CBSParser() {
     }
 
-    public static void parseCBSData() {
+    public static void parseCBSData() throws SQLException {
         parseCoursesToArray();
         parseLectures();
         parseToDatabase();
@@ -78,7 +76,7 @@ public class CBSParser {
 
     }
 
-    private static void parseToDatabase() {
+    private static void parseToDatabase() throws SQLException {
         Set<String> studyNames = new HashSet<String>();
         Map<String, String> studyValues = new HashMap<String, String>();
         Map<String, String> courseValues = new HashMap<String, String>();
@@ -93,7 +91,7 @@ public class CBSParser {
 
                 //Opret studie i databasen
                 studyValues.put("name",studyName);
-                dbWrapper.insertIntoRecords("study",studyValues);
+                DBWrapper.insertIntoRecords("study",studyValues);
             }
 
 
