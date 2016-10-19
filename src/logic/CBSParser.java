@@ -3,14 +3,15 @@ package logic;
 
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
-import dal.MYSQLDriver;
 import service.DBWrapper;
 import shared.CourseDTO;
+import shared.LectureDTO;
+
+import javax.sql.rowset.CachedRowSet;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -25,8 +26,6 @@ public class CBSParser {
     }
 
     public static void parseCBSData() throws SQLException {
-        parseCoursesToArray();
-        parseLectures();
         parseToDatabase();
     }
 
@@ -42,8 +41,13 @@ public class CBSParser {
 
     public static void main(String[] args) throws SQLException {
         ConfigLoader.parseConfig();
+        parseCoursesToArray();
         parseStudiesToDatabase();
+        parseCoursesToDatabase();
+        parseLecturesToDatabase();
     }
+
+
 
 
     private static void parseStudiesToDatabase() {
@@ -58,15 +62,17 @@ public class CBSParser {
 
             Iterator iterator = jArray.iterator();
 
+
             while(iterator.hasNext()){
 
                 JsonObject obj = (JsonObject) iterator.next();
                 Map<String, String> studyValues = new HashMap<String, String>();
 
-                if(!duplicatesCheck.contains(obj.get("study-name").toString())){
-                    studyValues.put("shortname",obj.get("shortname").toString());
-                    studyValues.put("name",obj.get("study-name").toString());
-                    duplicatesCheck.add(obj.get("study-name").toString());
+                if(!duplicatesCheck.contains(obj.get("shortname").toString().replace("\"", "").substring(0,5))){
+
+                    studyValues.put("shortname",obj.get("shortname").toString().replace("\"", "").substring(0,5));
+                    studyValues.put("name",obj.get("study-name").toString().replace("\"", ""));
+                    duplicatesCheck.add(obj.get("shortname").toString().replace("\"", "").substring(0,5));
                     DBWrapper.insertIntoRecords("study", studyValues);
                 }
             }
@@ -77,8 +83,75 @@ public class CBSParser {
         }
     }
 
+    private static void parseCoursesToDatabase() throws SQLException {
+        // Set<String> shortnameSubstrings = new HashSet<String>();
+        Map<String, String> studyAttributes = new HashMap<String, String>();
+        Map<String, String> courseMap = new HashMap<String, String>();
 
-    private static void parseLectures(){
+        //Da shortnames allerede er unikke i databasen, behøves der ikke nogen duplicate checker (Set)
+        /*
+            RET TIL CACHEDROWSET I HELE PROGRAMMET HVOR DER BRUGES RESULTSET
+         */
+        CachedRowSet rs = DBWrapper.getRecords("study", new String[]{"id","shortname"}, null, null, 0);
+
+
+        //Overvej at lave denne til en metode for sig selv da den også bruges i parseLecturesToDatabase();
+        while(rs.next()){
+
+            //"ABCDEFG" er blot et quickfix, ellers virker lortet ikke.
+            String shortname = rs.getString("shortname") + "ABCDEFG";
+
+            String substring = shortname.substring(0,5);
+
+            //shortnameSubstrings.add(substring);
+            studyAttributes.put(substring, rs.getString("id"));
+        }
+
+        for (CourseDTO course : courseArray){
+
+            System.out.println(course);
+
+            String substring = course.getId().substring(0,5);
+
+            //if(shortnameSubstrings.contains(substring)){
+            if(studyAttributes.containsKey(substring)){
+
+                courseMap.put("code", course.getName());
+                courseMap.put("name", course.getId());
+                courseMap.put("study_id", studyAttributes.get(substring));
+
+                DBWrapper.insertIntoRecords("course", courseMap);
+            }
+            else {
+
+            }
+        }
+    }
+
+    private static void parseLecturesToDatabase() throws SQLException{
+        Map<String, String> courseAttributes = new HashMap<String, String>();
+        Map<String, String> lectureMap;
+
+        CachedRowSet rs = DBWrapper.getRecords("course", new String[]{"id",}, null, null, 0);
+
+
+        while(rs.next()){
+
+            //Assign all courses from courseArray corresponding id's from database
+            for (CourseDTO course : courseArray){
+                course.setId(rs.getString("id"));
+
+            }
+
+            //"ABCDEFG" er blot et quickfix, ellers virker lortet ikke.
+            String shortname = rs.getString("name") + "ABCDEFG";
+
+            String substring = shortname.substring(0,5);
+
+            //shortnameSubstrings.add(substring);
+            courseAttributes.put(substring, rs.getString("id"));
+        }
+
         try{
             String urlPrefix = ConfigLoader.CBS_API_LINK;
             URL url;
@@ -88,6 +161,7 @@ public class CBSParser {
 
             //Læs Json fra calendar.cbs.dk for hvert kursus og fyld lektioner ind i kursets arrayliste.
             for(CourseDTO course : courseArray) {
+                System.out.println(course.getId());
                 url = new URL(urlPrefix + course.getId());
                 conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("GET");
@@ -96,6 +170,29 @@ public class CBSParser {
                 //Tomt kursus-object nødvendigt for at indlæse JSON
                 CourseDTO tempCourse = gson.fromJson(br, CourseDTO.class);
                 course.setEvents(tempCourse.getEvents());
+
+                for (LectureDTO lecture : course.getEvents()){
+                    lectureMap = new HashMap<String, String>();
+
+                    lectureMap.put("course_id", course.getId());
+                    lectureMap.put("type", lecture.getType());
+                    lectureMap.put("description", lecture.getDescription());
+                    /**
+                     *
+                     * VI ER NÅET HER TIL
+                     *
+                     *
+                     *
+                     *
+                     *
+                     */
+
+
+                    // DBWrapper.insertIntoRecords("course", courseMap);
+
+
+
+                }
 
                 //TODO: Lav debug på anden måde end at skrive strengen ud. Så dette skal fjernes.
                /* for (LectureDTO lecture : course.getEvents()) {
@@ -114,71 +211,24 @@ public class CBSParser {
 
     }
 
+
     private static void parseToDatabase() throws SQLException {
-       /** Map<String, String> courseValues = new HashMap<String, String>();
+        Map<String, String> courseValues = new HashMap<String, String>();
 
-        //Parser studyNames til database
-
-        Set<Map.Entry<String, String>> studyEntries = studyValues.entrySet();
-
-        Map<String, String> tmpMap = new HashMap<String, String>();
-
-        for(Map.Entry<String, String> entry : studyEntries){
-
-            tmpMap.put(entry.getKey(),entry.getValue());
-            DBWrapper.insertIntoRecords("study",tmpMap);
-
-        }
-
-       /** Iterator iterator = studyValues.entrySet().iterator();
-
-        while(iterator.hasNext()){
+        parseStudiesToDatabase();
 
 
 
-            tmpMap.put((Map.Entry<String,String>)iterator.next().ge
-
-            Map.Entry entry = (Map.Entry)iterator.next();
-            String name = entry.getKey()
-
-            DBWrapper.insertIntoRecords("study", );
-        }
-*/
-
-
-
-
-
-
-
-
-/*
-
-
-        for(Iterator iterator = studyValues.entrySet().iterator(); iterator.hasNext();) {
-
-            Map<String, String> values = new HashMap<String, String>();
-
-            values.put((Map.Entry<String, String>) iterator.)
-
-            Map.Entry<String, String> entry = (Map.Entry<String, String>) iterator.next();
-
-
-
-            DBWrapper.insertIntoRecords("study", entry);
-        }
-
-*/
         //Tjek om studiet er blevet oprettet. Hvis ikke, da opret i database og tilføj til Set for at markere, det er oprettet.
-           /* studyName = course.getId().substring(0,5);
-            if(!studyNames.contains(studyName)){
-                studyNames.add(studyName);
+        /**   studyName = course.getId().substring(0,5);
+         if(!studyNames.contains(studyName)){
+         studyNames.add(studyName);
 
-                //Opret studie i databasen
-                studyValues.put("name",studyName);
-                DBWrapper.insertIntoRecords("study",studyValues);
-            }
-            */
+         //Opret studie i databasen
+         studyValues.put("name",studyName);
+         DBWrapper.insertIntoRecords("study",studyValues);
+         }*/
+
 
 
 
