@@ -16,6 +16,20 @@ public class DBWrapper {
     public DBWrapper(){
     }
 
+    public static void main(String[] args) throws SQLException {
+
+        Map<String, String> where = new HashMap<String, String>();
+
+        where.put("user_id","2");
+
+        Map<String, String> join = new HashMap<String, String>();
+
+        join.put("course_attendant","course_id");
+
+
+        getRecords("course", null, where, join, 0);
+    }
+
 
 
     /**
@@ -38,7 +52,7 @@ public class DBWrapper {
 
 
         if(joinStmts != null ){
-            sql = joinOn(joinStmts, sql);
+            sql = joinOn(table, joinStmts, sql);
         }
 
         if(whereStmts != null){
@@ -94,7 +108,7 @@ public class DBWrapper {
      * @param sql Modtager det SQL-statement der er igang med at blive bygget op.
      * @return Returnerer en String med et SQL Statement, hvor der er bygget JOIN clauses på.
      */
-    private static String joinOn(Map<String, String> joins, String sql){
+    private static String joinOn(String table, Map<String, String> joins, String sql){
         StringBuilder builder = new StringBuilder(sql);
 
         if(!joins.isEmpty()){
@@ -105,10 +119,17 @@ public class DBWrapper {
                 Map.Entry<String, String> entry = (Map.Entry<String, String>) iterator.next();
                 builder.append(entry.getKey());
                 builder.append(" ON ");
+                builder.append(table);
+                builder.append(".id");
+                builder.append(" = ");
+                builder.append(entry.getKey());
+                builder.append(".");
                 builder.append(entry.getValue());
             }
 
         }
+
+        System.out.println(builder.toString());
 
         return builder.toString();
     }
