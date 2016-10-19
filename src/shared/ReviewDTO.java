@@ -10,16 +10,18 @@ public class ReviewDTO {
     private String comment;
     private int lectureId;
     private String cbsMail;
+    private int userId;
 
     public ReviewDTO(){
     }
 
-    public ReviewDTO(int id, int rating, String comment, int lectureId, String cbsMail) {
+    public ReviewDTO(int id, int rating, String comment, int lectureId, String cbsMail, int userId) {
         this.id = id;
         this.rating = rating;
         this.comment = comment;
         this.lectureId = lectureId;
         this.cbsMail = cbsMail;
+        this.userId = userId;
     }
 
     public int getId() {
@@ -62,6 +64,15 @@ public class ReviewDTO {
         this.cbsMail = cbsMail;
     }
 
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+
     @Override
     public String toString() {
         return "ReviewDTO{" +
@@ -70,6 +81,7 @@ public class ReviewDTO {
                 ", comment='" + comment + '\'' +
                 ", lectureId=" + lectureId +
                 ", cbsMail='" + cbsMail + '\'' +
+                ", userId=" + userId +
                 '}';
     }
 }
