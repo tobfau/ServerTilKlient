@@ -150,4 +150,27 @@ public class UserController {
         }
         return courses;
     }
+
+    public boolean login(String cbs_email, String password) {
+
+        try {
+            Map<String, String> params = new HashMap();
+            System.out.print(cbs_email);
+            System.out.print(password);
+            params.put("cbs_email", String.valueOf(cbs_email));
+            params.put("password", String.valueOf(password));
+            String[] attributes = {"id"};
+
+            ResultSet rs = DBWrapper.getRecords("review", attributes, params, null, 0);
+
+            while (rs.next()) {
+                System.out.println("bruger found");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
 }
