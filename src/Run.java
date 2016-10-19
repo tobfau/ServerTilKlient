@@ -1,14 +1,30 @@
+
 //TODO: Mangler dokumentation.
 
 import javax.ws.rs.*;
 
 import com.google.gson.Gson;
-        import com.sun.net.httpserver.HttpServer;
+import com.sun.net.httpserver.HttpServer;
+//import logic.MainController;
+import service.Service;
+
+//TODO: Mangler dokumentation.
+import javax.ws.rs.*;
+
+import com.google.gson.Gson;
+import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
 import java.io.PrintStream;
 
 import com.sun.jersey.api.container.httpserver.HttpServerFactory;
-        import logic.ConfigLoader;
+import logic.ConfigLoader;
+
+import logic.ConfigLoader;
+import logic.UserController;
+import service.Service;
+import java.io.PrintStream;
+
+
 
 //TODO: Missing documentation and use of config variables.
 
@@ -34,6 +50,7 @@ public class Run {
 
         UserController ctrl = new UserController();
         return gson.toJson(ctrl.getCourses(userId));
+
     }
 
 

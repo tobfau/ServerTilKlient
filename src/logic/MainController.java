@@ -1,4 +1,9 @@
+
 /*package logic;
+=======
+package logic;
+
+>>>>>>> 9c81f1e0bcb3da58e0820a023a4fa0643f5dca6e
 
 import security.Digester;
 import service.Service;
@@ -16,6 +21,12 @@ import java.sql.SQLException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+<<<<<<< HEAD
+=======
+/**
+ * MainControlleren er den første controlleren der bliver kørt.
+ */
+/*
 
 public class MainController {
 
@@ -33,7 +44,7 @@ public class MainController {
         adminCtrl = new AdminController();
         teacherCtrl = new TeacherController();
         studentCtrl = new StudentController();
-    }
+    }*/
 
   /**
   * Dette er login metoden som er baseret på variablerne mail og password, som er indtastet af den studerende eller læreren.
@@ -134,5 +145,8 @@ public class MainController {
 
 
       }
+
 }
+<<<<<<< HEAD
 */
+
