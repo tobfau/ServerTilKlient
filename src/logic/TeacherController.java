@@ -6,13 +6,13 @@ import shared.TeacherDTO;
 
 public class TeacherController extends UserController {
 
-    private TeacherDTO currentAdmin;
+    private TeacherDTO currentTeacher;
 
     public TeacherController() {
     }
 
-    public void loadAdmin(TeacherDTO currentAdmin) {
-        this.currentAdmin = currentAdmin;
+    public void loadTeacher(TeacherDTO currentTeacher) {
+        this.currentTeacher = currentTeacher;
     }
 
     public double calculateAverageRatingOnLecture(int lectureId) {
@@ -29,7 +29,6 @@ public class TeacherController extends UserController {
 
         double average = sumOfRatings / numberOfReviews;
 
-
         return average;
     }
 
@@ -41,7 +40,6 @@ public class TeacherController extends UserController {
 
         // for (LectureDTO lecture : getLectures1(courseId)) {
         for (LectureDTO lecture : getLectures(courseId)) {
-
             lectureId = lecture.getId();
         }
 

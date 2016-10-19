@@ -36,6 +36,14 @@ public class ReviewDTO {
         this.userId = userId;
     }
 
+    public int getLectureId() {
+        return lectureId;
+    }
+
+    public void setLectureId(int lectureId) {
+        this.lectureId = lectureId;
+    }
+
     public int getRating() {
         return rating;
     }
@@ -46,14 +54,6 @@ public class ReviewDTO {
 
     public String getComment() {
         return comment;
-    }
-
-    public int getLectureId() {
-        return lectureId;
-    }
-
-    public void setLectureId(int lectureId) {
-        this.lectureId = lectureId;
     }
 
     public void setComment(String comment) {
@@ -72,7 +72,7 @@ public class ReviewDTO {
     public String toString() {
         return "ReviewDTO{" +
                 "id=" + id +
-                ", userId=" + userId  +
+                ", userId=" + userId +
                 ", lectureId=" + lectureId +
                 ", rating=" + rating +
                 ", comment='" + comment + '\'' +

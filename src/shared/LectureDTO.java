@@ -6,6 +6,7 @@ import java.util.List;
 public class LectureDTO {
 
     private int id;
+    private int courseId;
     private String type;
     private String description;
     private List<String> start = new ArrayList<String>();
@@ -15,8 +16,8 @@ public class LectureDTO {
     public LectureDTO() {
     }
 
-    public LectureDTO(String type, String description, List<String> start, List<String> end, String location) {
-        this.id = id;
+    public LectureDTO(int courseId, String type, String description, List<String> start, List<String> end, String location) {
+        this.courseId = courseId;
         this.type = type;
         this.description = description;
         this.start = start;
@@ -28,8 +29,12 @@ public class LectureDTO {
         return id;
     }
 
-    public void setId() {
-        this.id = id;
+    public int getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId() {
+        this.courseId = courseId;
     }
 
     public String getType() {

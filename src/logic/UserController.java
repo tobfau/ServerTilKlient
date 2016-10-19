@@ -1,23 +1,24 @@
 package logic;
+
 import service.DBWrapper;
 import shared.CourseDTO;
 import shared.LectureDTO;
 import shared.ReviewDTO;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UserController {
+public abstract class UserController {
 
     public static void main(String[] args) {
-        UserController controller = new UserController();
-        controller.getCourses(1);
-        controller.getReviews(1);
+        //UserController controller = new UserController();
+        //controller.getCourses(1);
     }
 
-    public UserController(){
+    public UserController() {
     }
 
     public ArrayList<ReviewDTO> getReviews(int lectureId) {
@@ -42,6 +43,7 @@ public class UserController {
 
                 reviews.add(review);
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -49,7 +51,7 @@ public class UserController {
         return reviews;
     }
 
-    public ArrayList<LectureDTO> getLectures(int courseId){
+    public ArrayList<LectureDTO> getLectures(int courseId) {
 
         ArrayList<LectureDTO> lectures = new ArrayList<LectureDTO>();
 
@@ -61,7 +63,7 @@ public class UserController {
             ResultSet rs = DBWrapper.getRecords("lecture", null, params, null, 0);
 
 
-            while (rs.next()){
+            while (rs.next()) {
                 LectureDTO lecture = new LectureDTO();
 
                 lecture.setType(rs.getString("type"));
@@ -70,22 +72,22 @@ public class UserController {
             }
 
 
-        } catch (SQLException e){
+        } catch (SQLException e) {
 
         }
         return lectures;
     }
 
     //Metode der softdeleter et review fra databasen
-    public void softDeleteReview(ReviewDTO review){
+    public void softDeleteReview(ReviewDTO review) {
 
         try {
 
-            Map <String, String> isDeleted = new HashMap();
+            Map<String, String> isDeleted = new HashMap();
 
             isDeleted.put("is_deleted", String.valueOf(review.isDeleted()));
 
-            Map <String, String> id = new HashMap();
+            Map<String, String> id = new HashMap();
             id.put("id", String.valueOf(review.getId()));
 
             DBWrapper.updateRecords("review", isDeleted, id);
@@ -95,32 +97,30 @@ public class UserController {
         }
     }
 
-    public ArrayList<CourseDTO> getCourses(int userId){
+    public ArrayList<CourseDTO> getCourses(int userId) {
 
         ArrayList<CourseDTO> courses = new ArrayList<CourseDTO>();
 
         try {
-
             Map<String, String> params = new HashMap();
             Map<String, String> joins = new HashMap();
 
             params.put("id", String.valueOf(userId));
-            joins.put("table","course_attendant");
+            joins.put("table", "course_attendant");
 
             String[] attributes = new String[]{"name", "code"};
             ResultSet rs = DBWrapper.getRecords("course", attributes, params, null, 0);
 
-            while (rs.next()){
+
+            while (rs.next()) {
                 CourseDTO course = new CourseDTO();
 
                 course.setName(rs.getString("name"));
                 course.setId(rs.getString("code"));
                 courses.add(course);
             }
-
-
-        } catch (SQLException e){
-
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return courses;
     }
