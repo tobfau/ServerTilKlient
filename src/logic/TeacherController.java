@@ -1,5 +1,6 @@
 package logic;
 
+import shared.LectureDTO;
 import shared.ReviewDTO;
 import shared.TeacherDTO;
 
@@ -31,8 +32,29 @@ public class TeacherController extends UserController {
         return average;
     }
 
-    public double calculateAverageRatingOnCourse() {
+    public double calculateAverageRatingOnCourse(int courseId) {
+
+        int lectureId = 0;
+        double sumOfRatingsOnCourse = 0;
+        double numberOfReviews = 0;
+
+        for (LectureDTO lecture : getLectures(courseId)) {
+            lectureId = lecture.getId();
+
+            for (ReviewDTO review : getReviews(lectureId)) {
+                sumOfRatingsOnCourse = sumOfRatingsOnCourse + review.getRating();
+            }
+        }
+
+
+
+        numberOfReviews = getReviews(lectureId).size();
+
+
+
+        double average = sumOfRatingsOnCourse/numberOfLectures;
+
+        return average;
 
     }
-
 }
