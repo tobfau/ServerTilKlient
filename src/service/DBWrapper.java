@@ -20,20 +20,6 @@ public class DBWrapper {
 
     }
 
-    //Main-metode til at teste metoder
-    public static void main(String[] args) {
-        MYSQLDriver dbDriver = new MYSQLDriver();
-        DBWrapper dbWrapper = new DBWrapper(dbDriver);
-
-        HashMap values = new HashMap();
-        values.put("cbs_mail", "lol@cbs.dk");
-        values.put("password", "1234");
-        values.put("type", "Student");
-        dbWrapper.deleteRecords("User", values);
-        //dbWrapper.insertIntoRecords("user", values);
-
-    }
-
 
     /**
      *
@@ -225,17 +211,13 @@ public class DBWrapper {
      */
     public void updateRecords(String table, Map fields, Map whereStmts){
         String sql = "UPDATE " + table;
+        String updateString = createUpdateSQLStmt(sql, fields);
+        StringBuilder builder = new StringBuilder(buildWhere(whereStmts, updateString));
+        builder.append(";");
 
-        sql = createUpdateSQLStmt(sql, fields);
+        System.out.println(builder.toString());
 
-        if(whereStmts != null){
-            sql = buildWhere(whereStmts, sql);
-        }
-
-        //lav lige en builder senere
-        sql += ";";
-        System.out.println(sql);
-        dbDriver.updateSQL(sql);
+        dbDriver.updateSQL(builder.toString());
     }
 
     private String createUpdateSQLStmt(String sql, Map<String, String> fields) {
@@ -277,7 +259,6 @@ public class DBWrapper {
         String sql = "DELETE FROM " + table;
         StringBuilder builder = new StringBuilder(buildWhere(whereStmts, sql));
         builder.append(";");
-        System.out.println(builder.toString());
 
         return builder.toString();
     }
