@@ -55,17 +55,16 @@ public class UserEndpoint {
 
     @POST
     @Path("/login")
-    /*public void login(
-            @("email") String param1) {
+    public String login() {
 
-        System.out.print("");
-        System.out.print(param1);
+        String email = "123@123.dk";
+        String password = "123";
 
         Gson gson = new Gson();
 
         UserController ctrl = new UserController();
 
-        //return gson.toJson(ctrl.login(cbs_email, password));
-    }*/
+        return gson.toJson(ctrl.login(email, password));
+    }
 
 }

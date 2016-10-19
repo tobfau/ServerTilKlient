@@ -5,6 +5,7 @@ import shared.ReviewDTO;
 import java.util.ArrayList;
 import service.DBWrapper;
 import shared.CourseDTO;
+import shared.UserDTO;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -151,26 +152,28 @@ public class UserController {
         return courses;
     }
 
-    public boolean login(String cbs_email, String password) {
+    public UserDTO login(String cbs_email, String password) {
+
+        UserDTO user = null;
 
         try {
             Map<String, String> params = new HashMap();
-            System.out.print(cbs_email);
-            System.out.print(password);
-            params.put("cbs_email", String.valueOf(cbs_email));
-            params.put("password", String.valueOf(password));
-            String[] attributes = {"id"};
+            params.put("cbs_mail", String.valueOf(cbs_email));
+            //params.put("password", String.valueOf(password));
 
-            ResultSet rs = DBWrapper.getRecords("review", attributes, params, null, 0);
+            String[] attributes = {"id", "cbs_mail"};
+            ResultSet rs = DBWrapper.getRecords("user", attributes, params, null, 0);
 
             while (rs.next()) {
-                System.out.println("bruger found");
+                //user.setCbsMail(rs.getString("cbs_mail"));
+                System.out.print("bruger fundet");
+                System.out.print(rs.getString("cbs_mail"));
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return false;
+        return user;
     }
 }
