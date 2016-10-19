@@ -88,10 +88,18 @@ public class TUIAdminMenu {
     public void TUIChooseCourseId(int idCourseChoice) {
 
         Scanner input = new Scanner(System.in);
-        System.out.println("Indtast id for ønskede kommentar der skal slettes: ");
+        System.out.println("Indtast id for ønskede kursus: ");
 
         idCourseChoice = input.nextInt();
         }
+
+    public void TUIChooseReviewId(int idReviewChoice) {
+
+        Scanner input = new Scanner(System.in);
+        System.out.println("Indtast id for ønskede review: ");
+
+        idReviewChoice = input.nextInt();
+    }
 
     /**
      * TUICreateUser tager brugerens indput om den nye brugers information og sender variablerne videre til logikken (AdminControlleren)

@@ -56,7 +56,7 @@ public class UserController {
         return lectures;
     }
 
-    public ArrayList<CourseDTO> getCourses(int userId){
+    public ArrayList<CourseDTO> getCourses(){
 
         ArrayList<CourseDTO> courses = new ArrayList<CourseDTO>();
 
@@ -64,7 +64,7 @@ public class UserController {
             Map<String, String> params = new HashMap();
             Map<String, String> joins = new HashMap();
 
-            params.put("id", String.valueOf(userId));
+            //params.put("id", String.valueOf(userId));
             joins.put("table","course_attendant");
 
             String[] attributes = new String[]{"name", "code"};

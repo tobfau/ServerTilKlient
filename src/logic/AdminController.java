@@ -1,6 +1,8 @@
 package logic;
 
+import dal.MYSQLDriver;
 import dal.ServiceImpl;
+import service.DBWrapper;
 import service.Service;
 import shared.*;
 import view.TUIAdminMenu;
@@ -30,7 +32,7 @@ public class AdminController extends UserController {
 **/
     public AdminController () {
 
-        super(lectures, courses);
+        super();
     }
 
 /**
@@ -41,41 +43,36 @@ public class AdminController extends UserController {
 /**
  * Dette er en foreach løkke som printer alle lectures ud med et id først
  **/
-            for (CourseDTO courseDTO : service.getCourses(userDTO)) {
-
-                ArrayList<CourseDTO> idCourse = service.getCourses(userDTO);
-                System.out.println("id: " + idCourse + " " + courseDTO);
-
+            for (CourseDTO courseDTO : super.getCourses()) {
+            System.out.println(courseDTO.getId() + "id: " + courseDTO);
+            }
 /**
  * Her kaldes tuiAdminMenuen, som spørger admin efter et id på det Course, admin ønsker og se tilhørende lectures til
  **/
             int idCourseChoice = 0;
             tuiAdminMenu.TUIChooseCourseId(idCourseChoice);
 
-        }
-
 /**
  * Dette er en foreach løkke som printer alle courses ud med et id først
  **/
-            for (LectureDTO lectureDTO : service.getLectures(userDTO)) {
-
-                ArrayList<LectureDTO> idLecture = service.getLectures(userDTO);
-                System.out.println("id: " + idLecture + " " + lectureDTO);
+            for (LectureDTO lectureDTO : super.getLectures(idCourseChoice)) {
+                System.out.println(lectureDTO.getId() + "id: " + lectureDTO);
 
             }
 
-
- /**
- * Her kaldes tuiAdminMenuen, som spørger admin efter et id på det Lecture , admin ønsker og se tilhørende kommentarer til
- **/
             int idLectureChoice = 0;
             tuiAdminMenu.TUIChooseLectureId(idLectureChoice);
 
-            ReviewDTO reviewDTO = new ReviewDTO();
-            reviewDTO.setId(idLectureChoice);
+            for (ReviewDTO reviewDTO : super.getReview(idLectureChoice)) {
+            System.out.println(reviewDTO.getId() + "id: " + reviewDTO);
 
-            service.deleteReviewComment(reviewDTO);
-        }
+            }
+
+            int idReviewChoice = 0;
+            tuiAdminMenu.TUIChooseReviewId(idReviewChoice);
+
+            DBWrapper.updateRecords("review", "id" ,idReviewChoice);
+    ;}
 
  /**
  *Her ses en else som træder i kraft ved indtasting af invalid id
