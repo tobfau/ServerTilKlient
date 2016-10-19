@@ -68,7 +68,7 @@ public class Run {
             server = HttpServerFactory.create("http://" + ConfigLoader.SERVER_ADDRESS + ":" + ConfigLoader.SERVER_PORT + "/");
             System.setOut(stdout);
         }catch(ArrayIndexOutOfBoundsException a){
-            System.out.println(a.getMessage());
+            Logging.log(a, 3, "Fejl. Sysem startede ikke!");
             System.exit(20);
         }
 

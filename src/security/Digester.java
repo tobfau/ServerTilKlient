@@ -1,5 +1,6 @@
 package security;
 
+import logic.ConfigLoader;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
@@ -11,8 +12,8 @@ import java.security.MessageDigest;
 public class Digester {
 
   //TODO: Set SALT and KEY in config-file.
-  private final static String SALT = "n0zaCTADRUuTb@JUp01n%5@(l@IAaLlZ";
-  private final static String KEY = "40674244454045cb9a70040a30e1c007";
+  private final static String SALT = ConfigLoader.HASH_SALT;
+  private final static String KEY = ConfigLoader.ENCRYPT_KEY;
   private static MessageDigest digester;
 
 
