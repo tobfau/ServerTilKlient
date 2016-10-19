@@ -211,16 +211,13 @@ public class DBWrapper {
      */
     public void updateRecords(String table, Map fields, Map whereStmts){
         String sql = "UPDATE " + table;
+        String updateString = createUpdateSQLStmt(sql, fields);
+        StringBuilder builder = new StringBuilder(buildWhere(whereStmts, updateString));
+        builder.append(";");
 
-        sql = createUpdateSQLStmt(sql, fields);
+        System.out.println(builder.toString());
 
-        if(whereStmts != null){
-            sql = buildWhere(whereStmts, sql);
-        }
-
-        //lav lige en builder senere
-        sql += ";";
-        dbDriver.updateSQL(sql);
+        dbDriver.updateSQL(builder.toString());
     }
 
     private String createUpdateSQLStmt(String sql, Map<String, String> fields) {
