@@ -18,34 +18,30 @@ public class MYSQLDriver {
 
 
     public MYSQLDriver(){
-        try{
-        }
-
-        catch (SQLException ex){
-            ex.printStackTrace();
-        }
 
     }
 
-    public ResultSet executeSQL(String sql) throws SQLException {
+    public static ResultSet executeSQL(String sql) throws SQLException {
         try {
             dbConnection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
             return dbConnection.prepareStatement(sql).executeQuery();
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            System.out.println("htr");
             dbConnection.close();
         }
         return null;
     }
 
-    public void updateSQL(String sql){
+    public static void updateSQL(String sql) throws SQLException{
         try{
+            dbConnection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
             dbConnection.prepareStatement(sql).executeUpdate();
 
         } catch (SQLException e){
             e.printStackTrace();
+        } finally {
+            dbConnection.close();
         }
     }
 

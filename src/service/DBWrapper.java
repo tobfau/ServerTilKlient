@@ -3,6 +3,7 @@ package service;
 import dal.MYSQLDriver;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -11,14 +12,10 @@ import java.util.Map;
  * Created by Kasper on 17/10/2016.
  */
 public class DBWrapper {
-    //Test variabler
-    private MYSQLDriver dbDriver;
 
-    //Test constructor
-    public DBWrapper(MYSQLDriver dbDriver){
-        this.dbDriver = dbDriver;
-
+    public DBWrapper(){
     }
+
 
 
     /**
@@ -33,7 +30,7 @@ public class DBWrapper {
      * @param limit En limitation, hvis der kun ønskes en bestemt mængde data returneret. IKKE håndteret endnu, indsæt derfor 0.
      * @return Returnerer et ResultSet med ønsket data.
      */
-    public ResultSet getRecords (String table, String[] attributes, Map whereStmts, Map joinStmts, int limit){
+    public static ResultSet getRecords (String table, String[] attributes, Map whereStmts, Map joinStmts, int limit) throws SQLException {
 
         String sql = "SELECT ";
 
@@ -50,7 +47,7 @@ public class DBWrapper {
 
         //lav lige en builder senere
         sql += ";";
-        return dbDriver.executeSQL(sql);
+        return MYSQLDriver.executeSQL(sql);
 
     }
 
@@ -64,7 +61,7 @@ public class DBWrapper {
      * @param table Hvilken tabel der hentes data fra.
      * @return Returnerer en String med et SQL Statement, hvor der er bygget på til FROM "table".
      */
-    private String appendAttributes(String sql, String[] attributes, String table) {
+    private static String appendAttributes(String sql, String[] attributes, String table) {
         StringBuilder builder = new StringBuilder(sql);
 
         if(attributes.length == 0) {
@@ -97,7 +94,7 @@ public class DBWrapper {
      * @param sql Modtager det SQL-statement der er igang med at blive bygget op.
      * @return Returnerer en String med et SQL Statement, hvor der er bygget JOIN clauses på.
      */
-    private String joinOn(Map<String, String> joins, String sql){
+    private static String joinOn(Map<String, String> joins, String sql){
         StringBuilder builder = new StringBuilder(sql);
 
         if(!joins.isEmpty()){
@@ -124,7 +121,7 @@ public class DBWrapper {
      * @param sql Modtager det SQL-statement der er igang med at blive bygget op.
      * @return Returnerer en String med et SQL statement, hvor der er bygget WHERE clauses på.
      */
-    private String buildWhere(Map<String, String> params, String sql){
+    private static String buildWhere(Map<String, String> params, String sql){
         StringBuilder builder = new StringBuilder(sql);
 
         if(!params.isEmpty()){
@@ -157,7 +154,7 @@ public class DBWrapper {
      * @param table Tabellen der skal INSERT i.
      * @param values Et Map<K,V> der indeholder et selvvalgt antal set 'Keys' med specificeret 'Values' - "INSERT INTO (key) VALUES ("value")".
      */
-    public void insertIntoRecords(String table, Map<String, String> values){
+    public static void insertIntoRecords(String table, Map<String, String> values) throws SQLException {
         String sql = "INSERT INTO ";
         StringBuilder builder = new StringBuilder();
         builder.append(sql);
@@ -165,7 +162,7 @@ public class DBWrapper {
         builder.append(appendValues(values));
         builder.append(";");
 
-        dbDriver.updateSQL(builder.toString());
+        MYSQLDriver.updateSQL(builder.toString());
     }
 
     /**
@@ -173,7 +170,7 @@ public class DBWrapper {
      * @param values Et Map<K,V> der indeholder et selvvalgt antal set 'Keys' med specificeret 'Values' - "INSERT INTO (key) VALUES ("value")".
      * @return Returnerer en String med et SQL statement, hvor VALUES clausen er bygget på.
      */
-    private String appendValues(Map<String, String> values){
+    private static String appendValues(Map<String, String> values){
         StringBuilder builder = new StringBuilder();
         builder.append(" (");
 
@@ -206,10 +203,7 @@ public class DBWrapper {
     }
 
 
-    /**
-     * Mangler stadig updateRecords() og dets private metoder, if any.
-     */
-    public void updateRecords(String table, Map fields, Map whereStmts){
+    public static void updateRecords(String table, Map fields, Map whereStmts) throws SQLException {
         String sql = "UPDATE " + table;
         String updateString = createUpdateSQLStmt(sql, fields);
         StringBuilder builder = new StringBuilder(buildWhere(whereStmts, updateString));
@@ -217,10 +211,10 @@ public class DBWrapper {
 
         System.out.println(builder.toString());
 
-        dbDriver.updateSQL(builder.toString());
+        MYSQLDriver.updateSQL(builder.toString());
     }
 
-    private String createUpdateSQLStmt(String sql, Map<String, String> fields) {
+    private static String createUpdateSQLStmt(String sql, Map<String, String> fields) {
         StringBuilder builder = new StringBuilder(sql);
 
         builder.append(" SET ");
@@ -252,15 +246,13 @@ public class DBWrapper {
     }
 
 
-    /**
-     * Mangler stadig deleteRecords() og dets private metoder, if any.
-     */
-    public String deleteRecords(String table, Map<String, String> whereStmts){
+
+    public static void deleteRecords(String table, Map<String, String> whereStmts) throws SQLException{
         String sql = "DELETE FROM " + table;
         StringBuilder builder = new StringBuilder(buildWhere(whereStmts, sql));
         builder.append(";");
 
-        return builder.toString();
+        MYSQLDriver.updateSQL(builder.toString());
     }
 
 
