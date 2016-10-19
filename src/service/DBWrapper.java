@@ -25,11 +25,17 @@ public class DBWrapper {
         MYSQLDriver dbDriver = new MYSQLDriver();
         DBWrapper dbWrapper = new DBWrapper(dbDriver);
 
-        HashMap values = new HashMap();
+        /*HashMap values = new HashMap();
         values.put("cbs_mail", "lol@cbs.dk");
         values.put("password", "1234");
         values.put("type", "Student");
-        dbWrapper.insertIntoRecords("user", values);
+        dbWrapper.insertIntoRecords("user", values);*/
+
+        HashMap values = new HashMap();
+        values.put("rating","3");
+        HashMap where = new HashMap();
+        where.put("id","1");
+        dbWrapper.updateRecords("review",values,where);
 
     }
 
@@ -220,7 +226,7 @@ public class DBWrapper {
     /**
      * Mangler stadig updateRecords() og dets private metoder, if any.
      */
-    public void updateRecords(String table, Map <String, String> fields, Map <String, String> whereStmts){
+    public void updateRecords(String table, Map fields, Map whereStmts){
         String sql = "UPDATE " + table;
 
         sql = createUpdateSQLStmt(sql, fields);
@@ -231,7 +237,8 @@ public class DBWrapper {
 
         //lav lige en builder senere
         sql += ";";
-        return dbDriver.executeSQL(sql);
+        System.out.println(sql);
+        //dbDriver.executeSQL(sql);
     }
 
     private String createUpdateSQLStmt(String sql, Map<String, String> fields) {
