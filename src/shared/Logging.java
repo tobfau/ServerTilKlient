@@ -18,25 +18,24 @@ public class Logging {
      * @param level
      * @param msg
      */
-    public static void log(Exception ex, String level, String msg) {
+    public static void log(Exception ex, int level, String msg) {
         FileHandler fh = null;
 
         try {
             fh = new FileHandler("log.txt", true);
             logger.addHandler(fh);
             switch (level) {
-
-                case "FINEST":
+                case 1:
                     logger.log(Level.FINEST, msg, ex);
                     if (!msg.equals(""))
                         System.out.println(msg + "finest error");
                     break;
-                case "FINE":
+                case 2:
                     logger.log(Level.FINE, msg, ex);
                     if (!msg.equals(""))
                         System.out.println(msg + "fine error");
                     break;
-                case "SEVERE":
+                case 3:
                     logger.log(Level.SEVERE, msg, ex);
                     if (!msg.equals(""))
                         System.out.println(msg + "severe error");
@@ -46,11 +45,11 @@ public class Logging {
                     break;
 
             }
-
-
-        } catch (IOException | SecurityException ex1) {
+        } catch (IOException ex1) {
             logger.log(Level.SEVERE, null, ex1);
-        } finally {
+        } catch (SecurityException ex1) {
+            logger.log(Level.SEVERE, null, ex1);
+        }finally {
             if (fh != null) fh.close();
         }
     }
@@ -63,7 +62,7 @@ public class Logging {
             e1.printStackTrace();
 
         }
-        log(e, "SEVERE", "hey");
+        log(e, 1, "hey");
     }
 
 }
