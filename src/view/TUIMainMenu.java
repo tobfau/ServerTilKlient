@@ -21,7 +21,7 @@ public class TUIMainMenu {
     private TUIAdminMenu tuiAdminMenu;
 
  /**
- * TUILogin er menuen hvor Admin kan logge ind eller lukke programmet.
+ * TUILogin er menuen hvor Admin kan vælge mellem at logge ind eller lukke programmet.
  **/
     public void TUILogIn(String mail, String password) {
         Scanner input = new Scanner(System.in);
@@ -32,7 +32,7 @@ public class TUIMainMenu {
 
             int choice = input.nextInt();
 /**
- * Denne switch tager dit input (choice) og validere det til den case der skal udføres.
+ * Denne switch tager admins input (choice) og sender dem videre til den valgte case.
  **/
             switch (choice) {
                 case 0:
@@ -51,7 +51,7 @@ public class TUIMainMenu {
                     System.out.println("Du indtastede en forkert vaerdi, proev igen.\n");
             }
   /**
-  * Her er en catch som trøder frem, hvis brugeren taster en forkert vaerdi.
+  * Her er en catch som træder i kraft, hvis admin taster en forkert vaerdi.
   **/
         } catch (InputMismatchException e) {
             System.out.printf("Systemet fandt fejlen: %s \n", e);

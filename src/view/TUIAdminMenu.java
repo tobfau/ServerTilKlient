@@ -8,7 +8,7 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 /**
- * Her ses TUIAdminMenuen, som er admins TUI menu.
+ * Her ses TUIAdminMenuen, som er admin's text-baseret user interface menu.
  **/
 public class TUIAdminMenu {
 
@@ -22,7 +22,7 @@ public class TUIAdminMenu {
         try {
 
             /**
-             * Her ses menuens muligheder
+             * Her ses de muligheder som admin har i en menu.
              **/
 
             System.out.println("Velkommen til Undervisningsevaluering for CBS studerende og professorer!");
@@ -33,8 +33,8 @@ public class TUIAdminMenu {
             System.out.println("Tast 3 for slet en kommentar");
 
             /**
-             * Her bruges brugerens valg i menuen, i en switch som sender brugeren videre til den tilhørende case.
-             * Den tilhørende case sender brugeren videre til den metode der er valgt.
+             * Her modtager vi admins respons til ovenstående menu, og sender dem i gennem en switch som sender
+             * admin videre til den valgte metode. fx. 1 starter adminController.createUser();
              **/
 
             int choice = input.nextInt();
@@ -62,7 +62,7 @@ public class TUIAdminMenu {
             }
 
 	/**
-     * Her er en catch som tr�der frem, hvis brugeren taster en forkert vaerdi.
+     * Her er en catch som træder i kraft, hvis brugeren taster en invalid vaerdi.
      **/
         } catch (InputMismatchException e) {
             System.out.printf("Systemet fandt fejlen: %s \n", e);
@@ -72,7 +72,8 @@ public class TUIAdminMenu {
     }
 
     /**
-     * TUIChooseLectureId er til burgeren når der skal vælges en lecture, logikken til denne metode ses i AdminControlleren
+     * TUIChooseLectureId er til admin når der skal vælges en lecture hvorfor admin ønsker at slette en kommentar.
+     * Logikken bag denne metode ses i AdminControlleren.
      **/
     public void TUIChooseLectureId(int idLectureChoice) {
         Scanner input = new Scanner(System.in);
@@ -82,7 +83,8 @@ public class TUIAdminMenu {
     }
 
     /**
-     * TUIChooseCourseId er til burgeren når der skal vælges en Course, logikken til denne metode ses i AdminControlleren
+     * TUIChooseCourseId er bruges som "søgekriterie" til at finde frem til det review der ønskes slettet.
+     * Logikken bag denne metode ses i AdminControlleren
      **/
     public void TUIChooseCourseId(int idCourseChoice) {
 
@@ -92,6 +94,12 @@ public class TUIAdminMenu {
         idCourseChoice = input.nextInt();
         }
 
+    /**
+     * Efter at have indsnævret antallet af reviews ved først at søge ud fra courses og derefter lectures,
+     * kan admin nu indtaste id på det review der ønskes slettet
+     * @param idReviewChoice er id på det review som slettes fra databasen, logikken der fører den videre findes i
+     * adminController
+     */
     public void TUIChooseReviewId(int idReviewChoice) {
 
         Scanner input = new Scanner(System.in);
@@ -101,7 +109,8 @@ public class TUIAdminMenu {
     }
 
     /**
-     * TUICreateUser tager brugerens indput om den nye brugers information og sender variablerne videre til logikken (AdminControlleren)
+     * TUICreateUser tager admins input som den nye brugers parametre: CBS mail, Password og Type
+     * og sender variablerne videre til logik laget (AdminController)
      **/
     public void TUICreateUser(String mail, String password, String type){
         Scanner mail_input = new Scanner(System.in);
@@ -120,7 +129,8 @@ public class TUIAdminMenu {
     }
 
     /**
-     * TUIDeleteUser er til sletning af en bruger. i Logikken listes alle brugerne med id hvorefter admin kan slette en bruger udfra id.
+     * TUIDeleteUser er til sletning af en bruger. Logikken (Admincontroller) lister alle brugerne med tilhørende id
+     * hvorefter admin kan slette en bruger i systemet ved at indtaste det pågældende id.
      **/
     public void TUIDeleteUser(int idUserChoice) {
         Scanner input = new Scanner(System.in);
@@ -136,6 +146,9 @@ public class TUIAdminMenu {
 
     }
 
+    /**
+     * TUIDeleteUserValidate træder i kraft hvis en invalid værdi er blevet givet af admin.
+     */
     public void TUIDeleteUserValidate(){
         System.out.println("Forkerte værdier er indtastet.");
         System.out.println("Tast 0 for at stoppe programmet.");
