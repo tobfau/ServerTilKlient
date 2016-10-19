@@ -6,38 +6,88 @@ import shared.ReviewDTO;
 
 import javax.security.auth.callback.Callback;
 import java.util.ArrayList;
+import dal.MYSQLDriver;
+import service.DBWrapper;
+import shared.CourseDTO;
+import shared.LectureDTO;
+import shared.UserDTO;
 
-/**
- * Created by emilstepanian on 12/10/2016.
- */
-public abstract class UserController implements Service {
+import java.sql.Array;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-    private ArrayList<LectureDTO> lecture = new ArrayList<LectureDTO>();
-    private ArrayList<ReviewDTO> review = new ArrayList<ReviewDTO>();
-    private Service service;
+public class UserController {
 
+    MYSQLDriver driver = new MYSQLDriver();
+    DBWrapper dbWrapper = new DBWrapper(driver);
 
-    public UserController(Service service){
+    public static void main(String[] args) {
+        UserController controller = new UserController();
+        controller.getCourses(1);
+    }
 
-        lecture = new ArrayList<>();
-        review = new ArrayList<>();
-
-        this.service = service;
+    public UserController(){
     }
 
 
-    //Metode der henter alle lectures
-    public void loadLectures(){
+    public ArrayList<LectureDTO> getLectures(int courseId){
 
-        lecture = service.getLectures();
+        ArrayList<LectureDTO> lectures = new ArrayList<LectureDTO>();
+
+        try {
+            Map<String, String> params = new HashMap();
+
+            params.put("id", String.valueOf(courseId));
+
+
+            ResultSet rs = dbWrapper.getRecords("lecture", null, params, null, 0);
+
+
+            while (rs.next()){
+                LectureDTO lecture = new LectureDTO();
+
+                lecture.setType(rs.getString("type"));
+                lecture.setDescription(rs.getString("description"));
+                lectures.add(lecture);
+            }
+
+
+            } catch (SQLException e){
+
+            }
+        return lectures;
     }
 
+    public ArrayList<CourseDTO> getCourses(int userId){
 
-    //Metode der henter alle reviews
-    public void loadReviews(){
+        ArrayList<CourseDTO> courses = new ArrayList<CourseDTO>();
 
-        review = service.getReview();
+        try {
+            Map<String, String> params = new HashMap();
+            Map<String, String> joins = new HashMap();
 
+            params.put("id", String.valueOf(userId));
+            joins.put("table","course_attendant");
+
+            String[] attributes = new String[]{"name", "code"};
+            ResultSet rs = dbWrapper.getRecords("course", attributes, params, null, 0);
+
+
+            while (rs.next()){
+                CourseDTO course = new CourseDTO();
+
+                course.setName(rs.getString("name"));
+                course.setId(rs.getString("code"));
+                courses.add(course);
+            }
+
+
+        } catch (SQLException e){
+
+        }
+        return courses;
     }
-
 }

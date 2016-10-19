@@ -1,6 +1,6 @@
 package logic;
 
-import dal.ServiceImpl;
+
 import security.Digester;
 import service.Service;
 import shared.AdminDTO;
@@ -19,7 +19,8 @@ import java.util.Scanner;
 
 /**
  * MainControlleren er den første controlleren der bliver kørt.
- **/
+ */
+
 public class MainController {
 
     private UserDTO user;
@@ -86,6 +87,7 @@ public class MainController {
        * else træder i kraft ved forkert mail eller password, der er her mulighed for et output til klienten om fejl ved login.
         else {
             System.out.println("Forkert log in!");
+<<<<<<< HEAD
             DataOutputStream OutToClient = new DataOutputStream();
         }**/
 
@@ -136,4 +138,5 @@ public class MainController {
 
 
       }
+
 }
