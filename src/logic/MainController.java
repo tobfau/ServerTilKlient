@@ -49,7 +49,7 @@ public class MainController {
         String securedPassword = Digester.hashWithSalt(password);
 
         try {
-            Map<String, String> loginMail = new HashMap<>();
+            Map<String, String> loginMail = new HashMap<>   ();
 
             loginMail.put("cbs_mail", String.valueOf(mail));
             loginMail.put("password", String.valueOf(password));
