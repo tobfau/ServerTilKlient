@@ -53,7 +53,7 @@ public class TUIAdminMenu {
                     break;
 
                 case 3:
-                    adminController.deleteComment();
+                  //  adminController.deleteComment();
                     break;
 
                 default:

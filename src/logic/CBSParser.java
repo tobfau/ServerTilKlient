@@ -20,6 +20,7 @@ import java.util.*;
 public class CBSParser {
     private static CourseDTO[] courseArray;
     private static Gson gson = new Gson();
+    private static Map<String, String> studyValues;
 
     public CBSParser() {
     }
@@ -42,17 +43,16 @@ public class CBSParser {
 
     public static void main(String[] args) {
         ConfigLoader.parseConfig();
-        parseStudiesToArray();
+        parseStudiesToSet();
     }
 
 
-    private static void parseStudiesToArray() {
+    private static void parseStudiesToSet() {
         JsonReader jsonReader;
         JsonParser jparser = new JsonParser();
-        Set<String> studyNames = new HashSet<String>();
+        studyValues = new HashMap<String, String>();
 
         try {
-
             jsonReader = new JsonReader(new FileReader(ConfigLoader.STUDY_DATA_JSON));
             JsonArray jArray = jparser.parse(jsonReader).getAsJsonArray();
 
@@ -61,23 +61,18 @@ public class CBSParser {
 
                 JsonObject obj = (JsonObject) iterator.next();
 
-                studyNames.add(obj.get("study-name").toString());
+
+                studyValues.put("shortname",obj.get("study-shortname").toString());
+                studyValues.put("name",obj.get("study-name").toString());
             }
 
+            DBWrapper.insertIntoRecords("study",studyValues);
 
-
-
-
-
-            //Læs Json filen og opret array med CourseDTO objekter
-
-
-
-            //courseArray = gson.fromJson(reader, CourseDTO[].class);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
+
 
     private static void parseLectures(){
         try{
@@ -116,15 +111,16 @@ public class CBSParser {
     }
 
     private static void parseToDatabase() throws SQLException {
-        Set<String> studyNames = new HashSet<String>();
         Map<String, String> studyValues = new HashMap<String, String>();
         Map<String, String> courseValues = new HashMap<String, String>();
-        String studyName;
 
-        for (CourseDTO course : courseArray){
+        //Parser studyNames til database
 
-            //Tjek om studiet er blevet oprettet. Hvis ikke, da opret i database og tilføj til Set for at markere, det er oprettet.
-            studyName = course.getId().substring(0,5);
+        DBWrapper.insertIntoRecords("study",studyValues);
+
+
+        //Tjek om studiet er blevet oprettet. Hvis ikke, da opret i database og tilføj til Set for at markere, det er oprettet.
+           /* studyName = course.getId().substring(0,5);
             if(!studyNames.contains(studyName)){
                 studyNames.add(studyName);
 
@@ -132,6 +128,11 @@ public class CBSParser {
                 studyValues.put("name",studyName);
                 DBWrapper.insertIntoRecords("study",studyValues);
             }
+            */
+
+
+
+        for (CourseDTO course : courseArray){
 
 
             /**
