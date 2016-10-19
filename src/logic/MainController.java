@@ -89,15 +89,16 @@ public class MainController {
     /**
      * Denne metode logger admin ind i terminalen.
      */
-    public void loginAdmin() {
+    public int loginAdmin (AdminDTO adminDTO) {
 
-        String mail = "";
-        String password = "";
-        tuiMainMenu.TUILogIn(mail, password);
         /**
          * I dette tilfælde (hvor der logges ind gennem terminalen) er der ikke hashet første gang (hvor passwordet sendes fra klient til server)
          * Derfor hashes der to gange her for at få samme hash værdi.
          */
+
+        String password = adminDTO.getPassword();
+        String mail = adminDTO.getCbsMail();
+
         String securedPassword = Digester.hashWithSalt(password);
 
         String securedPassword1 = Digester.hashWithSalt(securedPassword);
@@ -113,24 +114,27 @@ public class MainController {
             loginMail.put("cbs_mail", String.valueOf(mail));
             loginMail.put("password", String.valueOf(password));
 
-            DBWrapper.getRecords("user", null, loginMail, null, 0);
-
             ResultSet result = DBWrapper.getRecords("user", null, loginMail, null, 0);
 
-            String type = result.getString("type");
+            //If login returned any rows
+            if(result.next()) {
+                String type = result.getString("type");
 
-            /**
-             * En if statement der validere om brugeren der logger in er af typen admin eller kan der ikke logges ind i TUI.
-             */
-            if (type.equals("admin")) {
-                adminCtrl = new AdminController();
-                //adminCtrl.loadAdmin(user);
+                /**
+                 * En if statement der validere om brugeren der logger in er af typen admin eller kan der ikke logges ind i TUI.
+                 */
+                if (type.equals("admin")) {
+                    adminDTO.setCbsMail(mail);
+                    adminDTO.setPassword(securedPassword1);
 
-                AdminDTO adminDTO = new AdminDTO();
-                adminDTO.setCbsMail(mail);
-                adminDTO.setPassword(securedPassword1);
-
-                tuiAdminMenu.Menu(adminDTO);
+                    TUIAdminMenu tuiAdminMenu = new TUIAdminMenu();
+                    tuiAdminMenu.Menu(adminDTO);
+                }
+                if (type != "admin") {
+                    //Login error. No rows returned for username and password
+                    System.out.println("bom");
+                    return 10;
+                }
             }
 
         }
@@ -139,8 +143,9 @@ public class MainController {
             System.out.print(e.getMessage());
             System.out.println("Du indtastede en forkert vaerdi, proev igen. \n");
             Logging.log(e,1,"Brugeren kunne ikke logge ind som admin");
-            tuiMainMenu.TUILogIn(mail, password);
+            tuiMainMenu.TUILogIn(adminDTO);
         }
+        return 200;
 
     }
 

@@ -17,7 +17,7 @@ import java.util.*;
  **/
 public class AdminController extends UserController {
 
-    private AdminDTO currentAdmin;
+    private AdminDTO adminDTO;
     private LectureDTO lectureDTO;
     private CourseDTO courseDTO;
     private ReviewDTO reviewDTO;
@@ -31,14 +31,6 @@ public class AdminController extends UserController {
     }
 
     /**
-     * Kaldes i MainControlleren som den admin, der logges ind og anvender adminCtrl.
-     * @param currentAdmin
-     */
-    public void loadAdmin(AdminDTO currentAdmin) {
-        this.currentAdmin = currentAdmin;
-    }
-
-    /**
      * deleteComment metoden sørger for at slette en kommentar udfra et indtastet id af admin brugeren (indtastes i TUI)
      **/
     public void deleteReview() {
@@ -47,7 +39,7 @@ public class AdminController extends UserController {
  * Dette er en foreach løkke som printer alle lectures ud med tilhørende id
  **/
         for (CourseDTO courseDTO : getCourses()) {
-            System.out.println(courseDTO.getId() + "id: " + courseDTO);
+            System.out.println(courseDTO.getId() + ": " + courseDTO);
         }
 /**
  * Her kaldes tuiAdminMenuen, som spørger admin efter et id på den Course admin ønsker og se tilhørende lectures til
@@ -97,7 +89,7 @@ public class AdminController extends UserController {
             e.printStackTrace();
             Logging.log(e,2,"Det indtastede id matcher ikke med nogle Review id i databsen");
         }
-        tuiAdminMenu.Menu(currentAdmin);
+        tuiAdminMenu.Menu(adminDTO);
         ;
     }
 
@@ -174,12 +166,11 @@ public class AdminController extends UserController {
      * Denne metode er til at lave en ny bruger, admin skal indtaste de tilhørende parametre: mail, password og type
      * hvorefter brugeren bliver oprettet i databasen.
      **/
-    public void createUser() {
-        String mail = "";
-        String password = "";
-        String type = "";
+    public void createUser(AdminDTO adminDTO) {
 
-        tuiAdminMenu.TUICreateUser(mail, password, type);
+        String mail = adminDTO.getCbsMail();
+        String password = adminDTO.getPassword();
+        String type = adminDTO.getType();
 
         //tjekker passwordet for tal og bogstaver, om det opfylder et normalt krav til et password
         if (password.matches(".*\\d+.*") && (password.matches(".*[a-zA-Z]+.*"))) {
@@ -191,16 +182,20 @@ public class AdminController extends UserController {
                 userMail.put("password", String.valueOf(password));
 
                 userMail.put("type", String.valueOf(type));
+
                 DBWrapper.insertIntoRecords("user", userMail);
+
                 System.out.println("Brugeren " + mail + " er nu oprettet. ");
-                tuiAdminMenu.Menu(currentAdmin);
+                tuiAdminMenu.Menu(adminDTO);
+
             } catch (SQLException e) {
                 e.printStackTrace();
                 Logging.log(e,1,"Brugeren kunne ikke oprettes");
             }
         } else {
             System.out.println("Forkert værdi i password. Prøv igen ");
-            createUser();
+            TUIAdminMenu tuiAdminMenu = new TUIAdminMenu();
+            tuiAdminMenu.Menu(adminDTO);
 
         }
     }

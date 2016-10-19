@@ -3,6 +3,7 @@ package view;
 import logic.AdminController;
 import shared.AdminDTO;
 import shared.StudentDTO;
+import shared.UserDTO;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -15,6 +16,7 @@ public class TUIAdminMenu {
     private AdminController adminController;
     private StudentDTO studentDTO;
     private AdminDTO adminDTO;
+    private UserDTO userDTO;
 
     public void Menu(AdminDTO adminDTO) {
         adminController = new AdminController();
@@ -42,14 +44,19 @@ public class TUIAdminMenu {
             switch (choice) {
                 case 0:
                     System.out.println("Programmet er stoppet og du er logget ud.");
+                    System.exit(0);
                     break;
 
                 case 1:
-                    adminController.createUser();
+                    String mail = "";
+                    String password = "";
+                    String type = "";
+
+                    TUICreateUser(adminDTO);
                     break;
 
                 case 2:
-                    adminController.deleteUser(studentDTO.getId());
+                    adminController.deleteUser(userDTO.getId());
                     break;
 
                 case 3:
@@ -112,20 +119,32 @@ public class TUIAdminMenu {
      * TUICreateUser tager admins input som den nye brugers parametre: CBS mail, Password og Type
      * og sender variablerne videre til logik laget (AdminController)
      **/
-    public void TUICreateUser(String mail, String password, String type){
+    public Object TUICreateUser(AdminDTO adminDTO){
+
+        String mail = "";
+        String password = "";
+        String type = "";
+
         Scanner mail_input = new Scanner(System.in);
         System.out.println("Indtast CBS mail: ");
+        mail = mail_input.nextLine();
 
         Scanner password_input = new Scanner(System.in);
         System.out.println("Indtast password: ");
+        password = password_input.nextLine();
 
         Scanner type_input = new Scanner(System.in);
         System.out.println("Indtast type (Student, Teacher, Admin): ");
-
-        mail = mail_input.nextLine();
-        password = password_input.nextLine();
         type = type_input.nextLine();
 
+
+        adminDTO.setCbsMail(mail);
+        adminDTO.setPassword(password);
+        adminDTO.setType(type);
+
+        AdminController adminController = new AdminController();
+        adminController.createUser(adminDTO);
+        return adminDTO;
     }
 
     /**

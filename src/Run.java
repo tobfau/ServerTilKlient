@@ -4,16 +4,26 @@ import com.sun.jersey.api.container.httpserver.HttpServerFactory;
 import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
 import logic.ConfigLoader;
+import logic.MainController;
 import logic.UserController;
+import shared.AdminDTO;
 import shared.Logging;
+import shared.UserDTO;
+import view.TUIMainMenu;
+
 import javax.ws.rs.*;
 import java.io.PrintStream;
 
 //TODO: Missing documentation and use of config variables.
 public class Run {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) /*throws IOException*/ {
 
+        AdminDTO adminDTO = new AdminDTO();
+        TUIMainMenu tuiMainMenu = new TUIMainMenu();
+        tuiMainMenu.TUILogIn(adminDTO);
+
+       /*
         HttpServer server = null;
 
         //Loader configfilen
@@ -42,5 +52,7 @@ public class Run {
         System.out.println("Stopping server");
         System.out.println("Server stopped");
         System.out.println();
+
+        */
     }
 }
