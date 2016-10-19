@@ -3,16 +3,7 @@ package view.endpoints;
 import com.google.gson.Gson;
 import logic.UserController;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.FormParam;
+import javax.ws.rs.*;
 
 /**
  * Created by Kasper on 19/10/2016.
@@ -32,7 +23,6 @@ public class UserEndpoint {
         Gson gson = new Gson();
 
         UserController ctrl = new UserController();
-
 
         return gson.toJson(ctrl.getLectures(courseId));
     }
@@ -54,8 +44,11 @@ public class UserEndpoint {
     }
 
     @POST
+    @Consumes("application/json")
     @Path("/login")
-    public String login() {
+    public String login(String s) {
+
+        System.out.println(s);
 
         String email = "123@123.dk";
         String password = "123";
