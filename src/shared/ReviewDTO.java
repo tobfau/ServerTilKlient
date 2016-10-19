@@ -1,31 +1,23 @@
 package shared;
 
-/**
- * Created by emilstepanian on 12/10/2016.
- */
 public class ReviewDTO {
-    //penis
+
     private int id;
     private int userId;
+    private int lectureId;
     private int rating;
     private String comment;
-    private int lectureId;
-    private String cbsMail;
-    private int userId;
+    private boolean isDeleted;
 
-
-    public ReviewDTO(){
+    public ReviewDTO() {
     }
 
-    public ReviewDTO(int id, int rating, String comment, int lectureId, String cbsMail, int userId) {
-        this.id = id;
+    public ReviewDTO(int userId, int lectureId, int rating, String comment, boolean isDeleted) {
         this.userId = userId;
+        this.lectureId = lectureId;
         this.rating = rating;
         this.comment = comment;
-        this.lectureId = lectureId;
-
-        this.cbsMail = cbsMail;
-        this.userId = userId;
+        this.isDeleted = isDeleted;
     }
 
     public int getId() {
@@ -56,10 +48,6 @@ public class ReviewDTO {
         return comment;
     }
 
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
     public int getLectureId() {
         return lectureId;
     }
@@ -68,33 +56,27 @@ public class ReviewDTO {
         this.lectureId = lectureId;
     }
 
-    public boolean getCommentIsDeleted() {
-        return commentIsDeleted;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
-    public void setCommentIsDeleted(boolean commentIsDeleted) {
-        this.commentIsDeleted = commentIsDeleted;
+    public boolean isDeleted() {
+        return isDeleted;
     }
 
-    public int getUserId() {
-        return userId;
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
     }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
 
     @Override
     public String toString() {
         return "ReviewDTO{" +
                 "id=" + id +
-                ", userId='" + userId + '\'' +
+                ", userId=" + userId  +
+                ", lectureId=" + lectureId +
                 ", rating=" + rating +
                 ", comment='" + comment + '\'' +
-                ", lectureId=" + lectureId +
-                ", cbsMail='" + cbsMail + '\'' +
-                ", userId=" + userId +
+                ", isDeleted=" + isDeleted +
                 '}';
     }
 }

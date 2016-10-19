@@ -1,65 +1,60 @@
 package logic;
 
-import dal.MYSQLDriver;
 import service.DBWrapper;
-import shared.LectureDTO;
 import shared.ReviewDTO;
-
-import java.sql.ResultSet;
+import shared.StudentDTO;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Created by emilstepanian on 12/10/2016.
  */
-public class StudentController {
 
-    MYSQLDriver driver = new MYSQLDriver();
-    DBWrapper dbWrapper = new DBWrapper(driver);
+public class StudentController extends UserController {
 
+    private StudentDTO currentStudent;
+
+    //Test
     public static void main(String[] args) {
+
         StudentController controller = new StudentController();
-        controller.insertReview(1);
+
+        controller.insertReview(new ReviewDTO(1, 1, 1, "1", true));
     }
 
 
-    public StudentController(){
+    public StudentController() {
 
     }
 
-    public void insertReview(int userId, int lectureId, int rating, String comment, String cbsMail) {
+    public void loadStudent(StudentDTO currentStudent) {
+        this.currentStudent = currentStudent;
+    }
 
-        ArrayList<ReviewDTO> review = new ArrayList<ReviewDTO>();
+        //Metode til at indsætte et review i databasen
 
-        try {
+        public void insertReview (ReviewDTO review){
 
-            Map<String, String> values = new HashMap();
+            try {
 
-            values.put("userId", String.valueOf(userId));
-            values.put("lectureId", String.valueOf(lectureId));
-            values.put("rating", String.valueOf(rating));
-            values.put("comment", String.valueOf(comment));
-            values.put("cbsMail", String.valueOf(cbsMail));
+                Map <String, String> values = new HashMap();
 
-
-            ResultSet rs = dbWrapper.insertIntoRecords("review", values);
-
-
-            ReviewDTO review1 = new ReviewDTO();
-
-            review1.setComment(rs.getString("comment"));
-            review1.setRating(rs.getInt("rating"));
+                values.put("user_id", String.valueOf(review.getUserId()));
+                values.put("lecture_id", String.valueOf(review.getLectureId()));
+                values.put("rating", String.valueOf(review.getRating()));
+                values.put("comment", String.valueOf(review.getComment()));
+                values.put("is_deleted", String.valueOf(review.isDeleted()));
 
 
-            review.add(review1);
+                DBWrapper.insertIntoRecords("review", values);
 
 
-        } catch (SQLException e) {
+            } catch (SQLException e) {
+
+                e.printStackTrace();
+            }
 
         }
-
-    }
 
 }

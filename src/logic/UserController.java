@@ -1,24 +1,21 @@
 package logic;
-
-import dal.MYSQLDriver;
 import service.DBWrapper;
 import shared.CourseDTO;
 import shared.LectureDTO;
 import shared.ReviewDTO;
-import shared.UserDTO;
-
-import java.sql.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by emilstepanian on 12/10/2016.
- */
 public class UserController {
 
+    public static void main(String[] args) {
+        UserController controller = new UserController();
+        controller.getCourses(1);
+        controller.getReviews(1);
+    }
 
     public UserController(){
     }
@@ -28,24 +25,23 @@ public class UserController {
         ArrayList<ReviewDTO> reviews = new ArrayList<ReviewDTO>();
 
         try {
-        Map<String, String> params = new HashMap();
-        params.put("id", String.valueOf(lectureId));
-        String[] attributes = {"id", "user_id", "lecture_id", "rating", "commment", "comment_is_deleted"};
+            Map<String, String> params = new HashMap();
+            params.put("id", String.valueOf(lectureId));
+            String[] attributes = {"id", "user_id", "lecture_id", "rating", "comment", "is_deleted"};
 
-        ResultSet rs = dbWrapper.getRecords("review", attributes, params, null, 0);
+            ResultSet rs = DBWrapper.getRecords("review", attributes, params, null, 0);
 
-        while (rs.next()) {
-            ReviewDTO review = new ReviewDTO();
-            review.setId(rs.getInt("id"));
-            review.setUserId(rs.getInt("user_id"));
-            review.setLectureId(rs.getInt("lecture_id"));
-            review.setRating(rs.getInt("rating"));
-            review.setComment(rs.getString("comment"));
-            review.setCommentIsDeleted(rs.getBoolean("comment_is_deleted"));
+            while (rs.next()) {
+                ReviewDTO review = new ReviewDTO();
+                review.setId(rs.getInt("id"));
+                review.setUserId(rs.getInt("user_id"));
+                review.setLectureId(rs.getInt("lecture_id"));
+                review.setRating(rs.getInt("rating"));
+                review.setComment(rs.getString("comment"));
+                review.setDeleted(rs.getBoolean("is_deleted"));
 
-            reviews.add(review);
-        }
-
+                reviews.add(review);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -62,7 +58,6 @@ public class UserController {
 
             params.put("id", String.valueOf(courseId));
 
-
             ResultSet rs = DBWrapper.getRecords("lecture", null, params, null, 0);
 
 
@@ -75,10 +70,29 @@ public class UserController {
             }
 
 
-            } catch (SQLException e){
+        } catch (SQLException e){
 
-            }
+        }
         return lectures;
+    }
+
+    //Metode der softdeleter et review fra databasen
+    public void softDeleteReview(ReviewDTO review){
+
+        try {
+
+            Map <String, String> isDeleted = new HashMap();
+
+            isDeleted.put("is_deleted", String.valueOf(review.isDeleted()));
+
+            Map <String, String> id = new HashMap();
+            id.put("id", String.valueOf(review.getId()));
+
+            DBWrapper.updateRecords("review", isDeleted, id);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public ArrayList<CourseDTO> getCourses(int userId){
@@ -110,5 +124,4 @@ public class UserController {
         }
         return courses;
     }
-
 }

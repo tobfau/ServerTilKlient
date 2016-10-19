@@ -4,14 +4,14 @@ import shared.LectureDTO;
 import shared.ReviewDTO;
 import shared.TeacherDTO;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-
 public class TeacherController extends UserController {
 
     private TeacherDTO currentAdmin;
 
-    public void loadAdmin(TeacherDTO currentAdmin) {
+    public TeacherController() {
+    }
+
+    public void loadAdmin(TeacherDTO currentAdmin) {    
         this.currentAdmin = currentAdmin;
     }
 
@@ -26,8 +26,9 @@ public class TeacherController extends UserController {
         for (ReviewDTO review : getReviews(lectureId)) {
             sumOfRatings = sumOfRatings + review.getRating();
         }
-        //double average = Double.valueOf(df.format(sumOfRatings/numberOfReviews));
-        double average = sumOfRatings/numberOfReviews;
+
+        double average = sumOfRatings / numberOfReviews;
+
 
         return average;
     }
@@ -35,26 +36,25 @@ public class TeacherController extends UserController {
     public double calculateAverageRatingOnCourse(int courseId) {
 
         int lectureId = 0;
-        double sumOfRatingsOnCourse = 0;
+        double sumOfRatings = 0;
         double numberOfReviews = 0;
 
+        // for (LectureDTO lecture : getLectures1(courseId)) {
         for (LectureDTO lecture : getLectures(courseId)) {
-            lectureId = lecture.getId();
 
-            for (ReviewDTO review : getReviews(lectureId)) {
-                sumOfRatingsOnCourse = sumOfRatingsOnCourse + review.getRating();
-            }
+            lectureId = lecture.getId();
         }
 
+        //for (ReviewDTO review : getReviews1(lectureId)) {
+        for (ReviewDTO review : getReviews(lectureId)) {
+            sumOfRatings = sumOfRatings + review.getRating();
+        }
 
-
+        //numberOfReviews = getReviews1(lectureId).size();
         numberOfReviews = getReviews(lectureId).size();
 
-
-
-        double average = sumOfRatingsOnCourse/numberOfLectures;
+        double average = sumOfRatings / numberOfReviews;
 
         return average;
-
     }
 }
