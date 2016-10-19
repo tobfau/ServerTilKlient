@@ -3,7 +3,4 @@
 target/
 target/*
 config.json
-src/service/DBWrapper_BACKUP_14690.java
-src/service/DBWrapper_BASE_14690.java
-src/service/DBWrapper_LOCAL_14690.java
-src/service/DBWrapper_REMOTE_14690.java
+
