@@ -40,11 +40,21 @@ public class CBSParser {
         }
     }
 
+    public static void main(String[] args) {
+        parseStudiesToArray();
+    }
+
 
     private static void parseStudiesToArray() {
         try {
             //Læs Json filen og opret array med CourseDTO objekter
             JsonReader reader = new JsonReader(new FileReader(ConfigLoader.STUDY_DATA));
+
+            JsonParser parser = new JsonParser();
+            JsonObject obj = parser.parse(reader).getAsJsonObject();
+            String studyName = obj.get("study-name").getAsString();
+            System.out.println(studyName);
+
 
             //courseArray = gson.fromJson(reader, CourseDTO[].class);
         } catch (Exception e) {
