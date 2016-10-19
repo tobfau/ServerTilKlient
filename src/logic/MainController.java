@@ -19,11 +19,11 @@ import java.util.Map;
  * MainControlleren er den første controlleren der bliver kørt.
  */
 
-
 public class MainController {
 
-    private UserDTO user;
-    private Service service;
+    private AdminDTO admin;
+    private TeacherDTO teacher;
+    private StudentDTO student;
     private Digester digester;
     private AdminController adminCtrl;
     private TeacherController teacherCtrl;
@@ -32,7 +32,6 @@ public class MainController {
     private TUIAdminMenu tuiAdminMenu;
 
     public MainController() {
-        this.service = service;
         adminCtrl = new AdminController();
         teacherCtrl = new TeacherController();
         studentCtrl = new StudentController();
@@ -41,6 +40,7 @@ public class MainController {
     /**
      * Dette er login metoden som er baseret på variablerne mail og password, som er indtastet af den studerende eller læreren.
      **/
+
     public void login (String mail, String password) {
 
         /**
@@ -49,7 +49,8 @@ public class MainController {
         String securedPassword = Digester.hashWithSalt(password);
 
         try {
-            Map<String, String> loginMail = new HashMap<String, String>   ();
+
+            Map<String, String> loginMail = new HashMap<String, String>();
 
             loginMail.put("cbs_mail", String.valueOf(mail));
             loginMail.put("password", String.valueOf(password));
@@ -64,8 +65,7 @@ public class MainController {
                 TeacherDTO teacherDTO = new TeacherDTO();
                 teacherDTO.setCbsMail(mail);
                 teacherDTO.setPassword(securedPassword);
-
-                //teacherCtrl.loadTeacher(user);
+                teacherCtrl.loadTeacher(teacher);
 
             }
             if (type.equals("student")) {
@@ -73,10 +73,8 @@ public class MainController {
                 StudentDTO studentDTO = new StudentDTO();
                 studentDTO.setCbsMail(mail);
                 studentDTO.setPassword(securedPassword);
-
-                //studentCtrl.loadStudent(user);
+                studentCtrl.loadStudent(student);
             }
-
         }
 
         //hvis der ingen ens værdi findes med det indtastede id og id i DB vil denne catch kaste brugeren videre til tuiAdminMenuen, hvor man kan få muligheden for og prøve igen osv.
@@ -86,7 +84,7 @@ public class MainController {
         }
     }
 
-    public void loginAdmin(){
+    public void loginAdmin() {
 
         String mail = "";
         String password = "";
@@ -114,7 +112,6 @@ public class MainController {
 
             String type = result.getString("type");
 
-
             /**
              * En if statement der validere om brugeren der logger in er af typen admin eller kan der ikke logges ind i TUI.
              **/
@@ -137,10 +134,6 @@ public class MainController {
             tuiMainMenu.TUILogIn(mail, password);
         }
 
-
-        /**
-         * En else statement der træder i kraft hvis der er indtastet et forkert mail eller password.
-         **/
     }
-}
 
+}
