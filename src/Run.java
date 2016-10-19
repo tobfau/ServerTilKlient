@@ -11,6 +11,8 @@ import logic.CBSParser;
 import logic.ConfigLoader;
 import logic.UserController;
 import service.Service;
+import shared.Logging;
+
 import java.io.PrintStream;
 import java.sql.SQLException;
 
@@ -43,6 +45,9 @@ public class Run {
 
     public static void main(String[] args) throws IOException {
 
+        //Setup logLevel and prepare to log
+        Logging.initiateLog(ConfigLoader.DEBUG);
+
         HttpServer server = null;
 
         try {
@@ -63,7 +68,6 @@ public class Run {
         //Loader courses og lectures ind til databasen
         System.out.println("Server henter fag og lektioner.");
         System.out.println("Det kan tage op til 40 sekunder...");
-
 
         //Parse CBS data til database
         /**try {

@@ -1,5 +1,7 @@
 package shared;
 
+import logic.ConfigLoader;
+
 import java.io.IOException;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
@@ -9,6 +11,16 @@ import java.util.logging.Logger;
 public class Logging {
 
     protected static final Logger logger = Logger.getLogger("logging");
+
+    public static void initiateLog(String debugLevel){
+        if(debugLevel.equals("1")){
+            logger.setLevel(Level.FINEST);
+        }else if(debugLevel.equals("2")){
+            logger.setLevel(Level.FINE);
+        }else{
+            logger.setLevel(Level.SEVERE);
+        }
+    }
 
     /**
      * Ved hjælp af switch er der
