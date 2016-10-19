@@ -1,5 +1,6 @@
 package service;
 
+import com.sun.xml.bind.v2.TODO;
 import dal.MYSQLDriver;
 
 import java.sql.ResultSet;
@@ -29,7 +30,8 @@ public class DBWrapper {
         values.put("cbs_mail", "lol@cbs.dk");
         values.put("password", "1234");
         values.put("type", "Student");
-        dbWrapper.insertIntoRecords("user", values);
+        dbWrapper.deleteRecords("User", values);
+        //dbWrapper.insertIntoRecords("user", values);
 
     }
 
@@ -149,7 +151,9 @@ public class DBWrapper {
                 Map.Entry<String, String> entry = (Map.Entry<String, String>) iterator.next();
                 builder.append(entry.getKey());
                 builder.append(" = ");
+                builder.append("'");
                 builder.append(entry.getValue());
+                builder.append("'");
 
                 //Tjek om der er flere entries i params
                 if(iterator.hasNext()){
@@ -229,8 +233,15 @@ public class DBWrapper {
     /**
      * Mangler stadig deleteRecords() og dets private metoder, if any.
      */
-    public void deleteRecords(){
+    public String deleteRecords(String table, Map<String, String> whereStmts){
+        String sql = "DELETE FROM " + table;
+        StringBuilder builder = new StringBuilder(buildWhere(whereStmts, sql));
+        builder.append(";");
+        System.out.println(builder.toString());
 
+        return builder.toString();
     }
+
+
 
 }
