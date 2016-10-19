@@ -20,20 +20,6 @@ public class DBWrapper {
 
     }
 
-    //Main-metode til at teste metoder
-    public static void main(String[] args) {
-        MYSQLDriver dbDriver = new MYSQLDriver();
-        DBWrapper dbWrapper = new DBWrapper(dbDriver);
-
-        HashMap values = new HashMap();
-        values.put("cbs_mail", "lol@cbs.dk");
-        values.put("password", "1234");
-        values.put("type", "Student");
-        dbWrapper.deleteRecords("User", values);
-        //dbWrapper.insertIntoRecords("user", values);
-
-    }
-
 
     /**
      *
@@ -234,7 +220,6 @@ public class DBWrapper {
 
         //lav lige en builder senere
         sql += ";";
-        System.out.println(sql);
         dbDriver.updateSQL(sql);
     }
 
@@ -277,7 +262,6 @@ public class DBWrapper {
         String sql = "DELETE FROM " + table;
         StringBuilder builder = new StringBuilder(buildWhere(whereStmts, sql));
         builder.append(";");
-        System.out.println(builder.toString());
 
         return builder.toString();
     }
