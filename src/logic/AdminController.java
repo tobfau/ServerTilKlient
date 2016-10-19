@@ -28,7 +28,7 @@ public class AdminController extends UserController {
     DBWrapper dbWrapper = new DBWrapper();
 
 /**
-* AdminControlleren har nedarvet fra UserControlleren (dens metoder)
+* AdminControlleren har nedarvet fra UserControlleren dvs. den har adgang til de samme metoder.
 **/
     public AdminController () {
 
@@ -36,24 +36,24 @@ public class AdminController extends UserController {
     }
 
 /**
-* deleteComent metoden sørger for at slette en kommentar udfra et indtastet id af admin brugeren (iindtastet i terminalen)
+* deleteComment metoden sørger for at slette en kommentar udfra et indtastet id af admin brugeren (indtastes i TUI)
 **/
     public void deleteComment() {
 
 /**
- * Dette er en foreach løkke som printer alle lectures ud med et id først
+ * Dette er en foreach løkke som printer alle lectures ud med tilhørende id
  **/
             for (CourseDTO courseDTO : super.getCourses()) {
             System.out.println(courseDTO.getId() + "id: " + courseDTO);
             }
 /**
- * Her kaldes tuiAdminMenuen, som spørger admin efter et id på det Course, admin ønsker og se tilhørende lectures til
+ * Her kaldes tuiAdminMenuen, som spørger admin efter et id på den Course admin ønsker og se tilhørende lectures til
  **/
             int idCourseChoice = 0;
             tuiAdminMenu.TUIChooseCourseId(idCourseChoice);
 
 /**
- * Dette er en foreach løkke som printer alle courses ud med et id først
+ * Dette er en foreach løkke som printer alle courses ud med deres id
  **/
             for (LectureDTO lectureDTO : super.getLectures(idCourseChoice)) {
                 System.out.println(lectureDTO.getId() + "id: " + lectureDTO);
@@ -62,7 +62,10 @@ public class AdminController extends UserController {
 
             int idLectureChoice = 0;
             tuiAdminMenu.TUIChooseLectureId(idLectureChoice);
-
+        /**
+         * Dette er en foreach løkke som printer alle reviews ud på baggrund af den givne id, som admin har skrevet
+         * ind i tuiAdminMenu.
+         */
             for (ReviewDTO reviewDTO : super.getReview(idLectureChoice)) {
             System.out.println(reviewDTO.getId() + "id: " + reviewDTO);
 
@@ -71,7 +74,10 @@ public class AdminController extends UserController {
             int idReviewChoice = 0;
             tuiAdminMenu.TUIChooseReviewId(idReviewChoice);
 
-
+        /**
+         * Nu har vi fået et id på et review fra TUIChooseReviewId, den indtastede id findes i review database-tabelen
+         * og her ændres værdien "is_deleted" til 1 dvs. den "soft deletes"
+         */
         try {
 
             Map<String, String> id = new HashMap<>();
@@ -102,8 +108,8 @@ public class AdminController extends UserController {
   */
 
   /**
-  *Denne metode er til og slette en bruger, hvor alle brugerne listes op i terminalen (med id)
-  * og derefter kan der tastes et id af den bruger som skal slettes.
+  *Denne metode er til at slette en bruger, hvor alle brugerne listes op i terminalen (med id)
+  * og derefter kan der tastes et id ind af den bruger som skal slettes.
   **/
     public void deleteUser(UserDTO userDTO) {
 
@@ -131,13 +137,19 @@ public class AdminController extends UserController {
                 tuiAdminMenu.TUIDeleteUserMenu(idUserChoiceDelete);
         }
 
-        //hvis der ingen ens værdi findes med det indtastede id og id i DB vil denne catch kaste brugeren videre til tuiAdminMenuen, hvor man kan få muligheden for og prøve igen osv.
+        /**
+         * hvis der ikke findes en værdi der passer med det indtastede id i Databasen,
+         * vil denne catch kaste admin videre til tuiAdminMenuen, hvor man kan få muligheden for og prøve igen.
+         */
+        hvis der ingen ens værdi findes med det indtastede id og id  DB vil denne catch kaste brugeren videre til tuiAdminMenuen, hvor man kan få muligheden for og prøve igen osv.
         catch (SQLException e){
             e.printStackTrace();
             tuiAdminMenu.TUIDeleteUserValidate();
         }
 
-        //sletning af bruger.
+        /**
+         * Her slettes brugen fra databasen ved hjælp af den id som der er blevet skrevet ind af admin.
+         */
         try {
 
             Map<String, String> id = new HashMap<>();
@@ -152,7 +164,7 @@ public class AdminController extends UserController {
     }
 
   /**
-  *Denne metode er til og lave en ny bruger, admin skal indtaste mail, password og type af bruger.
+  * Denne metode er til at lave en ny bruger, admin skal indtaste de tilhørende parametre: mail, password og type
   * hvorefter brugeren bliver oprettet i databasen.
   **/
     public void createUser(){
