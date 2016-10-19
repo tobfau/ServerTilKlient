@@ -6,20 +6,22 @@ package shared;
 public class ReviewDTO {
     //penis
     private int id;
+    private int userId;
     private int rating;
     private String comment;
     private int lectureId;
-    private String cbsMail;
+    private boolean commentIsDeleted;
 
     public ReviewDTO(){
     }
 
-    public ReviewDTO(int id, int rating, String comment, int lectureId, String cbsMail) {
+    public ReviewDTO(int id, int userId, int rating, String comment, int lectureId, boolean commentIsDeleted) {
         this.id = id;
+        this.userId = userId;
         this.rating = rating;
         this.comment = comment;
         this.lectureId = lectureId;
-        this.cbsMail = cbsMail;
+        this.commentIsDeleted = commentIsDeleted;
     }
 
     public int getId() {
@@ -28,6 +30,14 @@ public class ReviewDTO {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public int getRating() {
@@ -54,22 +64,22 @@ public class ReviewDTO {
         this.lectureId = lectureId;
     }
 
-    public String getCbsMail() {
-        return cbsMail;
+    public boolean getCommentIsDeleted() {
+        return commentIsDeleted;
     }
 
-    public void setCbsMail(String cbsMail) {
-        this.cbsMail = cbsMail;
+    public void setCommentIsDeleted(boolean commentIsDeleted) {
+        this.commentIsDeleted = commentIsDeleted;
     }
 
     @Override
     public String toString() {
         return "ReviewDTO{" +
                 "id=" + id +
+                ", userId='" + userId + '\'' +
                 ", rating=" + rating +
                 ", comment='" + comment + '\'' +
                 ", lectureId=" + lectureId +
-                ", cbsMail='" + cbsMail + '\'' +
                 '}';
     }
 }

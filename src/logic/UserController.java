@@ -4,6 +4,7 @@ import dal.MYSQLDriver;
 import service.DBWrapper;
 import shared.CourseDTO;
 import shared.LectureDTO;
+import shared.ReviewDTO;
 import shared.UserDTO;
 
 import java.sql.Array;
@@ -29,6 +30,35 @@ public class UserController {
     public UserController(){
     }
 
+    public ArrayList<ReviewDTO> getReviews(int lectureId) {
+
+        ArrayList<ReviewDTO> reviews = new ArrayList<ReviewDTO>();
+
+        try {
+        Map<String, String> params = new HashMap();
+        params.put("id", String.valueOf(lectureId));
+        String[] attributes = {"id", "user_id", "lecture_id", "rating", "commment", "comment_is_deleted"};
+
+        ResultSet rs = dbWrapper.getRecords("review", attributes, params, null, 0);
+
+        while (rs.next()) {
+            ReviewDTO review = new ReviewDTO();
+            review.setId(rs.getInt("id"));
+            review.setUserId(rs.getInt("user_id"));
+            review.setLectureId(rs.getInt("lecture_id"));
+            review.setRating(rs.getInt("rating"));
+            review.setComment(rs.getString("comment"));
+            review.setCommentIsDeleted(rs.getBoolean("comment_is_deleted"));
+
+            reviews.add(review);
+        }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return reviews;
+    }
 
     public ArrayList<LectureDTO> getLectures(int courseId){
 

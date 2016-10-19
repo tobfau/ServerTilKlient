@@ -1,33 +1,38 @@
 package logic;
 
-import service.Service;
+import shared.ReviewDTO;
 import shared.TeacherDTO;
 
-/**
- * Created by emilstepanian on 12/10/2016.
- */
-public class TeacherController {
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
-    private TeacherDTO currentUser;
-    private Service service;
+public class TeacherController extends UserController {
 
+    private TeacherDTO currentAdmin;
 
-    // laver gennemsnittet af ratings
-    public double average() {
-        /*
-        Review arraylist skal hentes og derfra kun trækkes ratings.
-         */
-        int sum = 0;
-        double average;
+    public void loadAdmin(TeacherDTO currentAdmin) {
+        this.currentAdmin = currentAdmin;
+    }
 
-        //Hver rating bliver lagt sammen
-        for(int i=0; i < array.length; i++){
-            sum = sum + array[i];
+    public double calculateAverageRatingOnLecture(int lectureId) {
+        //DecimalFormat df = new DecimalFormat("#.00");
+
+        getReviews(lectureId);
+
+        int numberOfReviews = getReviews(lectureId).size();
+        int sumOfRatings = 0;
+
+        for (ReviewDTO review : getReviews(lectureId)) {
+            sumOfRatings = sumOfRatings + review.getRating();
         }
+        //double average = Double.valueOf(df.format(sumOfRatings/numberOfReviews));
+        double average = sumOfRatings/numberOfReviews;
 
-        //samlet rating bliver divideret med antallet af ratings
-        average = (double) sum/array.length;
-        //gennemsnittet bliver returneret
         return average;
     }
+
+    public double calculateAverageRatingOnCourse() {
+
+    }
+
 }
