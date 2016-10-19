@@ -7,6 +7,8 @@ import shared.AdminDTO;
 import shared.StudentDTO;
 import shared.TeacherDTO;
 import shared.UserDTO;
+import view.TUIAdminMenu;
+import view.TUIMainMenu;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -16,8 +18,8 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 /**
- * Created by emilstepanian on 12/10/2016.
- */
+ * MainControlleren er den første controlleren der bliver kørt.
+ **/
 public class MainController {
 
     private UserDTO user;
@@ -26,6 +28,8 @@ public class MainController {
     private AdminController adminCtrl;
     private TeacherController teacherCtrl;
     private StudentController studentCtrl;
+    private TUIMainMenu tuiMainMenu;
+    private TUIAdminMenu tuiAdminMenu;
 
     public MainController(Service service) {
         this.service = service;
@@ -34,18 +38,28 @@ public class MainController {
         studentCtrl = new StudentController();
     }
 
+  /**
+  * Dette er login metoden som er baseret på variablerne mail og password, som er indtastet af den studerende eller læreren.
+  **/
     public void login (String mail, String password) {
 
-        //hashing
+  /**
+  * Her hashes passwordet (med salt), som så derefter er et sikkret password, (det er her anden gang det hashes)
+  **/
         String securedPassword = Digester.hashWithSalt(password);
 
         try {
-
-            //Kommunikation med databasen, serviceImpl klassen bliver kaldt og metoden loginStudent køres.
+/**
+ * Databasen bliver kaldt, for og validere om passwordet og mailen er en eksisterende bruger.
+ **/
             user = serviceImpl.loginStudent(mail, securedPassword);
         } catch (SQLException e){
             System.out.print(e.getMessage());
         }
+
+ /**
+ * Der tjekkes her i en if, om brugeren der logger ind er en teacher eller student. Disse to brugere er dem som kan logge ind i klienten, hvor admin kun er tilhørende i TUI
+ **/
             if (user.getType().equals("teacher")) {
                 teacherCtrl = new TeacherController();
                 //teacherCtrl.loadTeacher(user);
@@ -68,69 +82,58 @@ public class MainController {
                 //studentCtrl.
             }
     }
-      /*  //else træder i kraft ved forkert mail eller password, der er her mulighed for et output til klienten om fejl ved login.
+      /**
+       * else træder i kraft ved forkert mail eller password, der er her mulighed for et output til klienten om fejl ved login.
         else {
             System.out.println("Forkert log in!");
-            //DataOutputStream OutToClient = new DataOutputStream();
-        }*/
+            DataOutputStream OutToClient = new DataOutputStream();
+        }**/
 
-      public void TUILogIn(){
-          Scanner input = new Scanner(System.in);
-          try{
-          System.out.println("Velkommen til Undervisningsevaluering for CBS studerende og professorer!");
-          System.out.println("Tast 0 for at stoppe programmet");
-          System.out.println("Tast 1 for og Logge ind som admin");
+      public void loginAdmin(){
 
-          int choice = input.nextInt();
+          String mail = "";
+          String password = "";
+          tuiMainMenu.TUILogIn(mail, password);
+ /**
+ * I dette tilfælde (hvor der logges ind gennem terminalen) er der ikke hashet første gang (hvor passwordet sendes fra klient til server)
+ * Derfor hashes der to gange her for og få den rigtige sikkerhed.
+ **/
+          String securedPassword = Digester.hashWithSalt(password);
 
-          switch (choice) {
-              case 0:
-                  System.out.println("Programmet er stoppet og du er logget ud.");
-                  break;
+          String securedPassword1 = Digester.hashWithSalt(securedPassword);
 
-              case 1:
-                  System.out.println("Indtast mail:");
-                  String mail = input.nextLine();
-
-                  System.out.println("Indtast password:");
-                  String password = input.nextLine();
-
-                  //hashing første gang.
-                  String securedPassword = Digester.hashWithSalt(password);
-
-                  //hashing anden gang.
-                  String securedPassword1 = Digester.hashWithSalt(securedPassword);
-
-                  try {
-                      //Kommunikation med databasen, serviceImpl klassen bliver kaldt og metoden loginStudent køres.
-                      user = serviceImpl.loginStudent(mail, securedPassword1);
-                  } catch (SQLException e){
-                      System.out.print(e.getMessage());
-                  }
-                  if (user.getType().equals("admin")) {
-                      adminCtrl = new AdminController();
-                      //adminCtrl.loadAdmin(user);
-
-                      AdminDTO adminDTO = new AdminDTO();
-                      adminDTO.setCbsMail(mail);
-                      adminDTO.setPassword(securedPassword1);
-
-                      adminCtrl.Menu(adminDTO);
-                  }
-                  else{
-                      System.out.println("Du indtastede en forkert vaerdi, proev igen. \n");
-                      TUILogIn();
-                  }
-                  break;
-
-              default:
-                  System.out.println("Du indtastede en forkert vaerdi, proev igen.\n");
+          try {
+ /**
+ *Kommunikation med databasen, serviceImpl klassen bliver kaldt og metoden loginStudent køres.
+ **/
+          user = serviceImpl.loginStudent(mail, securedPassword1);
           }
-          /*Her er en catch som tr�der frem, hvis brugeren taster en forkert vaerdi. */
-          }catch(InputMismatchException e){
-              System.out.printf("Systemet fandt fejlen: %s \n",e);
-              System.out.println("Du indtastede ikke et heltal, menuen kører forfra");
-              input.nextLine();
+          catch (SQLException e) {
+          System.out.print(e.getMessage());
           }
-    }
+
+ /**
+ * En if statement der validere om brugeren der logger in er af typen admin eller kan der ikke logges ind i TUI.
+ **/
+          if (user.getType().equals("admin")) {
+              adminCtrl = new AdminController();
+              //adminCtrl.loadAdmin(user);
+
+              AdminDTO adminDTO = new AdminDTO();
+              adminDTO.setCbsMail(mail);
+              adminDTO.setPassword(securedPassword1);
+
+              tuiAdminMenu.Menu(adminDTO);
+          }
+
+ /**
+ * En else statement der træder i kraft hvis der er indtastet et forkert mail eller password.
+ **/
+          else {
+              System.out.println("Du indtastede en forkert vaerdi, proev igen. \n");
+              tuiMainMenu.TUILogIn(mail, password);
+          }
+
+
+      }
 }

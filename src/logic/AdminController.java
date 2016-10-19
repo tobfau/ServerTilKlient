@@ -3,14 +3,16 @@ package logic;
 import dal.ServiceImpl;
 import service.Service;
 import shared.*;
+import view.TUIAdminMenu;
 
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 /**
- * Created by emilstepanian on 12/10/2016.
- */
+ * Admin klassen er logikken bag administratorens funktioner, denne klasse hører sammen med TUIAdminMenu,
+ * som er UI siden af klassen.
+ **/
 public class AdminController extends UserController {
 
     private Service service;
@@ -19,160 +21,111 @@ public class AdminController extends UserController {
     private CourseDTO courseDTO;
     private ReviewDTO reviewDTO;
     private AdminDTO adminDTO;
+    private TUIAdminMenu tuiAdminMenu;
+    MYSQLDriver driver = new MYSQLDriver();
+    DBWrapper dbWrapper = new DBWrapper();
 
-
+/**
+* AdminControlleren har nedarvet fra UserControlleren (dens metoder)
+**/
     public AdminController () {
-        super();
+
+        super(lectures, courses);
     }
 
-    public void Menu(AdminDTO adminDTO){
-        Scanner input = new Scanner(System.in);
-        try{
-
-            System.out.println("Velkommen til Undervisningsevaluering for CBS studerende og professorer!");
-            System.out.println("Du er logget ind som Admin" /* brugernavn?*/);
-            System.out.println("Tast 0 for at stoppe programmet og log ud.");
-            System.out.println("Tast 1 for at oprette en ny bruger. ");
-            System.out.println("Tast 2 for slet en bruger. ");
-            System.out.println("Tast 3 for slet en kommentar");
-
-            int choice = input.nextInt();
-
-            switch (choice) {
-                case 0:
-                    System.out.println("Programmet er stoppet og du er logget ud.");
-                    break;
-
-                case 1:
-                    createUser();
-                    break;
-
-                case 2:
-                    deleteUser();
-                    break;
-
-                case 3:
-                    deleteComment();
-                    break;
-
-                default:
-                    System.out.println("Du indtastede en forkert vaerdi, proev igen.\n");
-                    Menu(adminDTO);
-            }
-
-	/*Her er en catch som tr�der frem, hvis brugeren taster en forkert vaerdi. */
-        }catch(InputMismatchException e){
-            System.out.printf("Systemet fandt fejlen: %s \n",e);
-            System.out.println("Du indtastede ikke et heltal, menuen kører forfra");
-            input.nextLine();
-        }
-    }
-
-
+/**
+* deleteComent metoden sørger for at slette en kommentar udfra et indtastet id af admin brugeren (iindtastet i terminalen)
+**/
     public void deleteComment() {
 
-        for (LectureDTO lectures : service.getLectures(userDTO)) {
-
-            ArrayList<LectureDTO> idLectures = service.getLectures(userDTO);
-            System.out.println("id: " + idLectures + " " + lectures);
-
-        }
-
-        Scanner input = new Scanner(System.in);
-        System.out.println("Indtast id for ønskede forelæsning: ");
-
-        int idChoice = input.nextInt();
-
-
-        if (idChoice == /*lecture id*/ ){
-
-            for (CourseDTO courseDTO: service.getCourses(userDTO) ) {
+/**
+ * Dette er en foreach løkke som printer alle lectures ud med et id først
+ **/
+            for (CourseDTO courseDTO : service.getCourses(userDTO)) {
 
                 ArrayList<CourseDTO> idCourse = service.getCourses(userDTO);
                 System.out.println("id: " + idCourse + " " + courseDTO);
 
+/**
+ * Her kaldes tuiAdminMenuen, som spørger admin efter et id på det Course, admin ønsker og se tilhørende lectures til
+ **/
+            int idCourseChoice = 0;
+            tuiAdminMenu.TUIChooseCourseId(idCourseChoice);
+
+        }
+
+/**
+ * Dette er en foreach løkke som printer alle courses ud med et id først
+ **/
+            for (LectureDTO lectureDTO : service.getLectures(userDTO)) {
+
+                ArrayList<LectureDTO> idLecture = service.getLectures(userDTO);
+                System.out.println("id: " + idLecture + " " + lectureDTO);
+
             }
 
-            Scanner input1 = new Scanner(System.in);
-            System.out.println("Indtast id for ønskede kommentar der skal slettes: ");
 
-            int idChoice1 = input1.nextInt();
+ /**
+ * Her kaldes tuiAdminMenuen, som spørger admin efter et id på det Lecture , admin ønsker og se tilhørende kommentarer til
+ **/
+            int idLectureChoice = 0;
+            tuiAdminMenu.TUIChooseLectureId(idLectureChoice);
 
             ReviewDTO reviewDTO = new ReviewDTO();
-            reviewDTO.setId(idChoice1);
+            reviewDTO.setId(idLectureChoice);
 
             service.deleteReviewComment(reviewDTO);
         }
+
+ /**
+ *Her ses en else som træder i kraft ved indtasting af invalid id
+  **/
+ /*
         else{
             System.out.println("Invalid id");
             deleteComment();
-            Menu(adminDTO);
+            tuiAdminMenu.Menu(adminDTO);
         }
-    }
+  */
 
-    public void deleteUser(StudentDTO studentDTO) {
+  /**
+  *Denne metode er til og slette en bruger, hvor alle brugerne listes op i terminalen (med id)
+  * og derefter kan der tastes et id af den bruger som skal slettes.
+  **/
+    public void deleteUser(UserDTO userDTO) {
 
         // ShowAllUsers
 
-        // ServiceImpl.
         //int userIdFromDb = ServiceImpl.
 
+        tuiAdminMenu.TUIDeleteUser();
+
         Scanner input = new Scanner(System.in);
-        System.out.println("Indtast id på bruger der skal slettes: ");
+        System.out.println("Indtast id for ønskede bruger der skal slettes: ");
 
-        String userId = input.nextLine();
-        //det gemte brugernavn skal sendes til Service
+        int idUserChoice = input.nextInt();
 
-        if (userId.equals(userIdFromDb)) {
-            System.out.println("Brugeren " + ServiceImpl. + " er nu fjernet. \n");
-        } else {
-            System.out.println("Forkerte værdier er indtastet.");
-            System.out.println("Tast 0 for at stoppe programmet.");
-            System.out.println("Tast 1 for at prøve igen.");
-            System.out.println("Tast 2 for at gå tilbage til menuen.");
-
-
-            int choice = input.nextInt();
-
-            switch (choice) {
-                case 0:
-                    System.out.println("Programmet er stoppet.");
-                    break;
-                case 1:
-                    deleteUser(studentDTO);
-                    break;
-                case 2:
-                    Menu(adminDTO);
-                    break;
-                default:
-                    System.out.println("Du indtastede en forkert vaerdi, proev igen.\n");
-                    Menu(adminDTO);
-            }
-        }
+        //sletning af bruger.
+        //service.deleteReviewComment(idUserChoice);
     }
 
+  /**
+  *Denne metode er til og lave en ny bruger, admin skal indtaste mail, password og type af bruger.
+  * hvorefter brugeren bliver oprettet i databasen.
+  **/
     public void createUser(){
-        Scanner mail_input = new Scanner(System.in);
-        System.out.println("Indtast CBS mail: ");
+        String mail = "";
+        String password = "";
+        String type = "";
 
-        Scanner password_input = new Scanner(System.in);
-        System.out.println("Indtast password: ");
-
-        Scanner type_input = new Scanner(System.in);
-        System.out.println("Indtast type (Student, Teacher, Admin): ");
-
-        String mail = mail_input.nextLine();
-        String password = password_input.nextLine();
-        String type = type_input.nextLine();
-
-        UserDTO userDTO = new UserDTO();
+       tuiAdminMenu.TUICreateUser(mail, password, type);
 
         //tjekker passwordet for tal og bogstaver, om det opfylder et normalt krav til et password
         if (password.matches(".*\\d+.*") && (password.matches(".*[a-zA-Z]+.*"))) {
 
-            userDTO.setCbsMail(mail);
+          /*  userDTO.setCbsMail(mail);
             userDTO.setType(type);
-            userDTO.setPassword(password);
+            userDTO.setPassword(password);*/
         }
         else{
             System.out.println("Forkert værdi i password. Prøv igen ");
@@ -182,6 +135,6 @@ public class AdminController extends UserController {
         //mangler metode i Service
         //Service.createUser(userDTO);
         System.out.println("Brugeren " + /* mail*/ + " er nu oprettet. ");
-        Menu(adminDTO);
+        tuiAdminMenu.Menu(adminDTO);
     }
 }
