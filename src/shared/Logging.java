@@ -1,13 +1,11 @@
-package src.shared;
+package shared;
 
 import java.io.IOException;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * Created by esbenbak on 19/10/2016.
- */
+//TODO: Needs proper comments
 public class Logging {
 
     protected static final Logger logger = Logger.getLogger("logging");
@@ -22,7 +20,7 @@ public class Logging {
         FileHandler fh = null;
 
         try {
-            fh = new FileHandler("log.txt", true);
+            fh = new FileHandler("application.log", true);
             logger.addHandler(fh);
             switch (level) {
                 case 1:
@@ -53,17 +51,5 @@ public class Logging {
             if (fh != null) fh.close();
         }
     }
-
-    public static void main(String[] args) {
-        IOException e = new IOException();
-        try {
-            throw e;
-        } catch (IOException e1) {
-            e1.printStackTrace();
-
-        }
-        log(e, 1, "hey");
-    }
-
 }
 
