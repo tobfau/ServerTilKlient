@@ -37,11 +37,6 @@ public class MainController {
         teacherCtrl = new TeacherController();
         studentCtrl = new StudentController();
     }
-    /**Test metode.
-     * public static void run (String [] args){
-     * MainController mainController = new MainController();
-     * mainController.login("ansk", "ansk");
-    }**/
 
   /**
   * Dette er login metoden som er baseret på variablerne mail og password, som er indtastet af den studerende eller læreren.
@@ -61,11 +56,8 @@ public class MainController {
 
             ResultSet result = DBWrapper.getRecords("user", null, loginMail, null, 0);
 
-            //while(result.next()){
-                String type = result.getString("type");
-
-            //}
-
+                UserDTO type = new UserDTO();
+                type.setType(result.getString("type"));
 
             if (type.equals("teacher")) {
                 teacherCtrl = new TeacherController();
@@ -84,6 +76,7 @@ public class MainController {
 
                 //studentCtrl.loadStudent(user);
             }
+
         }
 
         //hvis der ingen ens værdi findes med det indtastede id og id i DB vil denne catch kaste brugeren videre til tuiAdminMenuen, hvor man kan få muligheden for og prøve igen osv.
@@ -119,10 +112,8 @@ public class MainController {
 
               ResultSet result = DBWrapper.getRecords("user", null, loginMail, null, 0);
 
-              //while(result.next()){
               String type = result.getString("type");
 
-              //}
 
               /**
                * En if statement der validere om brugeren der logger in er af typen admin eller kan der ikke logges ind i TUI.
