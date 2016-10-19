@@ -19,7 +19,6 @@ public class MYSQLDriver {
 
     public MYSQLDriver(){
         try{
-            dbConnection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
         }
 
         catch (SQLException ex){
@@ -28,11 +27,15 @@ public class MYSQLDriver {
 
     }
 
-    public ResultSet executeSQL(String sql){
+    public ResultSet executeSQL(String sql) throws SQLException {
         try {
+            dbConnection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
             return dbConnection.prepareStatement(sql).executeQuery();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            System.out.println("htr");
+            dbConnection.close();
         }
         return null;
     }
