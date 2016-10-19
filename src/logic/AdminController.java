@@ -1,7 +1,6 @@
 package logic;
 
 import dal.MYSQLDriver;
-import dal.ServiceImpl;
 import org.omg.CosNaming.NamingContextExtPackage.StringNameHelper;
 import service.DBWrapper;
 import service.Service;
@@ -71,6 +70,7 @@ public class AdminController extends UserController {
 
             }
 
+
             int idReviewChoice = 0;
             tuiAdminMenu.TUIChooseReviewId(idReviewChoice);
 
@@ -114,9 +114,11 @@ public class AdminController extends UserController {
     public void deleteUser(UserDTO userDTO) {
 
         // ShowAllUsers
+
         for (userDTO : super.getUsers()) {
             System.out.println(userDTO.getId() + "id: " + userDTO);
         }
+
 
         int idUserChoice = 0;
         tuiAdminMenu.TUIDeleteUser(idUserChoice);
@@ -140,8 +142,8 @@ public class AdminController extends UserController {
         /**
          * hvis der ikke findes en værdi der passer med det indtastede id i Databasen,
          * vil denne catch kaste admin videre til tuiAdminMenuen, hvor man kan få muligheden for og prøve igen.
+         * hvis der ingen ens værdi findes med det indtastede id og id  DB vil denne catch kaste brugeren videre til tuiAdminMenuen, hvor man kan få muligheden for og prøve igen osv.
          */
-        hvis der ingen ens værdi findes med det indtastede id og id  DB vil denne catch kaste brugeren videre til tuiAdminMenuen, hvor man kan få muligheden for og prøve igen osv.
         catch (SQLException e){
             e.printStackTrace();
             tuiAdminMenu.TUIDeleteUserValidate();
