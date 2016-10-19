@@ -2,11 +2,7 @@ package logic;
 
 import security.Digester;
 import service.DBWrapper;
-import service.Service;
-import shared.AdminDTO;
-import shared.StudentDTO;
-import shared.TeacherDTO;
-import shared.UserDTO;
+import shared.*;
 import view.TUIAdminMenu;
 import view.TUIMainMenu;
 
@@ -39,15 +35,20 @@ public class MainController {
 
     /**
      * Dette er login metoden som er baseret på variablerne mail og password, som er indtastet af den studerende eller læreren.
-     **/
+     */
 
     public void login (String mail, String password) {
 
         /**
          * Her hashes passwordet (med salt), som så derefter er et sikkret password, (det er her anden gang det hashes)
-         **/
+         */
         String securedPassword = Digester.hashWithSalt(password);
 
+        /**
+         * Her oprettes et map der tildeles nogen Strings, hvorefter mappet bliver indsat i metoden getRecords.
+         * Hvor efter et UserDTO oprettes der skal finde "type".
+         * if statement's sender brugeren til enten teacher- eller student controlleren.
+         */
         try {
 
             Map<String, String> loginMail = new HashMap<String, String>();
@@ -80,10 +81,14 @@ public class MainController {
         //hvis der ingen ens værdi findes med det indtastede id og id i DB vil denne catch kaste brugeren videre til tuiAdminMenuen, hvor man kan få muligheden for og prøve igen osv.
         catch (SQLException e) {
             e.printStackTrace();
+            Logging.log(e,1,"Brugeren kunne ikke logge ind som teacher eller student.");
             System.out.println("invalid login.");
         }
     }
 
+    /**
+     * Denne metode logger admin ind i terminalen.
+     */
     public void loginAdmin() {
 
         String mail = "";
@@ -91,15 +96,17 @@ public class MainController {
         tuiMainMenu.TUILogIn(mail, password);
         /**
          * I dette tilfælde (hvor der logges ind gennem terminalen) er der ikke hashet første gang (hvor passwordet sendes fra klient til server)
-         * Derfor hashes der to gange her for og få den rigtige sikkerhed.
-         **/
+         * Derfor hashes der to gange her for at få samme hash værdi.
+         */
         String securedPassword = Digester.hashWithSalt(password);
 
         String securedPassword1 = Digester.hashWithSalt(securedPassword);
 
         /**
-         *Kommunikation med databasen, serviceImpl klassen bliver kaldt og metoden loginStudent køres.
-         **/
+         * Her oprettes et map der tildeles nogen Strings, hvorefter mappet bliver indsat i metoden getRecords.
+         * Hvor efter et UserDTO oprettes der skal finde "type".
+         * if statement's sender brugeren til enten teacher- eller student controlleren.
+         */
         try {
             Map<String, String> loginMail = new HashMap<String, String>();
 
@@ -114,7 +121,7 @@ public class MainController {
 
             /**
              * En if statement der validere om brugeren der logger in er af typen admin eller kan der ikke logges ind i TUI.
-             **/
+             */
             if (type.equals("admin")) {
                 adminCtrl = new AdminController();
                 //adminCtrl.loadAdmin(user);
@@ -131,6 +138,7 @@ public class MainController {
         catch (SQLException e) {
             System.out.print(e.getMessage());
             System.out.println("Du indtastede en forkert vaerdi, proev igen. \n");
+            Logging.log(e,1,"Brugeren kunne ikke logge ind som admin");
             tuiMainMenu.TUILogIn(mail, password);
         }
 

@@ -95,6 +95,7 @@ public class AdminController extends UserController {
             DBWrapper.updateRecords("review", id, commentDelete);
         } catch (SQLException e) {
             e.printStackTrace();
+            Logging.log(e,2,"Det indtastede id matcher ikke med nogle Review id i databsen");
         }
         tuiAdminMenu.Menu(currentAdmin);
         ;
@@ -150,6 +151,7 @@ public class AdminController extends UserController {
          */ catch (SQLException e) {
             e.printStackTrace();
             tuiAdminMenu.TUIDeleteUserValidate();
+            Logging.log(e,1,"Brugeren kunne ikke findes i databasen og kan derfor ikke slettes");
         }
 
         /**
@@ -164,6 +166,7 @@ public class AdminController extends UserController {
             DBWrapper.deleteRecords("user", id);
         } catch (SQLException e) {
             e.printStackTrace();
+            Logging.log(e,1,"Brugeren kunne ikke slettes");
         }
     }
 
@@ -193,10 +196,12 @@ public class AdminController extends UserController {
                 tuiAdminMenu.Menu(currentAdmin);
             } catch (SQLException e) {
                 e.printStackTrace();
+                Logging.log(e,1,"Brugeren kunne ikke oprettes");
             }
         } else {
             System.out.println("Forkert værdi i password. Prøv igen ");
             createUser();
+
         }
     }
 
@@ -222,6 +227,7 @@ public class AdminController extends UserController {
 
         } catch (SQLException e) {
             e.printStackTrace();
+            Logging.log(e,1,"Funktionen getUsers kunne ikke hente Brugerne");
         }
 
         return users;

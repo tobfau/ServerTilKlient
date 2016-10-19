@@ -1,6 +1,7 @@
 package logic;
 
 import shared.LectureDTO;
+import shared.Logging;
 import shared.ReviewDTO;
 import java.util.ArrayList;
 import service.DBWrapper;
@@ -46,6 +47,7 @@ public class UserController {
 
         } catch (SQLException e) {
             e.printStackTrace();
+            Logging.log(e,2,"Kunne ikke hente getReviews");
         }
 
         return reviews;
@@ -71,7 +73,11 @@ public class UserController {
             }
 
 
-        } catch (SQLException e) {
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        Logging.log(e,2,"Kunne ikke hente getLecture");
+
 
         }
         return lectures;
@@ -92,6 +98,7 @@ public class UserController {
 
         } catch (SQLException e) {
             e.printStackTrace();
+            Logging.log(e,2,"Softdelete kunne ikke slette review, SoftDeleteReview.");
         }
     }
 
@@ -120,6 +127,7 @@ public class UserController {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            Logging.log(e,2,"Kunne ikke hente getCourses");
         }
         return courses;
     }
@@ -147,6 +155,7 @@ public class UserController {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            Logging.log(e,2,"Kunne ikke hente getCourses");
         }
         return courses;
     }
