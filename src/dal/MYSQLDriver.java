@@ -37,7 +37,7 @@ public class MYSQLDriver {
         return null;
     }
 
-    public void insertSQL(String sql){
+    public void updateSQL(String sql){
         try{
             dbConnection.prepareStatement(sql).executeUpdate();
 

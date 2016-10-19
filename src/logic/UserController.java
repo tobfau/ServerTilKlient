@@ -4,6 +4,7 @@ import dal.MYSQLDriver;
 import service.DBWrapper;
 import shared.CourseDTO;
 import shared.LectureDTO;
+import shared.ReviewDTO;
 import shared.UserDTO;
 
 import java.sql.Array;
@@ -87,4 +88,5 @@ public class UserController {
         }
         return courses;
     }
+
 }
