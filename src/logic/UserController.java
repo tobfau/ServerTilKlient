@@ -19,13 +19,6 @@ import java.util.Map;
  */
 public class UserController {
 
-    MYSQLDriver driver = new MYSQLDriver();
-    DBWrapper dbWrapper = new DBWrapper(driver);
-
-    public static void main(String[] args) {
-        UserController controller = new UserController();
-        controller.getCourses(1);
-    }
 
     public UserController(){
     }
@@ -70,7 +63,7 @@ public class UserController {
             params.put("id", String.valueOf(courseId));
 
 
-            ResultSet rs = dbWrapper.getRecords("lecture", null, params, null, 0);
+            ResultSet rs = DBWrapper.getRecords("lecture", null, params, null, 0);
 
 
             while (rs.next()){
@@ -93,6 +86,7 @@ public class UserController {
         ArrayList<CourseDTO> courses = new ArrayList<CourseDTO>();
 
         try {
+
             Map<String, String> params = new HashMap();
             Map<String, String> joins = new HashMap();
 
@@ -100,8 +94,7 @@ public class UserController {
             joins.put("table","course_attendant");
 
             String[] attributes = new String[]{"name", "code"};
-            ResultSet rs = dbWrapper.getRecords("course", attributes, params, null, 0);
-
+            ResultSet rs = DBWrapper.getRecords("course", attributes, params, null, 0);
 
             while (rs.next()){
                 CourseDTO course = new CourseDTO();
@@ -117,4 +110,5 @@ public class UserController {
         }
         return courses;
     }
+
 }

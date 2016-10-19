@@ -3,6 +3,7 @@ package service;
 import dal.MYSQLDriver;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -11,27 +12,24 @@ import java.util.Map;
  * Created by Kasper on 17/10/2016.
  */
 public class DBWrapper {
-    //Test variabler
-    private MYSQLDriver dbDriver;
 
-    //Test constructor
-    public DBWrapper(MYSQLDriver dbDriver){
-        this.dbDriver = dbDriver;
-
+    public DBWrapper(){
     }
 
-    //Main-metode til at teste metoder
-    public static void main(String[] args) {
-        MYSQLDriver dbDriver = new MYSQLDriver();
-        DBWrapper dbWrapper = new DBWrapper(dbDriver);
+    public static void main(String[] args) throws SQLException {
 
-        HashMap values = new HashMap();
-        values.put("cbs_mail", "lol@cbs.dk");
-        values.put("password", "1234");
-        values.put("type", "Student");
-        dbWrapper.insertIntoRecords("user", values);
+        Map<String, String> where = new HashMap<String, String>();
 
+        where.put("user_id","2");
+
+        Map<String, String> join = new HashMap<String, String>();
+
+        join.put("course_attendant","course_id");
+
+
+        getRecords("course", null, where, join, 0);
     }
+
 
 
     /**
@@ -46,7 +44,7 @@ public class DBWrapper {
      * @param limit En limitation, hvis der kun ønskes en bestemt mængde data returneret. IKKE håndteret endnu, indsæt derfor 0.
      * @return Returnerer et ResultSet med ønsket data.
      */
-    public ResultSet getRecords (String table, String[] attributes, Map whereStmts, Map joinStmts, int limit){
+    public static ResultSet getRecords (String table, String[] attributes, Map whereStmts, Map joinStmts, int limit) throws SQLException {
 
         String sql = "SELECT ";
 
@@ -54,7 +52,7 @@ public class DBWrapper {
 
 
         if(joinStmts != null ){
-            sql = joinOn(joinStmts, sql);
+            sql = joinOn(table, joinStmts, sql);
         }
 
         if(whereStmts != null){
@@ -63,7 +61,7 @@ public class DBWrapper {
 
         //lav lige en builder senere
         sql += ";";
-        return dbDriver.executeSQL(sql);
+        return MYSQLDriver.executeSQL(sql);
 
     }
 
@@ -77,10 +75,10 @@ public class DBWrapper {
      * @param table Hvilken tabel der hentes data fra.
      * @return Returnerer en String med et SQL Statement, hvor der er bygget på til FROM "table".
      */
-    private String appendAttributes(String sql, String[] attributes, String table) {
+    private static String appendAttributes(String sql, String[] attributes, String table) {
         StringBuilder builder = new StringBuilder(sql);
 
-        if(attributes.length == 0) {
+        if(attributes == null) {
 
             builder.append(" * ");
 
@@ -110,7 +108,7 @@ public class DBWrapper {
      * @param sql Modtager det SQL-statement der er igang med at blive bygget op.
      * @return Returnerer en String med et SQL Statement, hvor der er bygget JOIN clauses på.
      */
-    private String joinOn(Map<String, String> joins, String sql){
+    private static String joinOn(String table, Map<String, String> joins, String sql){
         StringBuilder builder = new StringBuilder(sql);
 
         if(!joins.isEmpty()){
@@ -121,10 +119,17 @@ public class DBWrapper {
                 Map.Entry<String, String> entry = (Map.Entry<String, String>) iterator.next();
                 builder.append(entry.getKey());
                 builder.append(" ON ");
+                builder.append(table);
+                builder.append(".id");
+                builder.append(" = ");
+                builder.append(entry.getKey());
+                builder.append(".");
                 builder.append(entry.getValue());
             }
 
         }
+
+        System.out.println(builder.toString());
 
         return builder.toString();
     }
@@ -137,7 +142,7 @@ public class DBWrapper {
      * @param sql Modtager det SQL-statement der er igang med at blive bygget op.
      * @return Returnerer en String med et SQL statement, hvor der er bygget WHERE clauses på.
      */
-    private String buildWhere(Map<String, String> params, String sql){
+    private static String buildWhere(Map<String, String> params, String sql){
         StringBuilder builder = new StringBuilder(sql);
 
         if(!params.isEmpty()){
@@ -149,7 +154,9 @@ public class DBWrapper {
                 Map.Entry<String, String> entry = (Map.Entry<String, String>) iterator.next();
                 builder.append(entry.getKey());
                 builder.append(" = ");
+                builder.append("'");
                 builder.append(entry.getValue());
+                builder.append("'");
 
                 //Tjek om der er flere entries i params
                 if(iterator.hasNext()){
@@ -168,7 +175,7 @@ public class DBWrapper {
      * @param table Tabellen der skal INSERT i.
      * @param values Et Map<K,V> der indeholder et selvvalgt antal set 'Keys' med specificeret 'Values' - "INSERT INTO (key) VALUES ("value")".
      */
-    public void insertIntoRecords(String table, Map<String, String> values){
+    public static void insertIntoRecords(String table, Map<String, String> values) throws SQLException {
         String sql = "INSERT INTO ";
         StringBuilder builder = new StringBuilder();
         builder.append(sql);
@@ -176,7 +183,7 @@ public class DBWrapper {
         builder.append(appendValues(values));
         builder.append(";");
 
-        dbDriver.insertSQL(builder.toString());
+        MYSQLDriver.updateSQL(builder.toString());
     }
 
     /**
@@ -184,7 +191,7 @@ public class DBWrapper {
      * @param values Et Map<K,V> der indeholder et selvvalgt antal set 'Keys' med specificeret 'Values' - "INSERT INTO (key) VALUES ("value")".
      * @return Returnerer en String med et SQL statement, hvor VALUES clausen er bygget på.
      */
-    private String appendValues(Map<String, String> values){
+    private static String appendValues(Map<String, String> values){
         StringBuilder builder = new StringBuilder();
         builder.append(" (");
 
@@ -217,20 +224,58 @@ public class DBWrapper {
     }
 
 
-    /**
-     * Mangler stadig updateRecords() og dets private metoder, if any.
-     */
-    public void updateRecords(){
+    public static void updateRecords(String table, Map fields, Map whereStmts) throws SQLException {
+        String sql = "UPDATE " + table;
+        String updateString = createUpdateSQLStmt(sql, fields);
+        StringBuilder builder = new StringBuilder(buildWhere(whereStmts, updateString));
+        builder.append(";");
 
+        System.out.println(builder.toString());
+
+        MYSQLDriver.updateSQL(builder.toString());
+    }
+
+    private static String createUpdateSQLStmt(String sql, Map<String, String> fields) {
+        StringBuilder builder = new StringBuilder(sql);
+
+        builder.append(" SET ");
+
+        for(Iterator iterator = fields.entrySet().iterator(); iterator.hasNext();){
+            Map.Entry<String, String> entry = (Map.Entry<String, String>) iterator.next();
+            builder.append(entry.getKey());
+
+            if(iterator.hasNext()){
+                builder.append(", ");
+            }
+        }
+
+        builder.append(" = ");
+
+        for(Iterator iterator = fields.entrySet().iterator(); iterator.hasNext();) {
+            Map.Entry<String, String> entry = (Map.Entry<String, String>) iterator.next();
+            builder.append("'");
+            builder.append(entry.getValue());
+            builder.append("'");
+
+            if (iterator.hasNext()) {
+                builder.append(", ");
+            }
+        }
+
+        return builder.toString();
 
     }
 
 
-    /**
-     * Mangler stadig deleteRecords() og dets private metoder, if any.
-     */
-    public void deleteRecords(){
 
+    public static void deleteRecords(String table, Map<String, String> whereStmts) throws SQLException{
+        String sql = "DELETE FROM " + table;
+        StringBuilder builder = new StringBuilder(buildWhere(whereStmts, sql));
+        builder.append(";");
+
+        MYSQLDriver.updateSQL(builder.toString());
     }
+
+
 
 }
