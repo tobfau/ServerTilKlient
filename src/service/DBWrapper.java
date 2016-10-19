@@ -220,8 +220,46 @@ public class DBWrapper {
     /**
      * Mangler stadig updateRecords() og dets private metoder, if any.
      */
-    public void updateRecords(){
+    public void updateRecords(String table, Map <String, String> fields, Map <String, String> whereStmts){
+        String sql = "UPDATE " + table;
 
+        sql = createUpdateSQLStmt(sql, fields);
+
+        if(whereStmts != null){
+            sql = buildWhere(whereStmts, sql);
+        }
+
+        //lav lige en builder senere
+        sql += ";";
+        return dbDriver.executeSQL(sql);
+    }
+
+    private String createUpdateSQLStmt(String sql, Map<String, String> fields) {
+        StringBuilder builder = new StringBuilder(sql);
+
+        builder.append(" SET ");
+
+        for(Iterator iterator = fields.entrySet().iterator(); iterator.hasNext();){
+            Map.Entry<String, String> entry = (Map.Entry<String, String>) iterator.next();
+            builder.append(entry.getKey());
+
+            if(iterator.hasNext()){
+                builder.append(", ");
+            }
+        }
+
+        builder.append(" = ");
+
+        for(Iterator iterator = fields.entrySet().iterator(); iterator.hasNext();) {
+            Map.Entry<String, String> entry = (Map.Entry<String, String>) iterator.next();
+            builder.append(entry.getValue());
+
+            if (iterator.hasNext()) {
+                builder.append(", ");
+            }
+        }
+
+        return builder.toString();
 
     }
 
