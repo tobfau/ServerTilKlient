@@ -259,7 +259,9 @@ public class DBWrapper {
 
         for(Iterator iterator = fields.entrySet().iterator(); iterator.hasNext();) {
             Map.Entry<String, String> entry = (Map.Entry<String, String>) iterator.next();
+            builder.append("'");
             builder.append(entry.getValue());
+            builder.append("'");
 
             if (iterator.hasNext()) {
                 builder.append(", ");
