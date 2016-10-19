@@ -22,14 +22,18 @@ public class MYSQLDriver {
     }
 
     public static ResultSet executeSQL(String sql) throws SQLException {
+        ResultSet result = null;
         try {
             dbConnection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-            return dbConnection.prepareStatement(sql).executeQuery();
+            result = dbConnection.prepareStatement(sql).executeQuery();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            dbConnection.close();
+
         }
-        dbConnection.close();
-        return null;
+        return result;
+
     }
 
     public static void updateSQL(String sql) throws SQLException{
