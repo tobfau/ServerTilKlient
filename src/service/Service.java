@@ -2,7 +2,6 @@ package service;
 //TODO: Class and methods needs comments and documentation.
 
 //TODO: Cleanup unused imports.
-import dal.ServiceImpl;
 import com.sun.org.apache.xpath.internal.operations.String;
 import shared.CourseDTO;
 import shared.LectureDTO;
