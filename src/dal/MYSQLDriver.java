@@ -1,7 +1,9 @@
 package dal;
 
+import com.sun.rowset.CachedRowSetImpl;
 import logic.ConfigLoader;
 
+import javax.sql.rowset.CachedRowSet;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -21,18 +23,20 @@ public class MYSQLDriver {
 
     }
 
-    public static ResultSet executeSQL(String sql) throws SQLException {
+    public static CachedRowSet executeSQL(String sql) throws SQLException {
         ResultSet result = null;
+        CachedRowSet cr = new CachedRowSetImpl();
         try {
             dbConnection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
             result = dbConnection.prepareStatement(sql).executeQuery();
+            cr.populate(result);
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             dbConnection.close();
 
         }
-        return result;
+        return cr;
 
     }
 
