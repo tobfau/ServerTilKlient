@@ -102,6 +102,7 @@ public class UserController {
         ArrayList<CourseDTO> courses = new ArrayList<CourseDTO>();
 
         try {
+
             Map<String, String> params = new HashMap();
             Map<String, String> joins = new HashMap();
 
@@ -110,7 +111,6 @@ public class UserController {
 
             String[] attributes = new String[]{"name", "code"};
             ResultSet rs = DBWrapper.getRecords("course", attributes, params, null, 0);
-
 
             while (rs.next()){
                 CourseDTO course = new CourseDTO();

@@ -7,11 +7,7 @@
 #
 # Host: localhost (MySQL 5.7.11)
 # Database: project_eva
-<<<<<<< HEAD:resources/project_eva_2016-10-18.sql
-# Generation Time: 2016-10-18 11:41:23 +0000
-=======
-# Generation Time: 2016-10-18 13:01:37 +0000
->>>>>>> 5925832abf43f14f70f15caecc41c1c5928638d0:resources/project_eva_2016-10-18.sql
+# Generation Time: 2016-10-19 11:01:11 +0000
 # ************************************************************
 
 
@@ -31,7 +27,6 @@ DROP DATABASE IF EXISTS `project_eva`;
 CREATE DATABASE `project_eva`;
 
 USE project_eva;
-
 
 # Dump of table course
 # ------------------------------------------------------------
@@ -142,15 +137,6 @@ LOCK TABLES `lecture` WRITE;
 INSERT INTO `lecture` (`id`, `course_id`, `type`, `description`, `start`, `end`, `location`)
 VALUES
 	(1,1,'LA','Lecture','2016-10-02 10:00:00','2016-10-02 11:30:00',''),
-<<<<<<< HEAD:resources/project_eva_2016-10-18.sql
-	(2,2,'XA','Exercise','2016-10-02 11:40:00','2016-10-02 13:20:00',''),
-	(3,3,'LA','Lecture','2016-10-01 12:30:00','2016-10-01 14:00:00',''),
-	(4,1,'XA','Excercise','2016-10-01 11:00:00','2016-10-01 12:30:00',''),
-	(5,1,'LA','Lecture','2016-10-03 10:00:00','2016-10-01 11:30:00',''),
-	(6,2,'LA','Lecture','2016-10-03 13:30:00','2016-10-03 15:10:00',''),
-	(7,2,'LA','Lecture','2016-10-04 08:00:00','2016-10-04 09:50:00',''),
-	(8,3,'XA','Exercise','2016-10-04 10:00:00','2016-10-04 11:30:00','');
-=======
 	(2,2,'XB','Exercise','2016-10-02 11:40:00','2016-10-02 13:20:00',''),
 	(3,3,'LA','Lecture','2016-10-01 12:30:00','2016-10-01 14:00:00',''),
 	(4,1,'XB','Excercise','2016-10-01 11:00:00','2016-10-01 12:30:00',''),
@@ -158,7 +144,6 @@ VALUES
 	(6,2,'LA','Lecture','2016-10-03 13:30:00','2016-10-03 15:10:00',''),
 	(7,2,'LA','Lecture','2016-10-04 08:00:00','2016-10-04 09:50:00',''),
 	(8,3,'XB','Exercise','2016-10-04 10:00:00','2016-10-04 11:30:00','');
->>>>>>> 5925832abf43f14f70f15caecc41c1c5928638d0:resources/project_eva_2016-10-18.sql
 
 /*!40000 ALTER TABLE `lecture` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -171,58 +156,37 @@ DROP TABLE IF EXISTS `review`;
 
 CREATE TABLE `review` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
   `lecture_id` int(11) NOT NULL,
   `rating` int(11) NOT NULL,
   `comment` varchar(500) DEFAULT '',
   `comment_is_deleted` bit(1) NOT NULL,
-  `cbs_mail` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `lecture_id` (`lecture_id`),
-  KEY `cbs_mail` (`cbs_mail`),
+  KEY `user_id` (`id`),
+  KEY `review_ibfk_2` (`user_id`),
   CONSTRAINT `review_ibfk_1` FOREIGN KEY (`lecture_id`) REFERENCES `lecture` (`id`),
-  CONSTRAINT `review_ibfk_2` FOREIGN KEY (`cbs_mail`) REFERENCES `user` (`cbs_mail`)
+  CONSTRAINT `review_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 LOCK TABLES `review` WRITE;
 /*!40000 ALTER TABLE `review` DISABLE KEYS */;
 
-<<<<<<< HEAD:resources/project_eva_2016-10-18.sql
-INSERT INTO `review` (`id`, `lecture_id`, `rating`, `comment`, `comment_is_deleted`)
+INSERT INTO `review` (`id`, `user_id`, `lecture_id`, `rating`, `comment`, `comment_is_deleted`)
 VALUES
-	(1,1,3,'',b'0'),
-	(2,1,4,'',b'0'),
-	(3,1,5,'Fed time',b'0'),
-	(4,1,1,'ubrugelig time',b'0'),
-	(5,1,5,'rigtig godt lærer',b'0'),
-	(6,2,1,'dårlig time',b'0'),
-	(7,2,1,'Læreren er til grin',b'1'),
-	(8,2,2,'mangler forståelse',b'0'),
-	(9,2,2,'',b'0'),
-	(10,2,2,'',b'0'),
-	(11,3,5,'super time',b'0'),
-	(12,3,4,'rigtig godt',b'0'),
-	(13,3,5,'',b'0'),
-	(14,3,5,'',b'0'),
-	(15,3,1,'fik ikke noget ud af det',b'0');
-=======
-INSERT INTO `review` (`id`, `lecture_id`, `rating`, `comment`, `comment_is_deleted`, `cbs_mail`)
-VALUES
-	(1,1,3,'',b'0','ab1cd@student.cbs.dk'),
-	(2,1,4,'',b'0','ab2cd@student.cbs.dk'),
-	(3,1,5,'Fed time',b'0','ab4cd@student.cbs.dk'),
-	(4,1,1,'ubrugelig time',b'0','ab5cd@student.cbs.dk'),
-	(5,1,5,'rigtig godt lærer',b'0','ab3cd@student.cbs.dk'),
-	(6,2,1,'dårlig time',b'0','te1bo@student.cbs.dk'),
-	(7,2,1,'Læreren er til grin',b'1','te1bo@student.cbs.dk'),
-	(8,2,2,'mangler forståelse',b'0','te1bo@student.cbs.dk'),
-	(9,2,2,'',b'0','te1bo@student.cbs.dk'),
-	(10,2,2,'',b'0','te1bo@student.cbs.dk'),
-	(11,3,5,'super time',b'0','te1bo@student.cbs.dk'),
-	(12,3,4,'rigtig godt',b'0','te1bo@student.cbs.dk'),
-	(13,3,5,'',b'0','te1bo@student.cbs.dk'),
-	(14,3,5,'',b'0','te1bo@student.cbs.dk'),
-	(15,3,1,'fik ikke noget ud af det',b'0','te1bo@student.cbs.dk');
->>>>>>> 5925832abf43f14f70f15caecc41c1c5928638d0:resources/project_eva_2016-10-18.sql
+	(1,1,2,3,'okay time',b'0'),
+	(2,4,3,0,'lorte time',b'0'),
+	(3,5,2,5,'Fantastisk',b'0'),
+	(4,6,5,5,'bedste time ever!!!!!',b'0'),
+	(5,8,1,0,'hader læren',b'0'),
+	(6,2,8,1,'KEEEEDELIIIIG',b'0'),
+	(7,2,2,2,'Meget gentagen ',b'0'),
+	(8,3,4,4,'Flere øvelser',b'0'),
+	(9,7,2,0,'',b'0'),
+	(10,4,6,3,'',b'0'),
+	(11,8,6,2,'fik ikke noget ud af timen',b'0'),
+	(12,3,1,1,'din mor',b'1'),
+	(13,1,7,0,'',b'0');
 
 /*!40000 ALTER TABLE `review` ENABLE KEYS */;
 UNLOCK TABLES;
