@@ -20,7 +20,6 @@ public class Run {
     public static void main(String[] args) throws IOException {
         HttpServer server = null;
 
-
         try {
             PrintStream stdout = System.out;
             System.setOut(null);
@@ -40,7 +39,6 @@ public class Run {
         System.out.println("Stopping server");
         server.stop(0);
         System.out.println("Server stopped");
-
         System.out.println();
     }
 
