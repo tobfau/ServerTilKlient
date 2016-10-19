@@ -7,6 +7,8 @@ import javax.ws.rs.Path;
 /**
  * Created by Kasper on 19/10/2016.
  */
+
+@Path("/api/student")
 public class StudentEndpoint extends UserEndpoint {
 
     @POST
