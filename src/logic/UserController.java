@@ -11,11 +11,11 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class UserController {
+public class UserController {
 
     public static void main(String[] args) {
-        //UserController controller = new UserController();
-        //controller.getCourses(1);
+        UserController controller = new UserController();
+        controller.getCourses(1);
     }
 
     public UserController() {
@@ -105,6 +105,33 @@ public abstract class UserController {
 
             params.put("id", String.valueOf(userId));
             joins.put("table", "course_attendant");
+
+            String[] attributes = new String[]{"name", "code"};
+            //Vi smider aldrig joins ind...
+            ResultSet rs = DBWrapper.getRecords("course", attributes, params, null, 0);
+
+
+            while (rs.next()) {
+                CourseDTO course = new CourseDTO();
+
+                course.setName(rs.getString("name"));
+                course.setId(rs.getString("code"));
+                courses.add(course);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return courses;
+    }
+
+    public ArrayList<CourseDTO> getCourses() {
+
+        ArrayList<CourseDTO> courses = new ArrayList<CourseDTO>();
+
+        try {
+            Map<String, String> params = new HashMap();
+
+           // params.put("id", String.valueOf(userId));
 
             String[] attributes = new String[]{"name", "code"};
             //Vi smider aldrig joins ind...
