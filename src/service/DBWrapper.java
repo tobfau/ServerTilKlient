@@ -184,6 +184,8 @@ public class DBWrapper {
         builder.append(";");
 
         MYSQLDriver.updateSQL(builder.toString());
+
+        //INSERT INTO (name, shortname, id) VALUES ("emil", "em", "3")
     }
 
     /**

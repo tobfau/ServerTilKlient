@@ -20,7 +20,6 @@ import java.util.*;
 public class CBSParser {
     private static CourseDTO[] courseArray;
     private static Gson gson = new Gson();
-    private static Map<String, String> studyValues;
 
     public CBSParser() {
     }
@@ -41,29 +40,35 @@ public class CBSParser {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         ConfigLoader.parseConfig();
-        parseStudiesToMap();
+        parseStudiesToDatabase();
     }
 
 
-    private static void parseStudiesToMap() {
+    private static void parseStudiesToDatabase() {
         JsonReader jsonReader;
         JsonParser jparser = new JsonParser();
-        studyValues = new HashMap<String, String>();
+
+        Set<String> duplicatesCheck = new HashSet<String>();
 
         try {
             jsonReader = new JsonReader(new FileReader(ConfigLoader.STUDY_DATA_JSON));
             JsonArray jArray = jparser.parse(jsonReader).getAsJsonArray();
 
+            Iterator iterator = jArray.iterator();
 
-            for(Iterator iterator = jArray.iterator(); iterator.hasNext();){
+            while(iterator.hasNext()){
 
                 JsonObject obj = (JsonObject) iterator.next();
+                Map<String, String> studyValues = new HashMap<String, String>();
 
-
-                studyValues.put("shortname",obj.get("study-shortname").toString());
-                studyValues.put("name",obj.get("study-name").toString());
+                if(!duplicatesCheck.contains(obj.get("study-name").toString())){
+                    studyValues.put("shortname",obj.get("shortname").toString());
+                    studyValues.put("name",obj.get("study-name").toString());
+                    duplicatesCheck.add(obj.get("study-name").toString());
+                    DBWrapper.insertIntoRecords("study", studyValues);
+                }
             }
 
 
@@ -110,27 +115,35 @@ public class CBSParser {
     }
 
     private static void parseToDatabase() throws SQLException {
-        Map<String, String> studyValues = new HashMap<String, String>();
-        Map<String, String> courseValues = new HashMap<String, String>();
+       /** Map<String, String> courseValues = new HashMap<String, String>();
 
         //Parser studyNames til database
 
-        //Set<Map.Entry<String, String>> studyEntries = studyValues.entrySet();
+        Set<Map.Entry<String, String>> studyEntries = studyValues.entrySet();
 
-        //for(Map.Entry<String, String> entry : studyEntries){
+        Map<String, String> tmpMap = new HashMap<String, String>();
 
-        //}
+        for(Map.Entry<String, String> entry : studyEntries){
 
-        Iterator iterator = studyValues.entrySet().iterator();
+            tmpMap.put(entry.getKey(),entry.getValue());
+            DBWrapper.insertIntoRecords("study",tmpMap);
+
+        }
+
+       /** Iterator iterator = studyValues.entrySet().iterator();
+
         while(iterator.hasNext()){
-            Map<String, String> tmpMap;
+
+
+
+            tmpMap.put((Map.Entry<String,String>)iterator.next().ge
 
             Map.Entry entry = (Map.Entry)iterator.next();
             String name = entry.getKey()
 
             DBWrapper.insertIntoRecords("study", );
         }
-
+*/
 
 
 
@@ -169,7 +182,7 @@ public class CBSParser {
 
 
 
-        for (CourseDTO course : courseArray){
+       /* for (CourseDTO course : courseArray){
 
 
             /**
@@ -192,9 +205,9 @@ public class CBSParser {
 
             } catch (Exception e ){
 
-            }*/
+            }
 
-        }
+        } */
     }
 
     //TODO: Brugt til testing - udkommenteret men får lige lov at stå her lidt.
