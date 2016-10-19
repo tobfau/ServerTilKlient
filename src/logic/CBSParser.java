@@ -3,24 +3,36 @@ package logic;
 
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
+import dal.MYSQLDriver;
+import service.DBWrapper;
 import shared.CourseDTO;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.sql.ResultSet;
+import java.util.*;
 
 /**
  * Created by Kasper on 15/10/2016.
  */
 public class CBSParser {
-    private CourseDTO[] courseArray;
-    private Gson gson;
+    private static CourseDTO[] courseArray;
+    private static Gson gson = new Gson();
+
+    private static MYSQLDriver mysqlDriver = new MYSQLDriver();
+    private static DBWrapper dbWrapper = new DBWrapper(mysqlDriver);
 
     public CBSParser() {
-        gson = new Gson();
     }
 
-    public void parseCoursesToArray() {
+    public static void parseCBSData() {
+        parseCoursesToArray();
+        parseLectures();
+        parseToDatabase();
+    }
+
+    private static void parseCoursesToArray() {
         try {
             //Læs Json filen og opret array med CourseDTO objekter
             JsonReader reader = new JsonReader(new FileReader("resources/courses.json"));
@@ -30,7 +42,7 @@ public class CBSParser {
         }
     }
 
-    public void parseLectures(){
+    private static void parseLectures(){
         try{
             String urlPrefix = ConfigLoader.CBS_API_LINK;
             URL url;
@@ -66,13 +78,57 @@ public class CBSParser {
 
     }
 
-    //TODO: Brugt til testing - udkommenteret men får lige lov at stå her lidt.
-    /*
-    public static void main(String args[]) {
-        CBSParser conTest = new CBSParser();
-        conTest.parseCoursesToArray();
-        conTest.parseLectures();
+    private static void parseToDatabase() {
+        Set<String> studyNames = new HashSet<String>();
+        Map<String, String> studyValues = new HashMap<String, String>();
+        Map<String, String> courseValues = new HashMap<String, String>();
+        String studyName;
 
+        for (CourseDTO course : courseArray){
+
+            //Tjek om studiet er blevet oprettet. Hvis ikke, da opret i database og tilføj til Set for at markere, det er oprettet.
+            studyName = course.getId().substring(0,5);
+            if(!studyNames.contains(studyName)){
+                studyNames.add(studyName);
+
+                //Opret studie i databasen
+                studyValues.put("name",studyName);
+                dbWrapper.insertIntoRecords("study",studyValues);
+            }
+
+
+            /**
+            String[] string = {};
+            ResultSet rs = dbWrapper.getRecords("study",string,null,null,0);
+            int i;
+
+            try{
+
+                while (rs.next()) {
+                    if(studyName == rs.getString("name")){
+                        i = rs.getInt("id");
+                        courseValues.put("code", course.getId());
+                        courseValues.put("name", course.getName());
+                        courseValues.put("study_id", String.valueOf(i));
+                        System.out.println("Inde i while");
+                        dbWrapper.insertIntoRecords("course", courseValues);
+                    }
+                }
+
+            } catch (Exception e ){
+
+            }*/
+
+        }
     }
-    */
+
+    //TODO: Brugt til testing - udkommenteret men får lige lov at stå her lidt.
+
+/*
+    public static void main(String args[]) {
+        CBSParser.parseCBSData();
+
+
+    }*/
+
 }

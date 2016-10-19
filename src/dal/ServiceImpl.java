@@ -1,4 +1,4 @@
-package dal;
+/**package dal;
 
 import service.Service;
 import shared.*;
@@ -32,6 +32,20 @@ public class ServiceImpl {
             e.printStackTrace();
         }
     }
+
+    //Forberedt main-metode, til test af diverse metoder.
+
+
+/*    public static void main(String[] args) {
+        ServiceImpl d = new ServiceImpl();
+        ArrayList<StudentDTO> arr = d.getStudents();
+        for (StudentDTO studentDTO : arr) {
+            System.out.println(studentDTO.getUsername());
+
+
+        }
+    }
+
 
     public UserDTO loginStudent(String username, String password) throws SQLException {
         ResultSet resultSet = null;
@@ -246,4 +260,4 @@ public class ServiceImpl {
     public boolean insertLectures(int rating, String comment, int lectureid) throws SQLException {
         return false;
     }
-}
+}*/
