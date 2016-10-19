@@ -7,6 +7,7 @@ import service.Service;
 import shared.*;
 import view.TUIAdminMenu;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -37,7 +38,7 @@ public class AdminController extends UserController {
 /**
 * deleteComment metoden sørger for at slette en kommentar udfra et indtastet id af admin brugeren (indtastes i TUI)
 **/
-    public void deleteComment() {
+    public void deleteReview() {
 
 /**
  * Dette er en foreach løkke som printer alle lectures ud med tilhørende id
@@ -65,7 +66,7 @@ public class AdminController extends UserController {
          * Dette er en foreach løkke som printer alle reviews ud på baggrund af den givne id, som admin har skrevet
          * ind i tuiAdminMenu.
          */
-            for (ReviewDTO reviewDTO : super.getReview(idLectureChoice)) {
+            for (ReviewDTO reviewDTO : super.getReviews(idLectureChoice)) {
             System.out.println(reviewDTO.getId() + "id: " + reviewDTO);
 
             }
@@ -80,11 +81,11 @@ public class AdminController extends UserController {
          */
         try {
 
-            Map<String, String> id = new HashMap<>();
+            Map<String, String> id = new HashMap<String, String>();
 
             id.put("id", String.valueOf(idReviewChoice));
 
-            Map<String, String> commentDelete = new HashMap<>();
+            Map<String, String> commentDelete = new HashMap<String, String>();
 
             commentDelete.put("is_deleted", "1");
 
@@ -115,9 +116,9 @@ public class AdminController extends UserController {
 
         // ShowAllUsers
 
-        for (userDTO : super.getUsers()) {
+        /*for (userDTO : super.getUsers()) {
             System.out.println(userDTO.getId() + "id: " + userDTO);
-        }
+        }*/
 
 
         int idUserChoice = 0;
@@ -130,7 +131,7 @@ public class AdminController extends UserController {
 
         //useridFromDb hentes
         try {
-            Map<String, String> userId = new HashMap<>();
+            Map<String, String> userId = new HashMap<String,String>();
 
             userId.put("id", String.valueOf(idUserChoiceDelete));
 
@@ -154,7 +155,7 @@ public class AdminController extends UserController {
          */
         try {
 
-            Map<String, String> id = new HashMap<>();
+            Map<String, String> id = new HashMap<String, String>();
 
             id.put("id", String.valueOf(idUserChoiceDelete));
 
@@ -180,10 +181,9 @@ public class AdminController extends UserController {
         if (password.matches(".*\\d+.*") && (password.matches(".*[a-zA-Z]+.*"))) {
 
             try {
-            Map<String, String> userMail = new HashMap<>();
+            Map<String, String> userMail = new HashMap<String, String>();
 
             userMail.put("cbs_mail", String.valueOf(mail));
-
             userMail.put("password", String.valueOf(password));
 
             userMail.put("type", String.valueOf(type));
@@ -199,5 +199,32 @@ public class AdminController extends UserController {
             System.out.println("Forkert værdi i password. Prøv igen ");
             createUser();
         }
+    }
+
+    public ArrayList<UserDTO> getUsers(int userId) {
+
+        ArrayList<UserDTO> users = new ArrayList<UserDTO>();
+
+        try {
+            Map<String, String> params = new HashMap();
+            params.put("id", String.valueOf(userId));
+            String[] attributes = {"id", "cbs_mail", "type"};
+
+            ResultSet rs = DBWrapper.getRecords("user", attributes, params, null, 0);
+
+            while (rs.next()) {
+                UserDTO user = new UserDTO();
+                user.setId(rs.getInt("id"));
+                user.setCbsMail(rs.getString("cbs_mail"));
+                user.setType(rs.getString("type"));
+
+                users.add(user);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return users;
     }
 }
