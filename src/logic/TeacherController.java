@@ -11,7 +11,7 @@ public class TeacherController extends UserController {
     public TeacherController() {
     }
 
-    public void loadAdmin(TeacherDTO currentAdmin) {    
+    public void loadAdmin(TeacherDTO currentAdmin) {
         this.currentAdmin = currentAdmin;
     }
 
