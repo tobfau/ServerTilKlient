@@ -111,6 +111,7 @@ public class UserController {
             joins.put("table","course_attendant");
 
             String[] attributes = new String[]{"name", "code"};
+            //Vi smider aldrig joins ind...
             ResultSet rs = DBWrapper.getRecords("course", attributes, params, null, 0);
 
             while (rs.next()){
