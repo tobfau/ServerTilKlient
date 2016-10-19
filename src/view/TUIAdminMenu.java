@@ -1,6 +1,5 @@
 package view;
 
-import dal.ServiceImpl;
 import logic.AdminController;
 import shared.AdminDTO;
 import shared.StudentDTO;
@@ -123,41 +122,44 @@ public class TUIAdminMenu {
     /**
      * TUIDeleteUser er til sletning af en bruger. i Logikken listes alle brugerne med id hvorefter admin kan slette en bruger udfra id.
      **/
-    public void TUIDeleteUser(){
+    public void TUIDeleteUser(int idUserChoice) {
         Scanner input = new Scanner(System.in);
         System.out.println("Indtast id på bruger der skal slettes: ");
 
         String userId = input.nextLine();
         //det gemte brugernavn skal sendes til Service
 
-        /**
-         * her ses en menu, i tilfældet af at admin alligevel ikke vil slette en bruger.  
-         **/
-        if (userId.equals(userIdFromDb)) {
-            System.out.println("Brugeren " +  + " er nu fjernet. \n");
-        } else {
-            System.out.println("Forkerte værdier er indtastet.");
-            System.out.println("Tast 0 for at stoppe programmet.");
-            System.out.println("Tast 1 for at prøve igen.");
-            System.out.println("Tast 2 for at gå tilbage til menuen.");
+    }
+    public void TUIDeleteUserMenu(int idUserChoiceDelete){
 
+         System.out.println("Brugeren " + idUserChoiceDelete + " er nu fjernet. \n");
 
-            int choice = input.nextInt();
+    }
 
-            switch (choice) {
-                case 0:
-                    System.out.println("Programmet er stoppet.");
-                    break;
-                case 1:
-                    adminController.deleteUser(studentDTO);
-                    break;
-                case 2:
-                    Menu(adminDTO);
-                    break;
-                default:
-                    System.out.println("Du indtastede en forkert vaerdi, proev igen.\n");
-                    Menu(adminDTO);
-            }
+    public void TUIDeleteUserValidate(){
+        System.out.println("Forkerte værdier er indtastet.");
+        System.out.println("Tast 0 for at stoppe programmet.");
+        System.out.println("Tast 1 for at prøve igen.");
+        System.out.println("Tast 2 for at gå tilbage til menuen.");
+        Scanner input = new Scanner(System.in);
+
+        int choice = input.nextInt();
+
+        switch (choice) {
+            case 0:
+                System.out.println("Programmet er stoppet.");
+                break;
+            case 1:
+                adminController.deleteUser(studentDTO);
+                break;
+            case 2:
+                Menu(adminDTO);
+                break;
+            default:
+                System.out.println("Du indtastede en forkert vaerdi, proev igen.\n");
+                Menu(adminDTO);
         }
+
     }
 }
+

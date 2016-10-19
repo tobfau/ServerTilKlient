@@ -2,14 +2,14 @@ package logic;
 
 import dal.MYSQLDriver;
 import dal.ServiceImpl;
+import org.omg.CosNaming.NamingContextExtPackage.StringNameHelper;
 import service.DBWrapper;
 import service.Service;
 import shared.*;
 import view.TUIAdminMenu;
 
-import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.Scanner;
+import java.sql.SQLException;
+import java.util.*;
 
 /**
  * Admin klassen er logikken bag administratorens funktioner, denne klasse hører sammen med TUIAdminMenu,
@@ -71,8 +71,24 @@ public class AdminController extends UserController {
             int idReviewChoice = 0;
             tuiAdminMenu.TUIChooseReviewId(idReviewChoice);
 
-            DBWrapper.updateRecords("review", "id" ,idReviewChoice);
-    ;}
+
+        try {
+
+            Map<String, String> id = new HashMap<>();
+
+            id.put("id", String.valueOf(idReviewChoice));
+
+            Map<String, String> commentDelete = new HashMap<>();
+
+            commentDelete.put("is_deleted", "1");
+
+            DBWrapper.updateRecords("review", id, commentDelete);
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+        tuiAdminMenu.Menu(adminDTO);
+   ;}
 
  /**
  *Her ses en else som træder i kraft ved indtasting af invalid id
@@ -92,18 +108,47 @@ public class AdminController extends UserController {
     public void deleteUser(UserDTO userDTO) {
 
         // ShowAllUsers
+        for (userDTO : super.getUsers()) {
+            System.out.println(userDTO.getId() + "id: " + userDTO);
+        }
 
-        //int userIdFromDb = ServiceImpl.
-
-        tuiAdminMenu.TUIDeleteUser();
+        int idUserChoice = 0;
+        tuiAdminMenu.TUIDeleteUser(idUserChoice);
 
         Scanner input = new Scanner(System.in);
         System.out.println("Indtast id for ønskede bruger der skal slettes: ");
 
-        int idUserChoice = input.nextInt();
+        int idUserChoiceDelete = input.nextInt();
+
+        //useridFromDb hentes
+        try {
+            Map<String, String> userId = new HashMap<>();
+
+            userId.put("id", String.valueOf(idUserChoiceDelete));
+
+            DBWrapper.getRecords("user", null, userId, null, 0);
+
+                tuiAdminMenu.TUIDeleteUserMenu(idUserChoiceDelete);
+        }
+
+        //hvis der ingen ens værdi findes med det indtastede id og id i DB vil denne catch kaste brugeren videre til tuiAdminMenuen, hvor man kan få muligheden for og prøve igen osv.
+        catch (SQLException e){
+            e.printStackTrace();
+            tuiAdminMenu.TUIDeleteUserValidate();
+        }
 
         //sletning af bruger.
-        //service.deleteReviewComment(idUserChoice);
+        try {
+
+            Map<String, String> id = new HashMap<>();
+
+            id.put("id", String.valueOf(idUserChoiceDelete));
+
+            DBWrapper.deleteRecords("user", id);
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
     }
 
   /**
@@ -111,7 +156,7 @@ public class AdminController extends UserController {
   * hvorefter brugeren bliver oprettet i databasen.
   **/
     public void createUser(){
-        String mail = "";
+        String mail= "";
         String password = "";
         String type = "";
 
@@ -120,18 +165,25 @@ public class AdminController extends UserController {
         //tjekker passwordet for tal og bogstaver, om det opfylder et normalt krav til et password
         if (password.matches(".*\\d+.*") && (password.matches(".*[a-zA-Z]+.*"))) {
 
-          /*  userDTO.setCbsMail(mail);
-            userDTO.setType(type);
-            userDTO.setPassword(password);*/
+            try {
+            Map<String, String> userMail = new HashMap<>();
+
+            userMail.put("cbs_mail", String.valueOf(mail));
+
+            userMail.put("password", String.valueOf(password));
+
+            userMail.put("type", String.valueOf(type));
+                DBWrapper.insertIntoRecords("user",userMail);
+                System.out.println("Brugeren " + mail + " er nu oprettet. ");
+                tuiAdminMenu.Menu(adminDTO);
+            }
+            catch (SQLException e){
+                e.printStackTrace();
+            }
         }
         else{
             System.out.println("Forkert værdi i password. Prøv igen ");
             createUser();
         }
-
-        //mangler metode i Service
-        //Service.createUser(userDTO);
-        System.out.println("Brugeren " + /* mail*/ + " er nu oprettet. ");
-        tuiAdminMenu.Menu(adminDTO);
     }
 }
