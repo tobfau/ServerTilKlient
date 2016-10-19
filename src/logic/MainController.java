@@ -117,10 +117,17 @@ public class MainController {
 
               DBWrapper.getRecords("user", null, loginMail, null, 0);
 
+              ResultSet result = DBWrapper.getRecords("user", null, loginMail, null, 0);
+
+              //while(result.next()){
+              String type = result.getString("type");
+
+              //}
+
               /**
                * En if statement der validere om brugeren der logger in er af typen admin eller kan der ikke logges ind i TUI.
                **/
-              if () {
+              if (type.equals("admin")) {
                   adminCtrl = new AdminController();
                   //adminCtrl.loadAdmin(user);
 
