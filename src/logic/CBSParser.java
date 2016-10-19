@@ -43,11 +43,11 @@ public class CBSParser {
 
     public static void main(String[] args) {
         ConfigLoader.parseConfig();
-        parseStudiesToSet();
+        parseStudiesToMap();
     }
 
 
-    private static void parseStudiesToSet() {
+    private static void parseStudiesToMap() {
         JsonReader jsonReader;
         JsonParser jparser = new JsonParser();
         studyValues = new HashMap<String, String>();
@@ -66,7 +66,6 @@ public class CBSParser {
                 studyValues.put("name",obj.get("study-name").toString());
             }
 
-            DBWrapper.insertIntoRecords("study",studyValues);
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -116,9 +115,47 @@ public class CBSParser {
 
         //Parser studyNames til database
 
-        DBWrapper.insertIntoRecords("study",studyValues);
+        //Set<Map.Entry<String, String>> studyEntries = studyValues.entrySet();
+
+        //for(Map.Entry<String, String> entry : studyEntries){
+
+        //}
+
+        Iterator iterator = studyValues.entrySet().iterator();
+        while(iterator.hasNext()){
+            Map<String, String> tmpMap;
+
+            Map.Entry entry = (Map.Entry)iterator.next();
+            String name = entry.getKey()
+
+            DBWrapper.insertIntoRecords("study", );
+        }
 
 
+
+
+
+
+
+
+
+/*
+
+
+        for(Iterator iterator = studyValues.entrySet().iterator(); iterator.hasNext();) {
+
+            Map<String, String> values = new HashMap<String, String>();
+
+            values.put((Map.Entry<String, String>) iterator.)
+
+            Map.Entry<String, String> entry = (Map.Entry<String, String>) iterator.next();
+
+
+
+            DBWrapper.insertIntoRecords("study", entry);
+        }
+
+*/
         //Tjek om studiet er blevet oprettet. Hvis ikke, da opret i database og tilføj til Set for at markere, det er oprettet.
            /* studyName = course.getId().substring(0,5);
             if(!studyNames.contains(studyName)){
