@@ -13,6 +13,7 @@ public class StudentController extends UserController {
     private StudentDTO currentStudent;
 
     public StudentController() {
+        super();
     }
 
     /*

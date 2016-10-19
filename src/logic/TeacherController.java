@@ -9,6 +9,7 @@ public class TeacherController extends UserController {
     private TeacherDTO currentTeacher;
 
     public TeacherController() {
+        super();
     }
 
     public void loadTeacher(TeacherDTO currentTeacher) {

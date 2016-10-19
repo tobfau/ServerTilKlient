@@ -49,11 +49,11 @@ public class TUIAdminMenu {
                     break;
 
                 case 2:
-                    adminController.deleteUser(studentDTO);
+                    adminController.deleteUser(studentDTO.getId());
                     break;
 
                 case 3:
-                    adminController.deleteComment();
+                    adminController.deleteReview();
                     break;
 
                 default:
@@ -163,7 +163,7 @@ public class TUIAdminMenu {
                 System.out.println("Programmet er stoppet.");
                 break;
             case 1:
-                adminController.deleteUser(studentDTO);
+                adminController.deleteUser(studentDTO.getId());
                 break;
             case 2:
                 Menu(adminDTO);
