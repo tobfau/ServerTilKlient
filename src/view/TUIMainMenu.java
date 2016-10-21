@@ -24,6 +24,7 @@ public class TUIMainMenu {
  * TUILogin er menuen hvor Admin kan vælge mellem at logge ind eller lukke programmet.
  **/
     public Object TUILogIn(AdminDTO adminDTO) {
+        MainController mainController = new MainController();
         Scanner input = new Scanner(System.in);
         String mail="";
         String password = "";
@@ -50,9 +51,11 @@ public class TUIMainMenu {
                     Scanner input2 = new Scanner(System.in);
                     System.out.println("Indtast password:");
                     password = input2.nextLine();
+                    //hash password at login ("klient" side)
+                    Digester.hashWithSalt(password);
+
                     adminDTO.setCbsMail(mail);
                     adminDTO.setPassword(password);
-                    MainController mainController = new MainController();
                     mainController.loginAdmin(adminDTO);
 
                     break;
@@ -61,7 +64,6 @@ public class TUIMainMenu {
                     break;
 
             }
-
   /**
   * Her er en catch som træder i kraft, hvis admin taster en forkert vaerdi.
   **/
@@ -71,8 +73,6 @@ public class TUIMainMenu {
             System.out.println("Du indtastede ikke et heltal, menuen kører forfra");
             input.nextLine();
         }
-
-
 
     return adminDTO;
     }

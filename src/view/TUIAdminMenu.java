@@ -53,13 +53,19 @@ public class TUIAdminMenu {
                     String type = "";
 
                     TUICreateUser(adminDTO);
+                    adminController = new AdminController();
+                    adminController.createUser(adminDTO);
+
                     break;
 
                 case 2:
-                    adminController.deleteUser(userDTO.getId());
+                    int userId = adminDTO.getId();
+                    adminController = new AdminController();
+                    adminController.deleteUser(userId, adminDTO);
                     break;
 
                 case 3:
+                    adminController = new AdminController();
                     adminController.deleteReview();
                     break;
 
@@ -93,13 +99,16 @@ public class TUIAdminMenu {
      * TUIChooseCourseId er bruges som "søgekriterie" til at finde frem til det review der ønskes slettet.
      * Logikken bag denne metode ses i AdminControlleren
      **/
-    public void TUIChooseCourseId(int idCourseChoice) {
+    public int TUIChooseCourseId(int idCourseChoice) {
 
         Scanner input = new Scanner(System.in);
         System.out.println("Indtast id for ønskede kursus: ");
 
         idCourseChoice = input.nextInt();
+
+        return  idCourseChoice;
         }
+
 
     /**
      * Efter at have indsnævret antallet af reviews ved først at søge ud fra courses og derefter lectures,
@@ -107,12 +116,13 @@ public class TUIAdminMenu {
      * @param idReviewChoice er id på det review som slettes fra databasen, logikken der fører den videre findes i
      * adminController
      */
-    public void TUIChooseReviewId(int idReviewChoice) {
+    public int TUIChooseReviewId(int idReviewChoice) {
 
         Scanner input = new Scanner(System.in);
         System.out.println("Indtast id for ønskede review: ");
 
         idReviewChoice = input.nextInt();
+        return  idReviewChoice;
     }
 
     /**
@@ -142,8 +152,6 @@ public class TUIAdminMenu {
         adminDTO.setPassword(password);
         adminDTO.setType(type);
 
-        AdminController adminController = new AdminController();
-        adminController.createUser(adminDTO);
         return adminDTO;
     }
 
@@ -151,13 +159,13 @@ public class TUIAdminMenu {
      * TUIDeleteUser er til sletning af en bruger. Logikken (Admincontroller) lister alle brugerne med tilhørende id
      * hvorefter admin kan slette en bruger i systemet ved at indtaste det pågældende id.
      **/
-    public void TUIDeleteUser(int idUserChoice) {
+    public int TUIDeleteUser(int userIdDelete) {
         Scanner input = new Scanner(System.in);
         System.out.println("Indtast id på bruger der skal slettes: ");
 
-        String userId = input.nextLine();
+        userIdDelete = input.nextInt();
         //det gemte brugernavn skal sendes til Service
-
+        return userIdDelete;
     }
     public void TUIDeleteUserMenu(int idUserChoiceDelete){
 
@@ -182,7 +190,8 @@ public class TUIAdminMenu {
                 System.out.println("Programmet er stoppet.");
                 break;
             case 1:
-                adminController.deleteUser(studentDTO.getId());
+                int userId = 0;
+                adminController.deleteUser(userId, adminDTO);
                 break;
             case 2:
                 Menu(adminDTO);

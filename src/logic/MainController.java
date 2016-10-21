@@ -99,9 +99,9 @@ public class MainController {
         String password = adminDTO.getPassword();
         String mail = adminDTO.getCbsMail();
 
+        //Hasher på "server" siden
         String securedPassword = Digester.hashWithSalt(password);
 
-        String securedPassword1 = Digester.hashWithSalt(securedPassword);
 
         /**
          * Her oprettes et map der tildeles nogen Strings, hvorefter mappet bliver indsat i metoden getRecords.
@@ -125,7 +125,7 @@ public class MainController {
                  */
                 if (type.equals("admin")) {
                     adminDTO.setCbsMail(mail);
-                    adminDTO.setPassword(securedPassword1);
+                    adminDTO.setPassword(securedPassword);
 
                     TUIAdminMenu tuiAdminMenu = new TUIAdminMenu();
                     tuiAdminMenu.Menu(adminDTO);
