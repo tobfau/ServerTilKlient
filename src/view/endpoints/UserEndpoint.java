@@ -2,12 +2,10 @@ package view.endpoints;
 
 import com.google.gson.Gson;
 import logic.UserController;
+import shared.UserDTO;
 
 import javax.ws.rs.*;
 
-/**
- * Created by Kasper on 19/10/2016.
- */
 
 @Path("/api/user")
 public class UserEndpoint {
@@ -46,18 +44,17 @@ public class UserEndpoint {
     @POST
     @Consumes("application/json")
     @Path("/login")
-    public String login(String s) {
-
-        System.out.println(s);
-
-        String email = "123@123.dk";
-        String password = "123";
+    public String login(String data) {
 
         Gson gson = new Gson();
+        UserDTO user = new Gson().fromJson(data, UserDTO.class);
 
         UserController ctrl = new UserController();
 
-        return gson.toJson(ctrl.login(email, password));
+        System.out.println(user.getPassword());
+
+        return gson.toJson(ctrl.login(user.getCbsMail(), user.getPassword()));
     }
+
 
 }
