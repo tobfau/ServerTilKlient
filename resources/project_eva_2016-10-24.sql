@@ -37,7 +37,7 @@ CREATE TABLE `course` (
   `study_id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `code` (`code`),
+  /*UNIQUE KEY `code` (`code`),*/
   UNIQUE KEY `name` (`name`),
   KEY `study_id` (`study_id`),
   CONSTRAINT `course_ibfk_1` FOREIGN KEY (`study_id`) REFERENCES `study` (`id`)

@@ -109,15 +109,24 @@ public class CBSParser {
         //Overvej at lave denne til en metode for sig selv da den også bruges i parseLecturesToDatabase();
         while(rs.next()){
 
-            //"ABCDEFG" er blot et quickfix, ellers virker lortet ikke.
-            String shortname = rs.getString("shortname") + "ABCDEFG";
+            String shortname = rs.getString("shortname");
 
 
             String substring = shortname.substring(0,5);
 
             //shortnameSubstrings.add(substring);
+
+            System.out.println("substring: " + substring);
+            System.out.println("id: " + rs.getString("id"));
             studyAttributes.put(substring, rs.getString("id"));
         }
+
+        for (Iterator iterator = studyAttributes.entrySet().iterator(); iterator.hasNext();){
+
+            Map.Entry<String,String> entry = (Map.Entry<String,String>) iterator.next();
+            System.out.println(entry.getKey());
+        }
+
 
 
         for (CourseDTO course : courseArray){
@@ -136,6 +145,8 @@ public class CBSParser {
                 courseMap.put("name", course.getId());
                 courseMap.put("study_id", studyAttributes.get(substring));
 
+
+                System.out.println(course);
                 DBWrapper.insertIntoRecords("course", courseMap);
             }
             else {
@@ -203,6 +214,8 @@ public class CBSParser {
                         lectureMap.put("description", lecture.getDescription());
 
                         lectureMap.put("start", convertToDateTime(lecture.getStart()));
+                        System.out.println(lecture.getDescription());
+                        System.out.println(lecture.getStart());
                         lectureMap.put("end", convertToDateTime(lecture.getEnd()));
                         lectureMap.put("location", lecture.getLocation());
                         
@@ -240,7 +253,10 @@ public class CBSParser {
         //Byg Stringen så den matcher med formatet på et DateTime objekt som vi bruger i MySQL databasen
         dateBuilder.append(dateData.get(0));
         dateBuilder.append("-");
-        dateBuilder.append(dateData.get(1));
+        //dateBuilder.append(dateData.get(1));
+        //Plusser 1 måned til månedsværdien, da dataen hos CBS åbenbart er fucked og er én måned bagud.
+        int month = Integer.parseInt(dateData.get(1))+1;
+        dateBuilder.append(String.valueOf(month));
         dateBuilder.append("-");
         dateBuilder.append(dateData.get(2));
         dateBuilder.append(" ");
