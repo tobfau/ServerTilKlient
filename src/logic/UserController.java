@@ -105,16 +105,16 @@ public class UserController {
             Map<String, String> joins = new HashMap();
 
             params.put("id", String.valueOf(userId));
-            joins.put("table", "course_attendant");
+            joins.put("course_attendant", "course_id");
 
             String[] attributes = new String[]{"name", "code"};
             //Vi smider aldrig joins ind...
-            ResultSet rs = DBWrapper.getRecords("course", attributes, params, null, 0);
+            ResultSet rs = DBWrapper.getRecords("course", attributes, params, joins, 0);
 
 
             while (rs.next()) {
                 CourseDTO course = new CourseDTO();
-
+                System.out.println(rs.getInt("id"));
                 course.setName(rs.getString("name"));
                 course.setId(rs.getString("code"));
                 courses.add(course);
