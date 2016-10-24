@@ -45,6 +45,17 @@ public class CBSParser {
         parseStudiesToDatabase();
         parseCoursesToDatabase();
         parseLecturesToDatabase();
+/*
+        ArrayList<String> test = new ArrayList<String>();
+        test.add("1");
+        test.add("12");
+        test.add("4");
+        test.add("30");
+        convertToDateTime(test);
+        */
+
+
+
     }
 
 
@@ -101,15 +112,20 @@ public class CBSParser {
             //"ABCDEFG" er blot et quickfix, ellers virker lortet ikke.
             String shortname = rs.getString("shortname") + "ABCDEFG";
 
+
             String substring = shortname.substring(0,5);
 
             //shortnameSubstrings.add(substring);
             studyAttributes.put(substring, rs.getString("id"));
         }
 
+
         for (CourseDTO course : courseArray){
 
-            System.out.println(course);
+
+
+
+            //System.out.println(course);
 
             String substring = course.getId().substring(0,5);
 
@@ -126,78 +142,76 @@ public class CBSParser {
 
             }
         }
+        System.out.println("end of parsecourses");
     }
 
     private static void parseLecturesToDatabase() throws SQLException{
+
+        String urlPrefix = ConfigLoader.CBS_API_LINK;
+        URL url;
+        HttpURLConnection conn;
+        BufferedReader br;
         Map<String, String> courseAttributes = new HashMap<String, String>();
         Map<String, String> lectureMap;
+        System.out.println("start af parselecturestodb");
 
-        CachedRowSet rs = DBWrapper.getRecords("course", new String[]{"id",}, null, null, 0);
+        CachedRowSet rs = DBWrapper.getRecords("course", new String[]{"id", "name"}, null, null, 0);
+
+        try{
+
 
 
         while(rs.next()){
+            //for hvert kursus i databasen:
+            // find tilsvarende kursus i courseArray baseret på name
+            // tilskriv tilsvarende kursus-id fra kurset i databasen
 
-            //Assign all courses from courseArray corresponding id's from database
+            String name = rs.getString("name");
+
+            //String subString = name.substring(0,5);
+
+
+
             for (CourseDTO course : courseArray){
-                course.setId(rs.getString("id"));
+                //String id = course.getId()+ "abcdefg";
 
-            }
+                //String idSubstring = id.substring(0,5);
 
-            //"ABCDEFG" er blot et quickfix, ellers virker lortet ikke.
-            String shortname = rs.getString("name") + "ABCDEFG";
 
-            String substring = shortname.substring(0,5);
+                if(course.getId().equals(name)){
+                    System.out.println("match på name");
+                    System.out.println(name);
 
-            //shortnameSubstrings.add(substring);
-            courseAttributes.put(substring, rs.getString("id"));
+
+
+                    url = new URL(urlPrefix + course.getId());
+                    conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod("GET");
+                    br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+
+                    //Tomt kursus-object nødvendigt for at indlæse JSON
+                    CourseDTO tempCourse = gson.fromJson(br, CourseDTO.class);
+                    course.setEvents(tempCourse.getEvents());
+
+                    //Lav lecture record i databasen for hver lectureobjekt i hvert enkelt kursus' events
+                    StringBuilder dateBuilder = new StringBuilder();
+                    for (LectureDTO lecture : course.getEvents()){
+                        lectureMap = new HashMap<String, String>();
+
+                        lectureMap.put("course_id", course.getId());
+                        lectureMap.put("type", lecture.getType());
+                        lectureMap.put("description", lecture.getDescription());
+
+                        lectureMap.put("start", convertToDateTime(lecture.getStart()));
+                        lectureMap.put("end", convertToDateTime(lecture.getEnd()));
+                        lectureMap.put("location", lecture.getLocation());
+                        
+                        DBWrapper.insertIntoRecords("lecture", lectureMap);
+
+                    }
+            } // end of if statement
         }
 
-        try{
-            String urlPrefix = ConfigLoader.CBS_API_LINK;
-            URL url;
-            HttpURLConnection conn;
-            BufferedReader br;
-
-
-            //Læs Json fra calendar.cbs.dk for hvert kursus og fyld lektioner ind i kursets arrayliste.
-            for(CourseDTO course : courseArray) {
-                System.out.println(course.getId());
-                url = new URL(urlPrefix + course.getId());
-                conn = (HttpURLConnection) url.openConnection();
-                conn.setRequestMethod("GET");
-                br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-
-                //Tomt kursus-object nødvendigt for at indlæse JSON
-                CourseDTO tempCourse = gson.fromJson(br, CourseDTO.class);
-                course.setEvents(tempCourse.getEvents());
-
-                for (LectureDTO lecture : course.getEvents()){
-                    lectureMap = new HashMap<String, String>();
-
-                    lectureMap.put("course_id", course.getId());
-                    lectureMap.put("type", lecture.getType());
-                    lectureMap.put("description", lecture.getDescription());
-                    /**
-                     *
-                     * VI ER NÅET HER TIL
-                     *
-                     *
-                     *
-                     *
-                     *
-                     */
-
-
-                    // DBWrapper.insertIntoRecords("course", courseMap);
-
-
-
-                }
-
-                //TODO: Lav debug på anden måde end at skrive strengen ud. Så dette skal fjernes.
-               /* for (LectureDTO lecture : course.getEvents()) {
-                    System.out.println(lecture.toString());
-                }*/
 
             }
 
@@ -209,6 +223,36 @@ public class CBSParser {
             ex.printStackTrace();
         }
 
+    }
+
+
+
+    private static String convertToDateTime(List<String> dateData ){
+        StringBuilder dateBuilder = new StringBuilder();
+
+        //Sorter arraylisten, så vi tilføjer et 0 foran stringen, i det tilfælde hvor der kun står et enkelt tal
+        for (int i = 0; i < dateData.size(); i++){
+            if (dateData.get(i).length() < 2){
+                dateData.set(i, "0" + dateData.get(i));
+            }
+        }
+
+        //Byg Stringen så den matcher med formatet på et DateTime objekt som vi bruger i MySQL databasen
+        dateBuilder.append(dateData.get(0));
+        dateBuilder.append("-");
+        dateBuilder.append(dateData.get(1));
+        dateBuilder.append("-");
+        dateBuilder.append(dateData.get(2));
+        dateBuilder.append(" ");
+        dateBuilder.append(dateData.get(3));
+        dateBuilder.append(":");
+        dateBuilder.append(dateData.get(4));
+        dateBuilder.append(":");
+        dateBuilder.append("00");
+
+        return dateBuilder.toString();
+
+        //'YYYY-MM-DD HH:MM:SS'
     }
 
 
