@@ -5,6 +5,7 @@ import shared.ReviewDTO;
 import java.util.ArrayList;
 import service.DBWrapper;
 import shared.CourseDTO;
+import shared.UserDTO;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -149,5 +150,31 @@ public class UserController {
             e.printStackTrace();
         }
         return courses;
+    }
+
+    public UserDTO login(String cbs_email, String password) {
+
+        UserDTO user = new UserDTO();
+
+        try {
+            Map<String, String> params = new HashMap();
+            params.put("cbs_mail", String.valueOf(cbs_email));
+            params.put("password", String.valueOf(password));
+
+            String[] attributes = {"id"};
+            ResultSet rs = DBWrapper.getRecords("user", attributes, params, null, 0);
+
+            while (rs.next()) {
+                user.setId(rs.getInt("id"));
+                System.out.print("User found");
+                return user;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        System.out.print("User not found");
+        return null;
     }
 }

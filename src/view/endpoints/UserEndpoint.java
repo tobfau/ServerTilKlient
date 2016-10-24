@@ -2,17 +2,13 @@ package view.endpoints;
 
 import com.google.gson.Gson;
 import logic.UserController;
+import shared.UserDTO;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.ws.rs.*;
 
-/**
- * Created by Kasper on 19/10/2016.
- */
 
 @Path("/api/user")
-public abstract class UserEndpoint {
+public class UserEndpoint {
 
     /**
      * En metode til at hente lektioner for et enkelt kursus i form af en JSON String.
@@ -26,7 +22,6 @@ public abstract class UserEndpoint {
 
         UserController ctrl = new UserController();
 
-
         return gson.toJson(ctrl.getLectures(courseId));
     }
 
@@ -38,11 +33,26 @@ public abstract class UserEndpoint {
     @GET
     @Path("/getCourses/{userId}")
     public String getCourses(@PathParam("userId") int userId) {
+
         Gson gson = new Gson();
 
         UserController ctrl = new UserController();
 
         return gson.toJson(ctrl.getCourses(userId));
     }
+
+    @POST
+    @Consumes("application/json")
+    @Path("/login")
+    public String login(String data) {
+
+        Gson gson = new Gson();
+        UserDTO user = new Gson().fromJson(data, UserDTO.class);
+
+        UserController ctrl = new UserController();
+
+        return gson.toJson(ctrl.login(user.getCbsMail(), user.getPassword()));
+    }
+
 
 }
