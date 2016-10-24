@@ -14,13 +14,13 @@ public class CourseDTO {
      */
     private LectureDTO[] events;
 
-    private String id;
+    private int id;
     private String displaytext;
 
     public CourseDTO() {
     }
 
-    public CourseDTO(String id, String displaytext) {
+    public CourseDTO(int id, String displaytext) {
         this.id = id;
         this.displaytext = displaytext;
     }
@@ -41,11 +41,11 @@ public class CourseDTO {
         this.events = events;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -63,7 +63,7 @@ public class CourseDTO {
         return "CourseDTO{" +
                 "lectures=" + events +
                 ", id=" + id +
-                ", displaytext='" + displaytext + '\'' +
+                ", name='" + displaytext + '\'' +
                 '}';
     }
 }

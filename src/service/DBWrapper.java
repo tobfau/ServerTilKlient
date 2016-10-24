@@ -61,6 +61,7 @@ public class DBWrapper {
 
         //lav lige en builder senere
         sql += ";";
+        System.out.println(sql);
         return MYSQLDriver.executeSQL(sql);
 
     }
@@ -128,8 +129,6 @@ public class DBWrapper {
             }
 
         }
-
-        System.out.println(builder.toString());
 
         return builder.toString();
     }

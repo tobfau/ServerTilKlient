@@ -104,19 +104,18 @@ public class UserController {
             Map<String, String> params = new HashMap();
             Map<String, String> joins = new HashMap();
 
-            params.put("id", String.valueOf(userId));
+            params.put("course_attendant.user_id", String.valueOf(userId));
             joins.put("course_attendant", "course_id");
 
-            String[] attributes = new String[]{"name", "code"};
-            //Vi smider aldrig joins ind...
+            String[] attributes = new String[]{"name", "code", "course.id"};
             ResultSet rs = DBWrapper.getRecords("course", attributes, params, joins, 0);
 
 
             while (rs.next()) {
                 CourseDTO course = new CourseDTO();
-                System.out.println(rs.getInt("id"));
+
                 course.setName(rs.getString("name"));
-                course.setId(rs.getString("code"));
+                course.setId(rs.getInt("id"));
                 courses.add(course);
             }
         } catch (SQLException e) {
@@ -125,32 +124,6 @@ public class UserController {
         return courses;
     }
 
-    public ArrayList<CourseDTO> getCourses() {
-
-        ArrayList<CourseDTO> courses = new ArrayList<CourseDTO>();
-
-        try {
-            Map<String, String> params = new HashMap();
-
-           // params.put("id", String.valueOf(userId));
-
-            String[] attributes = new String[]{"name", "code"};
-            //Vi smider aldrig joins ind...
-            ResultSet rs = DBWrapper.getRecords("course", attributes, params, null, 0);
-
-
-            while (rs.next()) {
-                CourseDTO course = new CourseDTO();
-
-                course.setName(rs.getString("name"));
-                course.setId(rs.getString("code"));
-                courses.add(course);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return courses;
-    }
 
     public UserDTO login(String cbs_email, String password) {
 

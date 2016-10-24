@@ -85,14 +85,14 @@ public class CBSParser {
         for (CourseDTO course : courseArray){
 
             //Tjek om studiet er blevet oprettet. Hvis ikke, da opret i database og tilføj til Set for at markere, det er oprettet.
-            studyName = course.getId().substring(0,5);
+            /*studyName = course.getId().substring(0,5);
             if(!studyNames.contains(studyName)){
                 studyNames.add(studyName);
 
                 //Opret studie i databasen
                 studyValues.put("name",studyName);
                 DBWrapper.insertIntoRecords("study",studyValues);
-            }
+            }*/
 
 
             /**

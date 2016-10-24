@@ -46,9 +46,9 @@ public class AdminController extends UserController {
 /**
  * Dette er en foreach løkke som printer alle lectures ud med tilhørende id
  **/
-        for (CourseDTO courseDTO : getCourses()) {
+        /*for (CourseDTO courseDTO : getCourses()) {
             System.out.println(courseDTO.getId() + "id: " + courseDTO);
-        }
+        }*/
 /**
  * Her kaldes tuiAdminMenuen, som spørger admin efter et id på den Course admin ønsker og se tilhørende lectures til
  **/
