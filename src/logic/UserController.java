@@ -154,26 +154,27 @@ public class UserController {
 
     public UserDTO login(String cbs_email, String password) {
 
-        UserDTO user = null;
+        UserDTO user = new UserDTO();
 
         try {
             Map<String, String> params = new HashMap();
             params.put("cbs_mail", String.valueOf(cbs_email));
-            //params.put("password", String.valueOf(password));
+            params.put("password", String.valueOf(password));
 
-            String[] attributes = {"id", "cbs_mail"};
+            String[] attributes = {"id"};
             ResultSet rs = DBWrapper.getRecords("user", attributes, params, null, 0);
 
             while (rs.next()) {
-                //user.setCbsMail(rs.getString("cbs_mail"));
-                System.out.print("bruger fundet");
-                System.out.print(rs.getString("cbs_mail"));
+                user.setId(rs.getInt("id"));
+                System.out.print("User found");
+                return user;
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return user;
+        System.out.print("User not found");
+        return null;
     }
 }
