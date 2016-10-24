@@ -22,11 +22,14 @@ public class CBSParser {
     private static CourseDTO[] courseArray;
     private static Gson gson = new Gson();
 
-    public CBSParser() {
-    }
+
 
     public static void parseCBSData() throws SQLException {
-        parseToDatabase();
+        ConfigLoader.parseConfig();
+        parseCoursesToArray();
+        parseStudiesToDatabase();
+        parseCoursesToDatabase();
+        parseLecturesToDatabase();
     }
 
     private static void parseCoursesToArray() {
@@ -38,27 +41,6 @@ public class CBSParser {
             System.out.println(e.getMessage());
         }
     }
-
-    public static void main(String[] args) throws SQLException {
-        ConfigLoader.parseConfig();
-        parseCoursesToArray();
-        parseStudiesToDatabase();
-        parseCoursesToDatabase();
-        parseLecturesToDatabase();
-/*
-        ArrayList<String> test = new ArrayList<String>();
-        test.add("1");
-        test.add("12");
-        test.add("4");
-        test.add("30");
-        convertToDateTime(test);
-        */
-
-
-
-    }
-
-
 
 
     private static void parseStudiesToDatabase() {
@@ -94,12 +76,11 @@ public class CBSParser {
         }
     }
 
+
     private static void parseCoursesToDatabase() throws SQLException {
-        // Set<String> shortnameSubstrings = new HashSet<String>();
         Map<String, String> studyAttributes = new HashMap<String, String>();
         Map<String, String> courseMap = new HashMap<String, String>();
 
-        //Da shortnames allerede er unikke i databasen, behøves der ikke nogen duplicate checker (Set)
         /*
             RET TIL CACHEDROWSET I HELE PROGRAMMET HVOR DER BRUGES RESULTSET
          */
@@ -109,51 +90,27 @@ public class CBSParser {
         //Overvej at lave denne til en metode for sig selv da den også bruges i parseLecturesToDatabase();
         while(rs.next()){
 
-            String shortname = rs.getString("shortname");
 
+            String substring = rs.getString("shortname").substring(0,5);
 
-            String substring = shortname.substring(0,5);
-
-            //shortnameSubstrings.add(substring);
-
-            System.out.println("substring: " + substring);
-            System.out.println("id: " + rs.getString("id"));
             studyAttributes.put(substring, rs.getString("id"));
-        }
-
-        for (Iterator iterator = studyAttributes.entrySet().iterator(); iterator.hasNext();){
-
-            Map.Entry<String,String> entry = (Map.Entry<String,String>) iterator.next();
-            System.out.println(entry.getKey());
         }
 
 
 
         for (CourseDTO course : courseArray){
 
-
-
-
-            //System.out.println(course);
-
             String substring = course.getId().substring(0,5);
 
-            //if(shortnameSubstrings.contains(substring)){
             if(studyAttributes.containsKey(substring)){
 
                 courseMap.put("code", course.getName());
                 courseMap.put("name", course.getId());
                 courseMap.put("study_id", studyAttributes.get(substring));
 
-
-                System.out.println(course);
                 DBWrapper.insertIntoRecords("course", courseMap);
             }
-            else {
-
-            }
         }
-        System.out.println("end of parsecourses");
     }
 
     private static void parseLecturesToDatabase() throws SQLException{
@@ -162,72 +119,53 @@ public class CBSParser {
         URL url;
         HttpURLConnection conn;
         BufferedReader br;
-        Map<String, String> courseAttributes = new HashMap<String, String>();
         Map<String, String> lectureMap;
-        System.out.println("start af parselecturestodb");
 
         CachedRowSet rs = DBWrapper.getRecords("course", new String[]{"id", "name"}, null, null, 0);
 
         try{
 
+            while(rs.next()){
+
+                /*
+                For hvert kursus i databasen: ind tilsvarende kursus i courseArray baseret på name
+                tilskriv tilsvarende kursus-navn fra kurset i databasen
+                */
+
+                String name = rs.getString("name");
 
 
-        while(rs.next()){
-            //for hvert kursus i databasen:
-            // find tilsvarende kursus i courseArray baseret på name
-            // tilskriv tilsvarende kursus-id fra kurset i databasen
+                for (CourseDTO course : courseArray){
 
-            String name = rs.getString("name");
+                    if(course.getId().equals(name)){
 
-            //String subString = name.substring(0,5);
+                        url = new URL(urlPrefix + course.getId());
+                        conn = (HttpURLConnection) url.openConnection();
+                        conn.setRequestMethod("GET");
+                        br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
+                        //Tomt kursus-object nødvendigt for at indlæse JSON
+                        CourseDTO tempCourse = gson.fromJson(br, CourseDTO.class);
+                        course.setEvents(tempCourse.getEvents());
 
+                        //Lav lecture record i databasen for hver lectureobjekt i hvert enkelt kursus' events
+                        for (LectureDTO lecture : course.getEvents()){
+                            lectureMap = new HashMap<String, String>();
 
-            for (CourseDTO course : courseArray){
-                //String id = course.getId()+ "abcdefg";
+                            lectureMap.put("course_id", course.getId());
+                            lectureMap.put("type", lecture.getType());
+                            lectureMap.put("description", lecture.getDescription());
 
-                //String idSubstring = id.substring(0,5);
+                            lectureMap.put("start", convertToDateTime(lecture.getStart()));
+                            lectureMap.put("end", convertToDateTime(lecture.getEnd()));
+                            lectureMap.put("location", lecture.getLocation());
 
+                            DBWrapper.insertIntoRecords("lecture", lectureMap);
 
-                if(course.getId().equals(name)){
-                    System.out.println("match på name");
-                    System.out.println(name);
-
-
-
-                    url = new URL(urlPrefix + course.getId());
-                    conn = (HttpURLConnection) url.openConnection();
-                    conn.setRequestMethod("GET");
-                    br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-
-                    //Tomt kursus-object nødvendigt for at indlæse JSON
-                    CourseDTO tempCourse = gson.fromJson(br, CourseDTO.class);
-                    course.setEvents(tempCourse.getEvents());
-
-                    //Lav lecture record i databasen for hver lectureobjekt i hvert enkelt kursus' events
-                    StringBuilder dateBuilder = new StringBuilder();
-                    for (LectureDTO lecture : course.getEvents()){
-                        lectureMap = new HashMap<String, String>();
-
-                        lectureMap.put("course_id", course.getId());
-                        lectureMap.put("type", lecture.getType());
-                        lectureMap.put("description", lecture.getDescription());
-
-                        lectureMap.put("start", convertToDateTime(lecture.getStart()));
-                        System.out.println(lecture.getDescription());
-                        System.out.println(lecture.getStart());
-                        lectureMap.put("end", convertToDateTime(lecture.getEnd()));
-                        lectureMap.put("location", lecture.getLocation());
-                        
-                        DBWrapper.insertIntoRecords("lecture", lectureMap);
-
+                        }
                     }
-            } // end of if statement
-        }
-
-
+                }
             }
-
         }
         catch(MalformedURLException ex){
             ex.printStackTrace();
@@ -253,7 +191,6 @@ public class CBSParser {
         //Byg Stringen så den matcher med formatet på et DateTime objekt som vi bruger i MySQL databasen
         dateBuilder.append(dateData.get(0));
         dateBuilder.append("-");
-        //dateBuilder.append(dateData.get(1));
         //Plusser 1 måned til månedsværdien, da dataen hos CBS åbenbart er fucked og er én måned bagud.
         int month = Integer.parseInt(dateData.get(1))+1;
         dateBuilder.append(String.valueOf(month));
@@ -268,65 +205,6 @@ public class CBSParser {
 
         return dateBuilder.toString();
 
-        //'YYYY-MM-DD HH:MM:SS'
     }
-
-
-    private static void parseToDatabase() throws SQLException {
-        Map<String, String> courseValues = new HashMap<String, String>();
-
-        parseStudiesToDatabase();
-
-
-
-        //Tjek om studiet er blevet oprettet. Hvis ikke, da opret i database og tilføj til Set for at markere, det er oprettet.
-        /**   studyName = course.getId().substring(0,5);
-         if(!studyNames.contains(studyName)){
-         studyNames.add(studyName);
-
-         //Opret studie i databasen
-         studyValues.put("name",studyName);
-         DBWrapper.insertIntoRecords("study",studyValues);
-         }*/
-
-
-
-
-       /* for (CourseDTO course : courseArray){
-
-
-            /**
-            String[] string = {};
-            ResultSet rs = dbWrapper.getRecords("study",string,null,null,0);
-            int i;
-
-            try{
-
-                while (rs.next()) {
-                    if(studyName == rs.getString("name")){
-                        i = rs.getInt("id");
-                        courseValues.put("code", course.getId());
-                        courseValues.put("name", course.getName());
-                        courseValues.put("study_id", String.valueOf(i));
-                        System.out.println("Inde i while");
-                        dbWrapper.insertIntoRecords("course", courseValues);
-                    }
-                }
-
-            } catch (Exception e ){
-
-            }
-
-        } */
-    }
-
-    //TODO: Brugt til testing - udkommenteret men får lige lov at stå her lidt.
-
-/*
-    public static void main(String args[]) {
-        CBSParser.parseCBSData();
-
-
-    }*/
 
 }
