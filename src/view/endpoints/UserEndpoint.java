@@ -50,7 +50,6 @@ public class UserEndpoint {
         UserDTO user = new Gson().fromJson(data, UserDTO.class);
 
         UserController ctrl = new UserController();
-        
 
         return gson.toJson(ctrl.login(user.getCbsMail(), user.getPassword()));
     }
