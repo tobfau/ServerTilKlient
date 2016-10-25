@@ -182,8 +182,6 @@ public class DBWrapper {
         builder.append(appendValues(values));
         builder.append(";");
 
-        System.out.println(builder.toString());
-
         MYSQLDriver.updateSQL(builder.toString());
     }
 
@@ -273,6 +271,8 @@ public class DBWrapper {
         String sql = "DELETE FROM " + table;
         StringBuilder builder = new StringBuilder(buildWhere(whereStmts, sql));
         builder.append(";");
+
+        System.out.println(builder.toString());
 
         MYSQLDriver.updateSQL(builder.toString());
     }
