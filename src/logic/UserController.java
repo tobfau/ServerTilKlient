@@ -66,7 +66,7 @@ public class UserController {
             while (rs.next()) {
                 LectureDTO lecture = new LectureDTO();
 
-                lecture.setId(rs.getInt("id"));
+               // lecture.setId(rs.getInt("id"));
                 lecture.setType(rs.getString("type"));
                 lecture.setDescription(rs.getString("description"));
 

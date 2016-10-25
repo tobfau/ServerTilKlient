@@ -98,7 +98,7 @@ public class CBSParser {
 
 
 
-        for (CourseDTO course : courseArray){
+        /*for (CourseDTO course : courseArray){
 
             String substring = course.getId().substring(0,5);
 
@@ -110,7 +110,7 @@ public class CBSParser {
 
                 DBWrapper.insertIntoRecords("course", courseMap);
             }
-        }
+        }*/
     }
 
     private static void parseLecturesToDatabase() throws SQLException{
@@ -123,17 +123,12 @@ public class CBSParser {
 
         CachedRowSet rs = DBWrapper.getRecords("course", new String[]{"id", "name"}, null, null, 0);
 
-        try{
+        /*try{
 
             while(rs.next()){
 
-                /*
-                For hvert kursus i databasen: ind tilsvarende kursus i courseArray baseret på name
-                tilskriv tilsvarende kursus-navn fra kurset i databasen
-                */
 
                 String name = rs.getString("name");
-
 
                 for (CourseDTO course : courseArray){
 
@@ -172,7 +167,7 @@ public class CBSParser {
         }
         catch (IOException ex){
             ex.printStackTrace();
-        }
+        }*/
 
     }
 
