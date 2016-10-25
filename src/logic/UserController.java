@@ -2,6 +2,8 @@ package logic;
 
 import shared.LectureDTO;
 import shared.ReviewDTO;
+
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import service.DBWrapper;
 import shared.CourseDTO;
@@ -52,21 +54,23 @@ public class UserController {
         return reviews;
     }
 
-    public ArrayList<LectureDTO> getLectures(int courseId) {
+    public ArrayList<LectureDTO> getLectures(String course) {
 
         ArrayList<LectureDTO> lectures = new ArrayList<LectureDTO>();
 
         try {
             Map<String, String> params = new HashMap();
 
-            params.put("id", String.valueOf(courseId));
+            params.put("course_id", String.valueOf(course));
 
             ResultSet rs = DBWrapper.getRecords("lecture", null, params, null, 0);
 
             while (rs.next()) {
                 LectureDTO lecture = new LectureDTO();
 
-               // lecture.setId(rs.getInt("id"));
+                lecture.setStart(rs.getTimestamp("start"));
+                lecture.setEnd(rs.getTimestamp("end"));
+                lecture.setId(rs.getInt("id"));
                 lecture.setType(rs.getString("type"));
                 lecture.setDescription(rs.getString("description"));
 

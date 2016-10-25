@@ -16,13 +16,13 @@ public class UserEndpoint {
      * @return En JSON String
      */
     @GET
-    @Path("/getLectures/{courseId}")
-    public String getLectures(@PathParam("courseId") int courseId) {
+    @Path("/getLectures/{course}")
+    public String getLectures(@PathParam("course") String course) {
         Gson gson = new Gson();
 
         UserController ctrl = new UserController();
 
-        return gson.toJson(ctrl.getLectures(courseId));
+        return gson.toJson(ctrl.getLectures(course));
     }
 
     /**

@@ -58,10 +58,10 @@ public class AdminController extends UserController {
 /**
  * Dette er en foreach løkke som printer alle courses ud med deres id
  **/
-        for (LectureDTO lectureDTO : getLectures(idCourseChoice)) {
+        /*for (LectureDTO lectureDTO : getLectures(idCourseChoice)) {
             System.out.println(lectureDTO.getId() + "id: " + lectureDTO);
 
-        }
+        }*/
 
         int idLectureChoice = 0;
         tuiAdminMenu.TUIChooseLectureId(idLectureChoice);
