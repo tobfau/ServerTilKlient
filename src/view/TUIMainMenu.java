@@ -56,6 +56,7 @@ public class TUIMainMenu {
 
                     adminDTO.setCbsMail(mail);
                     adminDTO.setPassword(password);
+
                     mainController.loginAdmin(adminDTO);
 
                     break;
@@ -66,7 +67,7 @@ public class TUIMainMenu {
             }
   /**
   * Her er en catch som træder i kraft, hvis admin taster en forkert vaerdi.
-  **/
+  */
         }
         catch (InputMismatchException e) {
             System.out.printf("Systemet fandt fejlen: %s \n", e);

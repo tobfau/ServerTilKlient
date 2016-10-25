@@ -1,10 +1,7 @@
 package logic;
 
-import dal.MYSQLDriver;
-import org.omg.CORBA.Object;
-import org.omg.CosNaming.NamingContextExtPackage.StringNameHelper;
+import security.Digester;
 import service.DBWrapper;
-import service.Service;
 import shared.*;
 import view.TUIAdminMenu;
 
@@ -24,6 +21,7 @@ public class AdminController extends UserController {
     private ReviewDTO reviewDTO;
     private TUIAdminMenu tuiAdminMenu;
 
+
     /**
      * AdminControlleren har nedarvet fra UserControlleren dvs. den har adgang til de samme metoder.
      **/
@@ -37,14 +35,14 @@ public class AdminController extends UserController {
     public void deleteReview() {
 
         /**
-        * Dette er en foreach løkke som printer alle lectures ud med tilhørende id
-        **/
+         * Dette er en foreach løkke som printer alle lectures ud med tilhørende id
+         **/
         for (CourseDTO courseDTO : getCourses()) {
             System.out.println(courseDTO.getId() + ": " + courseDTO);
         }
         /**
-        * Her kaldes tuiAdminMenuen, som spørger admin efter et id på den Course admin ønsker og se tilhørende lectures til
-        **/
+         * Her kaldes tuiAdminMenuen, som spørger admin efter et id på den Course admin ønsker og se tilhørende lectures til
+         */
         int idCourseChoice = 0;
         //tuiAdminMenu.TUIChooseCourseId(idCourseChoice);
         Scanner input = new Scanner(System.in);
@@ -65,7 +63,6 @@ public class AdminController extends UserController {
         Scanner input1 = new Scanner(System.in);
 
 
-
         System.out.println("Indtast id for ønskede review: ");
         int idReviewChoice = input1.nextInt();
         /**
@@ -73,7 +70,7 @@ public class AdminController extends UserController {
          * ind i tuiAdminMenu.
          */
         for (ReviewDTO reviewDTO : getReviews(idLectureChoice)) {
-            System.out.println(reviewDTO.getId() + "id: " + reviewDTO);
+            System.out.println(reviewDTO.getId() + " id: " + reviewDTO);
 
         }
 
@@ -120,42 +117,70 @@ public class AdminController extends UserController {
     public void deleteUser(int userId, AdminDTO adminDTO) {
 
         // ShowAllUsers
+        ArrayList adminDTOs = getUsers(adminDTO);
 
 
         String mailDb = "";
-        for (UserDTO user : getUsers(mailDb, userId, adminDTO)) {
-            System.out.println(user.getId() + "id: " + user);
+        for (AdminDTO user : getUsers(adminDTO))
+        {
+            System.out.println("Id: " + adminDTO.getId() + "  CBS mail: " + adminDTO.getCbsMail()) ;
         }
 
         //if bruger id ikke findes - else: tuiAdminMenu.TUIDeleteUserValidate();
         int userIdDelete = 0;
-        tuiAdminMenu = new TUIAdminMenu();
-        tuiAdminMenu.TUIDeleteUser(userIdDelete);
 
-        /**
-         * Her slettes brugeren fra databasen ved hjælp af den id som der er blevet skrevet ind af admin.
-         */
+        //spørg efter id der skal slettes
+        Scanner input = new Scanner(System.in);
+        System.out.println("Indtast id på bruger der skal slettes: ");
+
+        userIdDelete = input.nextInt();
+
+
+
         try {
+            Map<String, String> userExsists = new HashMap<String, String>();
+            userExsists.put("cbs_mail", String.valueOf(userIdDelete));
+            ResultSet result = DBWrapper.getRecords("user", null, userExsists, null, 0);
 
-            Map<String, String> id = new HashMap<String, String>();
+            // if result ikke kunne returnere en værdi så findes brugeren ikke
+           /* if (result.next() != ) {
+                System.out.println("Brugeren findes ikke i Databasen");
+                TUIAdminMenu tuiAdminMenu = new TUIAdminMenu();
+                tuiAdminMenu.Menu(adminDTO);
+            }*/
 
-            id.put("id", String.valueOf(userIdDelete));
-
-            DBWrapper.deleteRecords("user", id);
-        }
-        /**
-         * Hvis der ikke findes en værdi der passer med det indtastede id i Databasen,
-         * vil denne catch kaste admin videre til tuiAdminMenuen, hvor man kan få muligheden for og prøve igen.
-         * hvis der ingen ens værdi findes med det indtastede id og id  DB vil denne catch kaste brugeren videre til tuiAdminMenuen, hvor man kan få muligheden for og prøve igen osv.
-         */
-        catch (SQLException e) {
-            e.printStackTrace();
-            Logging.log(e, 1, "Brugeren kunne ikke slettes");
-        }
-
-        System.out.println("Brugeren er slettet");
-
+        } catch(SQLException e)
+    {
+        e.printStackTrace();
+        Logging.log(e, 1, "Fejlede at finde brugeren i DB ved deleteUser");
     }
+
+
+    /**
+     * Her slettes brugeren fra databasen ved hjælp af den id som der er blevet skrevet ind af admin.
+     */
+
+    Map<String, String> id = new HashMap<String, String>();
+
+            id.put("id",String.valueOf(userIdDelete));
+
+        try
+
+    {
+        DBWrapper.deleteRecords("user", id);
+    } catch(SQLException e1) {
+            e1.printStackTrace();
+            Logging.log(e1, 1, "Brugeren kunne ikke slettes");
+    }
+    /**
+     * Hvis der ikke findes en værdi der passer med det indtastede id i Databasen,
+     * vil denne catch kaste admin videre til tuiAdminMenuen, hvor man kan få muligheden for og prøve igen.
+     * hvis der ingen ens værdi findes med det indtastede id og id  DB vil denne catch kaste brugeren videre til tuiAdminMenuen, hvor man kan få muligheden for og prøve igen osv.
+     */
+    System.out.println("Brugeren er slettet");
+
+}
+
 
     /**
      * Denne metode er til at lave en ny bruger, admin skal indtaste de tilhørende parametre: mail, password og type
@@ -167,15 +192,22 @@ public class AdminController extends UserController {
         String password = adminDTO.getPassword();
         String type = adminDTO.getType();
 
-        String mailDb = "";
-        int userId = 0;
-        getUsers(mailDb, userId, adminDTO);
+        //Hash password ved opret bruger.
+        Digester.hashWithSalt(password);
 
-        for (UserDTO user : getUsers(mailDb, userId, adminDTO)) {
+
+        String mailDb = adminDTO.getCbsMail();
+
+        AdminController adminController = new AdminController();
+        adminController.getUsers(adminDTO);
+
+        for (AdminDTO user : getUsers(adminDTO)) {
             if (mailDb.equals(mail)) {
-                System.out.println("brugeren findes allerede" + user.getId());
+                System.out.println("brugeren findes allerede");
                 tuiAdminMenu = new TUIAdminMenu();
                 tuiAdminMenu.Menu(adminDTO);
+            }
+        }
 
                 //tjekker passwordet for tal og bogstaver, om det opfylder et normalt krav til et password
                 if ((password.matches(".*[a-zA-Z]+.*"))) {
@@ -196,37 +228,32 @@ public class AdminController extends UserController {
                         e.printStackTrace();
                         Logging.log(e, 1, "Brugeren kunne ikke oprettes");
                     }
-                }
-
-            } else {
+                } else {
                 System.out.println("Forkert værdi i password. Prøv igen ");
                 tuiAdminMenu = new TUIAdminMenu();
                 tuiAdminMenu.Menu(adminDTO);
 
             }
-        }
+
         tuiAdminMenu = new TUIAdminMenu();
         tuiAdminMenu.Menu(adminDTO);
     }
 
-        public ArrayList<UserDTO> getUsers (String mailDb, int userId, AdminDTO adminDTO){
+        public ArrayList<AdminDTO> getUsers (AdminDTO adminDTO){
 
-            ArrayList<UserDTO> users = new ArrayList<UserDTO>();
-
+            ArrayList<AdminDTO> users = new ArrayList<AdminDTO>();
             try {
                 Map<String, String> params = new HashMap();
-                params.put("cbs_mail", String.valueOf(mailDb));
-                params.put("id", String.valueOf(userId));
+                params.put("cbs_mail", String.valueOf(adminDTO.getCbsMail()));
+                params.put("type", String.valueOf(adminDTO.getType()));
                 String[] attributes = {"id", "cbs_mail", "type"};
 
-                ResultSet rs = DBWrapper.getRecords("user", attributes, params, null, 200);
+                ResultSet rs = DBWrapper.getRecords("user", attributes, params, null, 0);
 
                 while (rs.next()) {
-                    UserDTO user = new UserDTO();
-                    user.setId(rs.getInt("id"));
+                    AdminDTO user = new AdminDTO();
                     user.setCbsMail(rs.getString("cbs_mail"));
                     user.setType(rs.getString("type"));
-
                     users.add(user);
                 }
 
