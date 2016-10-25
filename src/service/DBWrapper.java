@@ -2,6 +2,7 @@ package service;
 
 import dal.MYSQLDriver;
 
+import javax.sql.rowset.CachedRowSet;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -44,7 +45,7 @@ public class DBWrapper {
      * @param limit En limitation, hvis der kun ønskes en bestemt mængde data returneret. IKKE håndteret endnu, indsæt derfor 0.
      * @return Returnerer et ResultSet med ønsket data.
      */
-    public static ResultSet getRecords (String table, String[] attributes, Map whereStmts, Map joinStmts, int limit) throws SQLException {
+    public static CachedRowSet getRecords (String table, String[] attributes, Map whereStmts, Map joinStmts, int limit) throws SQLException {
 
         String sql = "SELECT ";
 
@@ -182,6 +183,8 @@ public class DBWrapper {
         builder.append(";");
 
         MYSQLDriver.updateSQL(builder.toString());
+
+        //INSERT INTO (name, shortname, id) VALUES ("emil", "em", "3")
     }
 
     /**
