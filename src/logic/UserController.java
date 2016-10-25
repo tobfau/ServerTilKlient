@@ -31,7 +31,7 @@ public class UserController {
         try {
             Map<String, String> params = new HashMap();
             params.put("id", String.valueOf(lectureId));
-            String[] attributes = {"id", "user_id", "lecture_id", "rating", "comment", "is_deleted"};
+            String[] attributes = {"id", "user_id", "lecture_id", "rating", "comment"};
 
             ResultSet rs = DBWrapper.getRecords("review", attributes, params, null, 0);
 
@@ -42,7 +42,6 @@ public class UserController {
                 review.setLectureId(rs.getInt("lecture_id"));
                 review.setRating(rs.getInt("rating"));
                 review.setComment(rs.getString("comment"));
-                review.setDeleted(rs.getBoolean("is_deleted"));
 
                 reviews.add(review);
             }

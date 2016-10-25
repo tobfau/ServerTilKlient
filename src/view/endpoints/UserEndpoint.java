@@ -41,6 +41,18 @@ public class UserEndpoint {
         return gson.toJson(ctrl.getCourses(userId));
     }
 
+
+    @GET
+    @Path("/getReviews/{lectureId}")
+    public String getReviews(@PathParam("lectureId") int lectureId) {
+
+        Gson gson = new Gson();
+
+        UserController ctrl = new UserController();
+
+        return gson.toJson(ctrl.getReviews(lectureId));
+    }
+
     @POST
     @Consumes("application/json")
     @Path("/login")
