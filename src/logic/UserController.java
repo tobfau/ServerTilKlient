@@ -83,22 +83,42 @@ public class UserController {
         return lectures;
     }
 
-    //Metode der softdeleter et review fra databasen
-    public void softDeleteReview(ReviewDTO review) {
+
+    public boolean deleteReview(ReviewDTO reviewDTO) {
 
         try {
-            Map<String, String> isDeleted = new HashMap();
+            Map<String, String> review = new HashMap();
+            review.put("id", String.valueOf(reviewDTO.getId()));
 
-            isDeleted.put("is_deleted", String.valueOf(review.isDeleted()));
+            DBWrapper.deleteRecords("review",review);
 
-            Map<String, String> id = new HashMap();
-            id.put("id", String.valueOf(review.getId()));
-
-            DBWrapper.updateRecords("review", isDeleted, id);
+            return true;
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        return false;
+    }
+
+    public boolean addReview(ReviewDTO reviewDTO) {
+
+        try {
+            Map<String, String> review = new HashMap();
+            review.put("user_id", String.valueOf(reviewDTO.getUserId()));
+            review.put("lecture_id", String.valueOf(reviewDTO.getLectureId()));
+            review.put("rating", String.valueOf(reviewDTO.getRating()));
+            review.put("comment", String.valueOf(reviewDTO.getComment()));
+
+            DBWrapper.insertIntoRecords("review",review);
+
+            return true;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
     }
 
     public ArrayList<CourseDTO> getCourses(int userId) {

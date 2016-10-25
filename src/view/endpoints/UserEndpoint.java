@@ -2,6 +2,7 @@ package view.endpoints;
 
 import com.google.gson.Gson;
 import logic.UserController;
+import shared.ReviewDTO;
 import shared.UserDTO;
 
 import javax.ws.rs.*;
@@ -51,6 +52,32 @@ public class UserEndpoint {
         UserController ctrl = new UserController();
 
         return gson.toJson(ctrl.getReviews(lectureId));
+    }
+
+    @POST
+    @Consumes("application/json")
+    @Path("/deleteReview")
+    public String deleteReview(String data) {
+
+        Gson gson = new Gson();
+        ReviewDTO review = new Gson().fromJson(data, ReviewDTO.class);
+
+        UserController ctrl = new UserController();
+
+        return gson.toJson(ctrl.deleteReview(review));
+    }
+
+    @POST
+    @Consumes("application/json")
+    @Path("/addReview")
+    public String addReview(String data) {
+
+        Gson gson = new Gson();
+        ReviewDTO review = new Gson().fromJson(data, ReviewDTO.class);
+
+        UserController ctrl = new UserController();
+
+        return gson.toJson(ctrl.addReview(review));
     }
 
     @POST
