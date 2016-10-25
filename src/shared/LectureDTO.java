@@ -16,17 +16,22 @@ public class LectureDTO {
     public LectureDTO() {
     }
 
-    public LectureDTO(int courseId, String type, String description, List<String> start, List<String> end, String location) {
+    public LectureDTO(int courseId, String type, String description, List<String> start, List<String> end, String location, int id) {
         this.courseId = courseId;
         this.type = type;
         this.description = description;
         this.start = start;
         this.end = end;
         this.location = location;
+        this.id = id;
     }
 
     public int getId() {
         return id;
+    }
+
+    public void setId() {
+        this.id = id;
     }
 
     public int getCourseId() {
