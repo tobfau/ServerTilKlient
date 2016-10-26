@@ -31,7 +31,6 @@ public class CBSParser {
      * @throws SQLException
      */
     public static void parseCBSData() throws SQLException {
-        //ConfigLoader.parseConfig();
         parseCoursesToArray();
         parseStudiesToDatabase();
         parseCoursesToDatabase();
@@ -59,7 +58,6 @@ public class CBSParser {
         JsonReader jsonReader;
         JsonParser jparser = new JsonParser();
 
-
         Set<String> duplicatesCheck = new HashSet<String>();
 
         try {
@@ -73,7 +71,6 @@ public class CBSParser {
 
                 JsonObject obj = (JsonObject) iterator.next();
                 Map<String, String> studyValues = new HashMap<String, String>();
-
 
                 /* Tjek om studyretningen allerede er blevet tilføjet til databasen. Hvis ikke, opret da en entry i
                    study tabellen. */
@@ -92,6 +89,7 @@ public class CBSParser {
         }
     }
 
+
     /**
      * Opretter kurser i databellens "course" tabel.
      * @throws SQLException
@@ -100,26 +98,27 @@ public class CBSParser {
         Map<String, String> studyAttributes = new HashMap<String, String>();
         Map<String, String> courseMap = new HashMap<String, String>();
 
-
         //NOTE: RET TIL CACHEDROWSET I HELE PROGRAMMET HVOR DER BRUGES RESULTSET
         CachedRowSet rs = DBWrapper.getRecords("study", new String[]{"id","shortname"}, null, null, 0);
 
+
         /*
-            Gennemløb listen af studier hentet fra databasen og gem de første 5 bogstaver af dens shortname, samt det
-            tilhørende id fra databasen i et HashMap.
-            NOTE: (Overvej at lave denne til en metode for sig selv da den også bruges i parseLecturesToDatabase());
-         */
+           Gennemløb listen af studier hentet fra databasen og gem de første 5 bogstaver af dens shortname, samt det
+           tilhørende id fra databasen i et HashMap.
+           NOTE: (Overvej at lave denne til en metode for sig selv da den også bruges i parseLecturesToDatabase());
+        */
         while(rs.next()){
 
+
             String substring = rs.getString("shortname").substring(0,5);
+
             studyAttributes.put(substring, rs.getString("id"));
         }
 
 
-        /*for (CourseDTO course : courseArray){
         /*
-            Løb arrayet af kurser igennem og tjek om der findes et match mellem kurset og studieretninger gemt i
-            studyAttributes hashmappet. Hvis ja, opret da kurset i databasen med det tilhørende study_id.
+           Løb arrayet af kurser igennem og tjek om der findes et match mellem kurset og studieretninger gemt i
+           studyAttributes hashmappet. Hvis ja, opret da kurset i databasen med det tilhørende study_id.
          */
         for (CourseDTO course : courseArray){
 
@@ -127,8 +126,8 @@ public class CBSParser {
 
             if(studyAttributes.containsKey(substring)){
 
-                courseMap.put("code", course.getName());
-                //courseMap.put("name", course.getId());
+                courseMap.put("code", course.getDisplaytext());
+                courseMap.put("name", course.getId());
                 courseMap.put("study_id", studyAttributes.get(substring));
 
                 DBWrapper.insertIntoRecords("course", courseMap);
@@ -162,7 +161,9 @@ public class CBSParser {
 
             while(rs.next()){
 
+
                 String name = rs.getString("name");
+
 
                 for (CourseDTO course : courseArray){
 

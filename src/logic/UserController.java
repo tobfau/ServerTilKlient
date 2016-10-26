@@ -139,8 +139,8 @@ public class UserController {
             while (rs.next()) {
                 CourseDTO course = new CourseDTO();
 
-                course.setName(rs.getString("code"));
-                course.setCode(rs.getString("name"));
+                course.setDisplaytext(rs.getString("name"));
+                course.setCode(rs.getString("code"));
                 //course.setId(rs.getInt("id"));
                 courses.add(course);
             }

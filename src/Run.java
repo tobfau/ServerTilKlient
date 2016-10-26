@@ -36,13 +36,10 @@ public class Run {
         //Setup logLevel and prepare to log
         Logging.initiateLog(ConfigLoader.DEBUG);
 
-        System.out.println("hey");
 
         try {
-            System.out.println("hey123");
             CBSParser.parseCBSData();
         } catch (Exception e) {
-            System.out.println("hey12312312");
             System.out.println(e);
         }
 
