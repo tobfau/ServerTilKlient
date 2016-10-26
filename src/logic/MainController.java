@@ -102,7 +102,6 @@ public class MainController {
         //Hasher på "server" siden
         String securedPassword= Digester.hashWithSalt(password);
 
-
         /**
          * Her oprettes et map der tildeles nogen Strings, hvorefter mappet bliver indsat i metoden getRecords.
          * Hvor efter et UserDTO oprettes der skal finde "type".

@@ -38,7 +38,7 @@ public class AdminController extends UserController {
          * Dette er en foreach løkke som printer alle lectures ud med tilhørende id
          **/
         for (CourseDTO courseDTO : getCourses()) {
-            System.out.println(courseDTO.getId() + ": " + courseDTO);
+            System.out.println("Id " +courseDTO.getId() + " Name " + courseDTO.getName());
         }
         /**
          * Her kaldes tuiAdminMenuen, som spørger admin efter et id på den Course admin ønsker og se tilhørende lectures til
@@ -53,7 +53,7 @@ public class AdminController extends UserController {
          * Dette er en foreach løkke som printer alle lectures ud med deres id
          **/
         for (LectureDTO lecture : getLectures(idCourseChoice)) {
-            System.out.println(lecture.getId() + "id: " + lecture);
+            System.out.println(lecture.getId() + "id: " + lecture.getDescription() + " " + lecture.getType());
         }
 
             System.out.println("Indtast id for ønskede lecture: ");
@@ -172,19 +172,15 @@ public class AdminController extends UserController {
      * Denne metode er til at lave en ny bruger, admin skal indtaste de tilhørende parametre: mail, password og type
      * hvorefter brugeren bliver oprettet i databasen.
      **/
-    public void createUser(AdminDTO adminDTO) {
+    public void createUser(AdminDTO adminDTO, AdminDTO newUser) {
 
-        String mail = adminDTO.getCbsMail();
-        String password = adminDTO.getPassword();
-        String type = adminDTO.getType();
+        String mail = newUser.getCbsMail();
+        String password = newUser.getPassword();
+        String type = newUser.getType();
 
         //Hash password ved opret bruger.
         String securePw = Digester.hashWithSalt(password);
         String securePw2 = Digester.hashWithSalt((securePw));
-
-
-        AdminController adminController = new AdminController();
-        adminController.getUsers();
 
         /**
          * For løkke der tjekker om brugeren findes i forvejen
@@ -210,8 +206,9 @@ public class AdminController extends UserController {
 
                         DBWrapper.insertIntoRecords("user", userCreate);
                         System.out.println("Brugeren " + mail + " er nu oprettet." + "\n");
-                        tuiAdminMenu = new TUIAdminMenu();
+                        TUIAdminMenu tuiAdminMenu = new TUIAdminMenu();
                         tuiAdminMenu.Menu(adminDTO);
+
                     }
                     catch (SQLException e) {
                         e.printStackTrace();
@@ -224,8 +221,6 @@ public class AdminController extends UserController {
 
             }
 
-        //tuiAdminMenu = new TUIAdminMenu();
-        //tuiAdminMenu.Menu(adminDTO);
     }
 
         private ArrayList<AdminDTO> getUsers() {

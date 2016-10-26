@@ -48,13 +48,10 @@ public class TUIAdminMenu {
                     break;
 
                 case 1:
-                    String mail = "";
-                    String password = "";
-                    String type = "";
-
-                    TUICreateUser(adminDTO);
+                    AdminDTO newUser = new AdminDTO();
+                    TUICreateUser(adminDTO, newUser);
                     adminController = new AdminController();
-                    adminController.createUser(adminDTO);
+                    adminController.createUser(adminDTO, newUser);
 
                     break;
 
@@ -102,79 +99,26 @@ public class TUIAdminMenu {
      * TUICreateUser tager admins input som den nye brugers parametre: CBS mail, Password og Type
      * og sender variablerne videre til logik laget (AdminController)
      **/
-    public Object TUICreateUser(AdminDTO adminDTO){
-
-        String mail = "";
-        String password = "";
-        String type = "";
+    public Object TUICreateUser(AdminDTO adminDTO, AdminDTO newUser){
 
         Scanner mail_input = new Scanner(System.in);
         System.out.println("Indtast CBS mail: ");
-        mail = mail_input.nextLine();
+        String mail = mail_input.nextLine();
 
         Scanner password_input = new Scanner(System.in);
         System.out.println("Indtast password: ");
-        password = password_input.nextLine();
+        String password = password_input.nextLine();
 
         Scanner type_input = new Scanner(System.in);
         System.out.println("Indtast type (student, teacher, admin): ");
-        type = type_input.nextLine();
+        String type = type_input.nextLine();
 
+        newUser.setCbsMail(mail);
+        newUser.setPassword(password);
+        newUser.setType(type);
 
-        adminDTO.setCbsMail(mail);
-        adminDTO.setPassword(password);
-        adminDTO.setType(type);
-
-        return adminDTO;
+        return newUser;
     }
 
-    /**
-     * TUIDeleteUser er til sletning af en bruger. Logikken (Admincontroller) lister alle brugerne med tilhørende id
-     * hvorefter admin kan slette en bruger i systemet ved at indtaste det pågældende id.
-     **/
-    public int TUIDeleteUser(int userIdDelete) {
-        Scanner input = new Scanner(System.in);
-        System.out.println("Indtast id på bruger der skal slettes: ");
-
-        userIdDelete = input.nextInt();
-        //det gemte brugernavn skal sendes til Service
-        return userIdDelete;
-    }
-    public void TUIDeleteUserMenu(int idUserChoiceDelete){
-
-         System.out.println("Brugeren " + idUserChoiceDelete + " er nu fjernet. \n");
-
-    }
-
-    /**
-     * TUIDeleteUserValidate træder i kraft hvis en invalid værdi er blevet givet af admin.
-     */
-    public void TUIDeleteUserValidate(){
-        System.out.println("Forkerte værdier er indtastet.");
-        System.out.println("Tast 0 for at stoppe programmet.");
-        System.out.println("Tast 1 for at prøve igen.");
-        System.out.println("Tast 2 for at gå tilbage til menuen.");
-        Scanner input = new Scanner(System.in);
-
-        int choice = input.nextInt();
-
-        switch (choice) {
-            case 0:
-                System.out.println("Programmet er stoppet.");
-                System.exit(0);
-                break;
-            case 1:
-                int userId = 0;
-                adminController.deleteUser(adminDTO);
-                break;
-            case 2:
-                Menu(adminDTO);
-                break;
-            default:
-                System.out.println("Du indtastede en forkert vaerdi, proev igen.\n");
-                Menu(adminDTO);
-        }
-
-    }
 }
 
