@@ -85,20 +85,26 @@ public class UserController {
     }
 
 
+    //Metode der softdeleter et review fra databasen
     public boolean deleteReview(ReviewDTO reviewDTO) {
+        boolean isSoftDeleted = true;
 
         try {
-            Map<String, String> review = new HashMap();
-            review.put("id", String.valueOf(reviewDTO.getId()));
+            Map<String, String> isDeleted = new HashMap();
 
-            DBWrapper.deleteRecords("review",review);
+            if (isSoftDeleted) {
+                isDeleted.put("comment_is_deleted", "1");
 
-            return true;
+                Map<String, String> id = new HashMap();
+                id.put("id", String.valueOf(reviewDTO.getId()));
+
+                DBWrapper.updateRecords("review", isDeleted, id);
+                return true;
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return false;
     }
 
