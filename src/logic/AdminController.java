@@ -43,7 +43,7 @@ public class AdminController extends UserController {
         /**
          * Her kaldes tuiAdminMenuen, som spørger admin efter et id på den Course admin ønsker og se tilhørende lectures til
          */
-        String idCourseChoice = "";
+        String idCourseChoice = " ";
         Scanner input = new Scanner(System.in);
         System.out.println("Indtast id for ønskede kursus f.eks. BINT2020: ");
 
