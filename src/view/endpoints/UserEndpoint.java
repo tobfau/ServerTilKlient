@@ -3,96 +3,113 @@ package view.endpoints;
 import com.google.gson.Gson;
 import logic.UserController;
 import security.Digester;
+import shared.CourseDTO;
+import shared.LectureDTO;
 import shared.ReviewDTO;
 import shared.UserDTO;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 
 
-@Path("/api/user")
+@Path("/api")
 public class UserEndpoint {
 
     /**
      * En metode til at hente lektioner for et enkelt kursus i form af en JSON String.
-     * @param course Id'et på det kursus man ønsker at hente.
+     *
+     * @param code Fagkoden på det kursus man ønsker at hente.
      * @return En JSON String
      */
     @GET
-    @Path("/getLectures/{course}")
-    public String getLectures(@PathParam("course") String course) {
+    @Consumes("applications/json")
+    @Path("/lecture/{code}")
+    public Response getLectures(@PathParam("code") String code) {
         Gson gson = new Gson();
+        UserController userCtrl = new UserController();
+        ArrayList<LectureDTO> lectures = userCtrl.getLectures(code);
 
-        UserController ctrl = new UserController();
+        if (!lectures.isEmpty()) {
 
-        return gson.toJson(Digester.encrypt(gson.toJson(ctrl.getLectures(course))));
+            String toJson = gson.toJson(Digester.encrypt(gson.toJson(lectures)));
+
+            return successResponse(200, toJson);
+        } else {
+            return errorResponse(404, "Failed. Couldn't get lectures.");
+        }
     }
 
     /**
      * En metode til at hente de kurser en bruger er tilmeldt.
+     *
      * @param userId Id'et på den bruger man ønsker at hente kurser for.
      * @return De givne kurser i form af en JSON String.
      */
     @GET
-    @Path("/getCourses/{userId}")
-    public String getCourses(@PathParam("userId") int userId) {
+    @Path("/course/{userId}")
+    public Response getCourses(@PathParam("userId") int userId) {
 
         Gson gson = new Gson();
+        UserController userCtrl = new UserController();
+        ArrayList<CourseDTO> courses = userCtrl.getCourses(userId);
 
-        UserController ctrl = new UserController();
+        if (!courses.isEmpty()) {
 
-        return gson.toJson(Digester.encrypt(gson.toJson(ctrl.getCourses(userId))));
+            String toJson = Digester.encrypt(gson.toJson(courses));
+
+            return successResponse(200, toJson);
+        } else {
+            return errorResponse(404, "Failed. Couldn't get reviews.");
+        }
     }
-
 
     @GET
-    @Path("/getReviews/{lectureId}")
-    public String getReviews(@PathParam("lectureId") int lectureId) {
-
+    @Consumes("applications/json")
+    @Path("/review/{lectureId}")
+    public Response getReviews(@PathParam("lectureId") int lectureId) {
         Gson gson = new Gson();
+        UserController userCtrl = new UserController();
+        ArrayList<ReviewDTO> reviews = userCtrl.getReviews(lectureId);
 
-        UserController ctrl = new UserController();
+        if (!reviews.isEmpty()) {
+            String toJson = gson.toJson(Digester.encrypt(gson.toJson(reviews)));
 
-        return gson.toJson(Digester.encrypt(gson.toJson(ctrl.getReviews(lectureId))));
-    }
-
-    @POST
-    @Consumes("application/json")
-    @Path("/deleteReview")
-    public String deleteReview(String data) {
-
-        Gson gson = new Gson();
-        ReviewDTO review = new Gson().fromJson(data, ReviewDTO.class);
-
-        UserController ctrl = new UserController();
-
-        return gson.toJson(Digester.encrypt(gson.toJson(ctrl.deleteReview(review))));
-    }
-
-    @POST
-    @Consumes("application/json")
-    @Path("/addReview")
-    public String addReview(String data) {
-
-        Gson gson = new Gson();
-        ReviewDTO review = new Gson().fromJson(data, ReviewDTO.class);
-
-        UserController ctrl = new UserController();
-
-        return gson.toJson(Digester.encrypt(gson.toJson(ctrl.addReview(review))));
+            return successResponse(200, toJson);
+        } else {
+            return errorResponse(404, "Failed. Couldn't get reviews.");
+        }
     }
 
     @POST
     @Consumes("application/json")
     @Path("/login")
-    public String login(String data) {
+    public Response login(String data) {
 
         Gson gson = new Gson();
         UserDTO user = new Gson().fromJson(data, UserDTO.class);
+        UserController userCtrl = new UserController();
 
-        UserController ctrl = new UserController();
+        if (user != null) {
 
-        return gson.toJson(Digester.encrypt(gson.toJson(ctrl.login(user.getCbsMail(), user.getPassword()))));
+            String toJson = gson.toJson(Digester.encrypt(gson.toJson(userCtrl.login(user.getCbsMail(), user.getPassword()))));
+
+            return successResponse(200, toJson);
+        } else {
+            return errorResponse(401, "Couldn't login. Try again!");
+        }
     }
 
+    protected Response errorResponse(int status, String message) {
 
+        return Response.status(status).entity(new Gson().toJson(Digester.encrypt("{\"message\": \"" + message + "\"}"))).build();
+        //return Response.status(status).entity(new Gson().toJson("{\"message\": \"" + message + "\"}")).build());
+    }
+
+    protected Response successResponse(int status, Object data) {
+        Gson gson = new Gson();
+
+        return Response.status(status).entity(gson.toJson(Digester.encrypt(gson.toJson(data)))).build();
+        //return Response.status(status).entity(gson.toJson(data)).build();
+    }
 }
