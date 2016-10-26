@@ -36,12 +36,12 @@ public class Run {
         //Setup logLevel and prepare to log
         Logging.initiateLog(ConfigLoader.DEBUG);
 
-
+/*
         try {
             CBSParser.parseCBSData();
         } catch (Exception e) {
             System.out.println(e);
-        }
+        }*/
 
 
         //Loader courses og lectures ind til databasen
