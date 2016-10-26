@@ -67,8 +67,8 @@ public class UserController {
             while (rs.next()) {
                 LectureDTO lecture = new LectureDTO();
 
-                lecture.setStart(rs.getTimestamp("start"));
-                lecture.setEnd(rs.getTimestamp("end"));
+                //lecture.setStart(rs.getTimestamp("start"));
+                //lecture.setEnd(rs.getTimestamp("end"));
                 lecture.setId(rs.getInt("id"));
                 lecture.setType(rs.getString("type"));
                 lecture.setDescription(rs.getString("description"));
@@ -141,7 +141,7 @@ public class UserController {
 
                 course.setName(rs.getString("code"));
                 course.setCode(rs.getString("name"));
-                course.setId(rs.getInt("id"));
+                //course.setId(rs.getInt("id"));
                 courses.add(course);
             }
         } catch (SQLException e) {

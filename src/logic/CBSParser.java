@@ -17,21 +17,30 @@ import java.util.*;
 
 /**
  * Created by Kasper on 15/10/2016.
+ * En klasse hvis overordnede formål er, at indlæse data i Json format, og sørge for, at data bliver omdannet til
+ * java objekter, som efterfølgende bliver oprettet i databasen ved hjælp af DBWrapper-klassen.
  */
 public class CBSParser {
     private static CourseDTO[] courseArray;
     private static Gson gson = new Gson();
 
 
-
+    /**
+     * Den overordnede metode der samler de individuelle parsermetoder.
+     * Indlæser dataen fra Json dataen, og udfylder hhv. "study", "course" og "lecture" tabellerne i databasen.
+     * @throws SQLException
+     */
     public static void parseCBSData() throws SQLException {
-        ConfigLoader.parseConfig();
+        //ConfigLoader.parseConfig();
         parseCoursesToArray();
         parseStudiesToDatabase();
         parseCoursesToDatabase();
         parseLecturesToDatabase();
     }
 
+    /**
+     * Udfylder courseArray med CourseDTO objekter oprettet ud fra Json filen.
+     */
     private static void parseCoursesToArray() {
         try {
             //Læs Json filen og opret array med CourseDTO objekter
@@ -42,10 +51,14 @@ public class CBSParser {
         }
     }
 
-
+    /**
+     * Læser Json filen med study data og opretter et array af Json objekter.
+     * Opretter entries i databasens "study" tabel.
+     */
     private static void parseStudiesToDatabase() {
         JsonReader jsonReader;
         JsonParser jparser = new JsonParser();
+
 
         Set<String> duplicatesCheck = new HashSet<String>();
 
@@ -61,6 +74,9 @@ public class CBSParser {
                 JsonObject obj = (JsonObject) iterator.next();
                 Map<String, String> studyValues = new HashMap<String, String>();
 
+
+                /* Tjek om studyretningen allerede er blevet tilføjet til databasen. Hvis ikke, opret da en entry i
+                   study tabellen. */
                 if(!duplicatesCheck.contains(obj.get("shortname").toString().replace("\"", "").substring(0,5))){
 
                     studyValues.put("shortname",obj.get("shortname").toString().replace("\"", "").substring(0,5));
@@ -76,29 +92,36 @@ public class CBSParser {
         }
     }
 
-
+    /**
+     * Opretter kurser i databellens "course" tabel.
+     * @throws SQLException
+     */
     private static void parseCoursesToDatabase() throws SQLException {
         Map<String, String> studyAttributes = new HashMap<String, String>();
         Map<String, String> courseMap = new HashMap<String, String>();
 
-        /*
-            RET TIL CACHEDROWSET I HELE PROGRAMMET HVOR DER BRUGES RESULTSET
-         */
+
+        //NOTE: RET TIL CACHEDROWSET I HELE PROGRAMMET HVOR DER BRUGES RESULTSET
         CachedRowSet rs = DBWrapper.getRecords("study", new String[]{"id","shortname"}, null, null, 0);
 
-
-        //Overvej at lave denne til en metode for sig selv da den også bruges i parseLecturesToDatabase();
+        /*
+            Gennemløb listen af studier hentet fra databasen og gem de første 5 bogstaver af dens shortname, samt det
+            tilhørende id fra databasen i et HashMap.
+            NOTE: (Overvej at lave denne til en metode for sig selv da den også bruges i parseLecturesToDatabase());
+         */
         while(rs.next()){
 
-
             String substring = rs.getString("shortname").substring(0,5);
-
             studyAttributes.put(substring, rs.getString("id"));
         }
 
 
-
         /*for (CourseDTO course : courseArray){
+        /*
+            Løb arrayet af kurser igennem og tjek om der findes et match mellem kurset og studieretninger gemt i
+            studyAttributes hashmappet. Hvis ja, opret da kurset i databasen med det tilhørende study_id.
+         */
+        for (CourseDTO course : courseArray){
 
             String substring = course.getId().substring(0,5);
 
@@ -110,9 +133,13 @@ public class CBSParser {
 
                 DBWrapper.insertIntoRecords("course", courseMap);
             }
-        }*/
+        }
     }
 
+    /**
+     * Opretter entries i datbasens Lecture tabel.
+     * @throws SQLException
+     */
     private static void parseLecturesToDatabase() throws SQLException{
 
         String urlPrefix = ConfigLoader.CBS_API_LINK;
@@ -123,10 +150,17 @@ public class CBSParser {
 
         CachedRowSet rs = DBWrapper.getRecords("course", new String[]{"id", "name"}, null, null, 0);
 
-        /*try{
+        try{
+
+            /*
+                 For hvert kursus i databasen:
+                 Gennemløb hvert kursus i courseArray og find kurser der matcher på "name".
+                 Ved match, hent data om kursets lektioner fra CBS' API og udfyld kursets events-Array med disse.
+                 Gennemløb herefter hver enkelt lecture i events-arrayet og opret dem som entries i databasens
+                 "lecture" tabel.
+             */
 
             while(rs.next()){
-
 
                 String name = rs.getString("name");
 
@@ -167,12 +201,16 @@ public class CBSParser {
         }
         catch (IOException ex){
             ex.printStackTrace();
-        }*/
+        }
 
     }
 
 
-
+    /**
+     * Konverterer en liste af Strings til en enkelt String der giver mening i MySQL.
+     * @param dateData en liste af Strings.
+     * @return En string der matcher formatet forventet af DateTime datatypen i MySQL.
+     */
     private static String convertToDateTime(List<String> dateData ){
         StringBuilder dateBuilder = new StringBuilder();
 

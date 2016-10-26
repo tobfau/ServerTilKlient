@@ -11,19 +11,21 @@ public class LectureDTO {
     private int courseId;
     private String type;
     private String description;
-    private Date start;
-    private Date end;
+    private List<String> start = new ArrayList<String>();
+    private List<String> end = new ArrayList<String>();
+    private Date startDate;
+    private Date endDate;
     private String location;
 
     public LectureDTO() {
     }
 
-    public LectureDTO(int courseId, String type, String description, Date start, Date end, String location, int id) {
+    public LectureDTO(int courseId, String type, String description, Date startDate, Date endDate, String location, int id) {
         this.courseId = courseId;
         this.type = type;
         this.description = description;
-        this.start = start;
-        this.end = end;
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.location = location;
         this.id = id;
     }
@@ -60,20 +62,36 @@ public class LectureDTO {
         this.description = description;
     }
 
-    public Date getStart() {
+    public List<String> getStart() {
         return start;
     }
 
-    public void setStart(Date start) {
+    public void setStart(List<String> start) {
         this.start = start;
     }
 
-    public Date getEnd() {
+    public List<String> getEnd() {
         return end;
     }
 
-    public void setEnd(Date end) {
+    public void setEnd(List<String> end) {
         this.end = end;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 
     public String getLocation() {

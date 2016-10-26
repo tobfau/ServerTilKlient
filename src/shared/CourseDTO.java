@@ -14,14 +14,14 @@ public class CourseDTO {
      */
     private LectureDTO[] events;
 
-    private int id;
+    private String id;
     private String code;
     private String name;
 
     public CourseDTO() {
     }
 
-    public CourseDTO(int id, String name, String code) {
+    public CourseDTO(String id, String name, String code) {
         this.id = id;
         this.name = name;
         this.code = code;
@@ -43,11 +43,11 @@ public class CourseDTO {
         this.events = events;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
