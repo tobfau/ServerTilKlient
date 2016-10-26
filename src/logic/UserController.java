@@ -31,6 +31,7 @@ public class UserController {
         try {
             Map<String, String> params = new HashMap();
             params.put("id", String.valueOf(lectureId));
+            params.put("comment_is_deleted", "0");
             String[] attributes = {"id", "user_id", "lecture_id", "rating", "comment"};
 
             ResultSet rs = DBWrapper.getRecords("review", attributes, params, null, 0);
