@@ -2,17 +2,14 @@ package view.endpoints;
 
 import com.google.gson.Gson;
 import logic.UserController;
+import shared.ReviewDTO;
+import shared.UserDTO;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.ws.rs.*;
 
-/**
- * Created by Kasper on 19/10/2016.
- */
 
 @Path("/api/user")
-public abstract class UserEndpoint {
+public class UserEndpoint {
 
     /**
      * En metode til at hente lektioner for et enkelt kursus i form af en JSON String.
@@ -20,14 +17,13 @@ public abstract class UserEndpoint {
      * @return En JSON String
      */
     @GET
-    @Path("/getLectures/{courseId}")
-    public String getLectures(@PathParam("courseId") int courseId) {
+    @Path("/getLectures/{course}")
+    public String getLectures(@PathParam("course") String course) {
         Gson gson = new Gson();
 
         UserController ctrl = new UserController();
 
-
-        return gson.toJson(ctrl.getLectures(courseId));
+        return gson.toJson(ctrl.getLectures(course));
     }
 
     /**
@@ -38,11 +34,64 @@ public abstract class UserEndpoint {
     @GET
     @Path("/getCourses/{userId}")
     public String getCourses(@PathParam("userId") int userId) {
+
         Gson gson = new Gson();
 
         UserController ctrl = new UserController();
 
         return gson.toJson(ctrl.getCourses(userId));
     }
+
+
+    @GET
+    @Path("/getReviews/{lectureId}")
+    public String getReviews(@PathParam("lectureId") int lectureId) {
+
+        Gson gson = new Gson();
+
+        UserController ctrl = new UserController();
+
+        return gson.toJson(ctrl.getReviews(lectureId));
+    }
+
+    @POST
+    @Consumes("application/json")
+    @Path("/deleteReview")
+    public String deleteReview(String data) {
+
+        Gson gson = new Gson();
+        ReviewDTO review = new Gson().fromJson(data, ReviewDTO.class);
+
+        UserController ctrl = new UserController();
+
+        return gson.toJson(ctrl.deleteReview(review));
+    }
+
+    @POST
+    @Consumes("application/json")
+    @Path("/addReview")
+    public String addReview(String data) {
+
+        Gson gson = new Gson();
+        ReviewDTO review = new Gson().fromJson(data, ReviewDTO.class);
+
+        UserController ctrl = new UserController();
+
+        return gson.toJson(ctrl.addReview(review));
+    }
+
+    @POST
+    @Consumes("application/json")
+    @Path("/login")
+    public String login(String data) {
+
+        Gson gson = new Gson();
+        UserDTO user = new Gson().fromJson(data, UserDTO.class);
+
+        UserController ctrl = new UserController();
+
+        return gson.toJson(ctrl.login(user.getCbsMail(), user.getPassword()));
+    }
+
 
 }

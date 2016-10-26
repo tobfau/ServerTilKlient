@@ -44,7 +44,6 @@ public class AdminController extends UserController {
          * Her kaldes tuiAdminMenuen, som spørger admin efter et id på den Course admin ønsker og se tilhørende lectures til
          */
         String idCourseChoice = "";
-        //tuiAdminMenu.TUIChooseCourseId(idCourseChoice);
         Scanner input = new Scanner(System.in);
         System.out.println("Indtast id for ønskede kursus f.eks. BINT2020: ");
 
@@ -55,60 +54,48 @@ public class AdminController extends UserController {
          **/
         for (LectureDTO lecture : getLectures(idCourseChoice)) {
             System.out.println(lecture.getId() + "id: " + lecture);
-
         }
 
-        System.out.println("Indtast id for ønskede lecture: ");
-        Scanner input1 = new Scanner(System.in);
-        int idLectureChoice = input1.nextInt();
+            System.out.println("Indtast id for ønskede lecture: ");
+            Scanner input1 = new Scanner(System.in);
+            int idLectureChoice = input1.nextInt();
 
-        /**
-         * Dette er en foreach løkke som printer alle reviews ud på baggrund af den givne id, som admin har skrevet
-         * ind i tuiAdminMenu.
-         */
-        for (ReviewDTO reviewDTO : getReviews(idLectureChoice)) {
-            System.out.println(reviewDTO.getId() + " id: " + reviewDTO);
+            /**
+             * Dette er en foreach løkke som printer alle reviews ud på baggrund af den givne id, som admin har skrevet
+             * ind i tuiAdminMenu.
+             */
+            for (ReviewDTO reviewDTO : getReviews(idLectureChoice)) {
+                System.out.println(reviewDTO.getId() + " id: " + reviewDTO);
+
+            }
+
+
+            System.out.println("Indtast id for ønskede review der skal slettes: ");
+            Scanner input2 = new Scanner(System.in);
+            int idReviewChoice = input2.nextInt();
+
+            /**
+             * Nu har vi fået et id på et review fra TUIChooseReviewId, den indtastede id findes i review database-tabelen
+             * og her ændres værdien "is_deleted" til 1 dvs. den "soft deletes"
+             */
+            try {
+
+                Map<String, String> id = new HashMap<String, String>();
+
+                id.put("id", String.valueOf(idReviewChoice));
+
+                Map<String, String> commentDelete = new HashMap<String, String>();
+
+                commentDelete.put("is_deleted", "1");
+
+                DBWrapper.updateRecords("review", id, commentDelete);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                Logging.log(e, 2, "Det indtastede id matcher ikke med nogle Review id i databsen");
+            }
+            tuiAdminMenu.Menu(adminDTO);
 
         }
-
-
-        System.out.println("Indtast id for ønskede review der skal slettes: ");
-        Scanner input2 = new Scanner(System.in);
-        int idReviewChoice = input2.nextInt();
-
-        /**
-         * Nu har vi fået et id på et review fra TUIChooseReviewId, den indtastede id findes i review database-tabelen
-         * og her ændres værdien "is_deleted" til 1 dvs. den "soft deletes"
-         */
-        try {
-
-            Map<String, String> id = new HashMap<String, String>();
-
-            id.put("id", String.valueOf(idReviewChoice));
-
-            Map<String, String> commentDelete = new HashMap<String, String>();
-
-            commentDelete.put("is_deleted", "1");
-
-            DBWrapper.updateRecords("review", id, commentDelete);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            Logging.log(e, 2, "Det indtastede id matcher ikke med nogle Review id i databsen");
-        }
-        tuiAdminMenu.Menu(adminDTO);
-
-    }
-
-    /**
-     *Her ses en else som træder i kraft ved indtasting af invalid id
-     **/
- /*
-        else{
-            System.out.println("Invalid id");
-            deleteComment();
-            tuiAdminMenu.Menu(currentAdmin);
-        }
-  */
 
     /**
      * Denne metode er til at slette en bruger, hvor alle brugerne listes op i terminalen (med id)
@@ -241,7 +228,7 @@ public class AdminController extends UserController {
         //tuiAdminMenu.Menu(adminDTO);
     }
 
-        public ArrayList<AdminDTO> getUsers() {
+        private ArrayList<AdminDTO> getUsers() {
 
             ArrayList<AdminDTO> users = new ArrayList<AdminDTO>();
             try {
@@ -265,5 +252,30 @@ public class AdminController extends UserController {
             return users;
 
         }
+
+
+    private ArrayList<CourseDTO> getCourses() {
+
+        ArrayList<CourseDTO> courses = new ArrayList<CourseDTO>();
+
+        try {
+            String[] attributes = new String[]{"name", "code", "course.id"};
+            ResultSet rs = DBWrapper.getRecords("course", attributes, null, null, 0);
+
+
+            while (rs.next()) {
+                CourseDTO course = new CourseDTO();
+
+                course.setName(rs.getString("code"));
+                course.setCode(rs.getString("name"));
+                course.setId(rs.getInt("id"));
+                courses.add(course);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Logging.log(e,2,"Kunne ikke hente getCourses");
+        }
+        return courses;
+    }
 
 }

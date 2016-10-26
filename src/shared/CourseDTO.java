@@ -14,15 +14,17 @@ public class CourseDTO {
      */
     private LectureDTO[] events;
 
-    private String id;
-    private String displaytext;
+    private int id;
+    private String code;
+    private String name;
 
     public CourseDTO() {
     }
 
-    public CourseDTO(String id, String displaytext) {
+    public CourseDTO(int id, String name, String code) {
         this.id = id;
-        this.displaytext = displaytext;
+        this.name = name;
+        this.code = code;
     }
 
     /**
@@ -41,21 +43,29 @@ public class CourseDTO {
         this.events = events;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
 
     public String getName() {
-        return displaytext;
+        return name;
     }
 
-    public void setName(String displaytext) {
-        this.displaytext = displaytext;
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
@@ -63,7 +73,7 @@ public class CourseDTO {
         return "CourseDTO{" +
                 "lectures=" + events +
                 ", id=" + id +
-                ", displaytext='" + displaytext + '\'' +
+                ", name='" + name + '\'' +
                 '}';
     }
 }

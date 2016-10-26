@@ -33,14 +33,14 @@ public class TeacherController extends UserController {
         return average;
     }
 
-    public double calculateAverageRatingOnCourse(int courseId) {
+    public double calculateAverageRatingOnCourse(String course) {
 
         int lectureId = 0;
         double sumOfRatings = 0;
         double numberOfReviews = 0;
 
         // for (LectureDTO lecture : getLectures1(courseId)) {
-        for (LectureDTO lecture : getLectures(courseId)) {
+        for (LectureDTO lecture : getLectures(course)) {
             lectureId = lecture.getId();
         }
 
