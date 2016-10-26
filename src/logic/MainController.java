@@ -2,7 +2,6 @@ package logic;
 
 import security.Digester;
 import service.DBWrapper;
-import service.Service;
 import shared.AdminDTO;
 import shared.StudentDTO;
 import shared.TeacherDTO;

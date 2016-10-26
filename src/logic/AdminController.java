@@ -1,9 +1,6 @@
 package logic;
 
-import dal.MYSQLDriver;
-import org.omg.CosNaming.NamingContextExtPackage.StringNameHelper;
 import service.DBWrapper;
-import service.Service;
 import shared.*;
 import view.TUIAdminMenu;
 
