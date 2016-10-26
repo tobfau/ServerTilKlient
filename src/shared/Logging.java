@@ -1,13 +1,11 @@
 package shared;
 
-import logic.ConfigLoader;
-
 import java.io.IOException;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-//TODO: Needs proper comments
+//TODO: Needs proper comments1231231
 public class Logging {
 
     protected static final Logger logger = Logger.getLogger("logging");
