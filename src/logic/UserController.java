@@ -93,7 +93,7 @@ public class UserController {
             Map<String, String> isDeleted = new HashMap();
 
             if (isSoftDeleted) {
-                isDeleted.put("comment_is_deleted", "1");
+                isDeleted.put("is_deleted", "1");
 
                 Map<String, String> id = new HashMap();
                 id.put("id", String.valueOf(reviewDTO.getId()));

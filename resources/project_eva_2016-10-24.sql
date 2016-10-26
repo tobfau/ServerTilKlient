@@ -94,7 +94,7 @@ CREATE TABLE `review` (
   `lecture_id` int(11) NOT NULL,
   `rating` int(11) NOT NULL,
   `comment` varchar(500) DEFAULT '',
-  `comment_is_deleted` bit(1) NOT NULL,
+  `is_deleted` int(1) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `lecture_id` (`lecture_id`),
   KEY `user_id` (`id`),
