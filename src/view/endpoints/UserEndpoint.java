@@ -2,6 +2,7 @@ package view.endpoints;
 
 import com.google.gson.Gson;
 import logic.UserController;
+import security.Digester;
 import shared.ReviewDTO;
 import shared.UserDTO;
 
@@ -13,7 +14,7 @@ public class UserEndpoint {
 
     /**
      * En metode til at hente lektioner for et enkelt kursus i form af en JSON String.
-     * @param courseId Id'et på det kursus man ønsker at hente.
+     * @param course Id'et på det kursus man ønsker at hente.
      * @return En JSON String
      */
     @GET
@@ -23,7 +24,7 @@ public class UserEndpoint {
 
         UserController ctrl = new UserController();
 
-        return gson.toJson(ctrl.getLectures(course));
+        return gson.toJson(Digester.encrypt(gson.toJson(ctrl.getLectures(course))));
     }
 
     /**
@@ -39,7 +40,7 @@ public class UserEndpoint {
 
         UserController ctrl = new UserController();
 
-        return gson.toJson(ctrl.getCourses(userId));
+        return gson.toJson(Digester.encrypt(gson.toJson(ctrl.getCourses(userId))));
     }
 
 
@@ -51,7 +52,7 @@ public class UserEndpoint {
 
         UserController ctrl = new UserController();
 
-        return gson.toJson(ctrl.getReviews(lectureId));
+        return gson.toJson(Digester.encrypt(gson.toJson(ctrl.getReviews(lectureId))));
     }
 
     @POST
@@ -64,7 +65,7 @@ public class UserEndpoint {
 
         UserController ctrl = new UserController();
 
-        return gson.toJson(ctrl.deleteReview(review));
+        return gson.toJson(Digester.encrypt(gson.toJson(ctrl.deleteReview(review))));
     }
 
     @POST
@@ -77,7 +78,7 @@ public class UserEndpoint {
 
         UserController ctrl = new UserController();
 
-        return gson.toJson(ctrl.addReview(review));
+        return gson.toJson(Digester.encrypt(gson.toJson(ctrl.addReview(review))));
     }
 
     @POST
@@ -90,7 +91,7 @@ public class UserEndpoint {
 
         UserController ctrl = new UserController();
 
-        return gson.toJson(ctrl.login(user.getCbsMail(), user.getPassword()));
+        return gson.toJson(Digester.encrypt(gson.toJson(ctrl.login(user.getCbsMail(), user.getPassword()))));
     }
 
 
