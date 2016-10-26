@@ -29,7 +29,7 @@ public class TUIMainMenu {
         String mail="";
         String password = "";
         try {
-            System.out.println("Velkommen til Undervisningsevaluering for CBS studerende og professorer!");
+            System.out.println("Velkommen til Undervisningsevaluering for CBS administratorer!");
             System.out.println("Tast 0 for at stoppe programmet");
             System.out.println("Tast 1 for og Logge ind som admin");
 
@@ -39,7 +39,7 @@ public class TUIMainMenu {
  **/
             switch (choice) {
                 case 0:
-                    System.out.println("Programmet er stoppet og du er logget ud.");
+                    System.out.println("Programmet er stoppet.");
                     System.exit(0);
                     break;
 
@@ -52,10 +52,10 @@ public class TUIMainMenu {
                     System.out.println("Indtast password:");
                     password = input2.nextLine();
                     //hash password at login ("klient" side)
-                    Digester.hashWithSalt(password);
+                    String securePW = Digester.hashWithSalt(password);
 
                     adminDTO.setCbsMail(mail);
-                    adminDTO.setPassword(password);
+                    adminDTO.setPassword(securePW);
 
                     mainController.loginAdmin(adminDTO);
 

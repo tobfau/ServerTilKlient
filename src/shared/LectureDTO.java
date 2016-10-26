@@ -16,7 +16,7 @@ public class LectureDTO {
     public LectureDTO() {
     }
 
-    public LectureDTO(int courseId, String type, String description, List<String> start, List<String> end, String location) {
+    public LectureDTO(int courseId, String type, String description, List<String> start, List<String> end, String location, int lectureId) {
         this.courseId = courseId;
         this.type = type;
         this.description = description;
@@ -27,6 +27,14 @@ public class LectureDTO {
 
     public int getId() {
         return id;
+    }
+
+    public int getLectureId() {
+        return id;
+    }
+
+    public void setLectureId(int id) {
+        this.id = id;
     }
 
     public int getCourseId() {
@@ -76,6 +84,7 @@ public class LectureDTO {
     public void setLocation(String location) {
         this.location = location;
     }
+
 
     @Override
     public String toString() {

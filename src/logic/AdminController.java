@@ -43,28 +43,25 @@ public class AdminController extends UserController {
         /**
          * Her kaldes tuiAdminMenuen, som spørger admin efter et id på den Course admin ønsker og se tilhørende lectures til
          */
-        int idCourseChoice = 0;
+        String idCourseChoice = "";
         //tuiAdminMenu.TUIChooseCourseId(idCourseChoice);
         Scanner input = new Scanner(System.in);
-        System.out.println("Indtast id for ønskede kursus: ");
+        System.out.println("Indtast id for ønskede kursus f.eks. BINT2020: ");
 
-        idCourseChoice = input.nextInt();
+        idCourseChoice = input.nextLine();
 
         /**
          * Dette er en foreach løkke som printer alle lectures ud med deres id
          **/
-        for (LectureDTO lectureDTO : getLectures(idCourseChoice)) {
-            System.out.println(lectureDTO.getId() + "id: " + lectureDTO);
+        for (LectureDTO lecture : getLectures(idCourseChoice)) {
+            System.out.println(lecture.getId() + "id: " + lecture);
 
         }
 
-        int idLectureChoice = 0;
-        //tuiAdminMenu.TUIChooseLectureId(idLectureChoice);
+        System.out.println("Indtast id for ønskede lecture: ");
         Scanner input1 = new Scanner(System.in);
+        int idLectureChoice = input1.nextInt();
 
-
-        System.out.println("Indtast id for ønskede review: ");
-        int idReviewChoice = input1.nextInt();
         /**
          * Dette er en foreach løkke som printer alle reviews ud på baggrund af den givne id, som admin har skrevet
          * ind i tuiAdminMenu.
@@ -74,7 +71,10 @@ public class AdminController extends UserController {
 
         }
 
-        tuiAdminMenu.TUIChooseReviewId(idReviewChoice);
+
+        System.out.println("Indtast id for ønskede review der skal slettes: ");
+        Scanner input2 = new Scanner(System.in);
+        int idReviewChoice = input2.nextInt();
 
         /**
          * Nu har vi fået et id på et review fra TUIChooseReviewId, den indtastede id findes i review database-tabelen
@@ -96,7 +96,7 @@ public class AdminController extends UserController {
             Logging.log(e, 2, "Det indtastede id matcher ikke med nogle Review id i databsen");
         }
         tuiAdminMenu.Menu(adminDTO);
-        ;
+
     }
 
     /**
@@ -114,16 +114,14 @@ public class AdminController extends UserController {
      * Denne metode er til at slette en bruger, hvor alle brugerne listes op i terminalen (med id)
      * og derefter kan der tastes et id ind af den bruger som skal slettes.
      **/
-    public void deleteUser(int userId, AdminDTO adminDTO) {
+    public void deleteUser(AdminDTO adminDTO) {
 
-        // ShowAllUsers
-        ArrayList adminDTOs = getUsers(adminDTO);
-
-
-        String mailDb = "";
-        for (AdminDTO user : getUsers(adminDTO))
+        /**
+         * Viser alle brugere i databasen.
+         */
+        for (UserDTO user : getUsers())
         {
-            System.out.println("Id: " + adminDTO.getId() + "  CBS mail: " + adminDTO.getCbsMail()) ;
+            System.out.println("Id: " + user.getId() +  " Type: " + user.getType() + "  CBS mail: " + user.getCbsMail()) ;
         }
 
         //if bruger id ikke findes - else: tuiAdminMenu.TUIDeleteUserValidate();
@@ -152,7 +150,7 @@ public class AdminController extends UserController {
         } catch(SQLException e)
     {
         e.printStackTrace();
-        Logging.log(e, 1, "Fejlede at finde brugeren i DB ved deleteUser");
+        Logging.log(e, 1, "Fejlede at finde brugeren i DB ved deleteUser" + "\n");
     }
 
 
@@ -170,15 +168,16 @@ public class AdminController extends UserController {
         DBWrapper.deleteRecords("user", id);
     } catch(SQLException e1) {
             e1.printStackTrace();
-            Logging.log(e1, 1, "Brugeren kunne ikke slettes");
+            Logging.log(e1, 1, "Brugeren kunne ikke slettes" + "\n");
     }
     /**
      * Hvis der ikke findes en værdi der passer med det indtastede id i Databasen,
      * vil denne catch kaste admin videre til tuiAdminMenuen, hvor man kan få muligheden for og prøve igen.
      * hvis der ingen ens værdi findes med det indtastede id og id  DB vil denne catch kaste brugeren videre til tuiAdminMenuen, hvor man kan få muligheden for og prøve igen osv.
      */
-    System.out.println("Brugeren er slettet");
-
+    System.out.println("Brugeren er slettet" + "\n");
+        TUIAdminMenu tuiAdminMenu = new TUIAdminMenu();
+        tuiAdminMenu.Menu(adminDTO);
 }
 
 
@@ -193,19 +192,22 @@ public class AdminController extends UserController {
         String type = adminDTO.getType();
 
         //Hash password ved opret bruger.
-        Digester.hashWithSalt(password);
+        String securePw = Digester.hashWithSalt(password);
+        String securePw2 = Digester.hashWithSalt((securePw));
 
-
-        String mailDb = adminDTO.getCbsMail();
 
         AdminController adminController = new AdminController();
-        adminController.getUsers(adminDTO);
+        adminController.getUsers();
 
-        for (AdminDTO user : getUsers(adminDTO)) {
-            if (mailDb.equals(mail)) {
-                System.out.println("brugeren findes allerede");
+        /**
+         * For løkke der tjekker om brugeren findes i forvejen
+         */
+        for (AdminDTO user : getUsers()) {
+            if (mail.equals(user)) {
+                System.out.println("brugeren findes allerede" + "\n");
                 tuiAdminMenu = new TUIAdminMenu();
                 tuiAdminMenu.Menu(adminDTO);
+
             }
         }
 
@@ -216,42 +218,40 @@ public class AdminController extends UserController {
                         Map<String, String> userCreate = new HashMap<String, String>();
 
                         userCreate.put("cbs_mail", String.valueOf(mail));
-                        userCreate.put("password", String.valueOf(password));
+                        userCreate.put("password", String.valueOf(securePw2));
                         userCreate.put("type", String.valueOf(type));
 
                         DBWrapper.insertIntoRecords("user", userCreate);
-                        System.out.println("Brugeren " + mail + " er nu oprettet. ");
+                        System.out.println("Brugeren " + mail + " er nu oprettet." + "\n");
                         tuiAdminMenu = new TUIAdminMenu();
                         tuiAdminMenu.Menu(adminDTO);
                     }
                     catch (SQLException e) {
                         e.printStackTrace();
-                        Logging.log(e, 1, "Brugeren kunne ikke oprettes");
+                        Logging.log(e, 1, "Brugeren kunne ikke oprettes" + "\n");
                     }
                 } else {
-                System.out.println("Forkert værdi i password. Prøv igen ");
+                System.out.println("Forkert værdi i password. Prøv igen " + "\n");
                 tuiAdminMenu = new TUIAdminMenu();
                 tuiAdminMenu.Menu(adminDTO);
 
             }
 
-        tuiAdminMenu = new TUIAdminMenu();
-        tuiAdminMenu.Menu(adminDTO);
+        //tuiAdminMenu = new TUIAdminMenu();
+        //tuiAdminMenu.Menu(adminDTO);
     }
 
-        public ArrayList<AdminDTO> getUsers (AdminDTO adminDTO){
+        public ArrayList<AdminDTO> getUsers() {
 
             ArrayList<AdminDTO> users = new ArrayList<AdminDTO>();
             try {
-                Map<String, String> params = new HashMap();
-                params.put("cbs_mail", String.valueOf(adminDTO.getCbsMail()));
-                params.put("type", String.valueOf(adminDTO.getType()));
                 String[] attributes = {"id", "cbs_mail", "type"};
 
-                ResultSet rs = DBWrapper.getRecords("user", attributes, params, null, 0);
+                ResultSet rs = DBWrapper.getRecords("user", attributes, null, null, 0);
 
                 while (rs.next()) {
                     AdminDTO user = new AdminDTO();
+                    user.setId(rs.getInt("id"));
                     user.setCbsMail(rs.getString("cbs_mail"));
                     user.setType(rs.getString("type"));
                     users.add(user);
@@ -259,9 +259,11 @@ public class AdminController extends UserController {
 
             } catch (SQLException e) {
                 e.printStackTrace();
-                Logging.log(e, 1, "Funktionen getUsers kunne ikke hente Brugerne");
+                Logging.log(e, 1, "Funktionen getUsers kunne ikke hente Brugerne" + "\n");
             }
 
             return users;
+
         }
+
 }

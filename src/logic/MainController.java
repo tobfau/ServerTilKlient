@@ -100,7 +100,7 @@ public class MainController {
         String mail = adminDTO.getCbsMail();
 
         //Hasher på "server" siden
-        String securedPassword = Digester.hashWithSalt(password);
+        String securedPassword= Digester.hashWithSalt(password);
 
 
         /**
@@ -112,7 +112,7 @@ public class MainController {
             Map<String, String> loginMail = new HashMap<String, String>();
 
             loginMail.put("cbs_mail", String.valueOf(mail));
-            loginMail.put("password", String.valueOf(password));
+            loginMail.put("password", String.valueOf(securedPassword));
 
             ResultSet result = DBWrapper.getRecords("user", null, loginMail, null, 0);
 
@@ -132,7 +132,8 @@ public class MainController {
                 }
                 if (type != "admin") {
                     //Login error. No rows returned for username and password
-                    System.out.println("bom");
+                    TUIMainMenu tuiMainMenu = new TUIMainMenu();
+                    tuiMainMenu.TUILogIn(adminDTO);
                     return 10;
                 }
             }

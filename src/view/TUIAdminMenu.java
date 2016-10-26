@@ -27,8 +27,8 @@ public class TUIAdminMenu {
              * Her ses de muligheder som admin har i en menu.
              **/
 
-            System.out.println("Velkommen til Undervisningsevaluering for CBS studerende og professorer!");
-            System.out.println("Du er logget ind som Admin" /* brugernavn?*/);
+            System.out.println("Velkommen til Undervisningsevaluering for CBS administratorer!");
+            System.out.println("Du er logget ind som: " +  adminDTO.getCbsMail());
             System.out.println("Tast 0 for at stoppe programmet og log ud.");
             System.out.println("Tast 1 for at oprette en ny bruger. ");
             System.out.println("Tast 2 for slet en bruger. ");
@@ -61,7 +61,7 @@ public class TUIAdminMenu {
                 case 2:
                     int userId = adminDTO.getId();
                     adminController = new AdminController();
-                    adminController.deleteUser(userId, adminDTO);
+                    adminController.deleteUser(adminDTO);
                     break;
 
                 case 3:
@@ -85,17 +85,6 @@ public class TUIAdminMenu {
     }
 
     /**
-     * TUIChooseLectureId er til admin når der skal vælges en lecture hvorfor admin ønsker at slette en kommentar.
-     * Logikken bag denne metode ses i AdminControlleren.
-     **/
-    public void TUIChooseLectureId(int idLectureChoice) {
-        Scanner input = new Scanner(System.in);
-        System.out.println("Indtast id for ønskede forelæsning: ");
-
-        idLectureChoice = input.nextInt();
-    }
-
-    /**
      * TUIChooseCourseId er bruges som "søgekriterie" til at finde frem til det review der ønskes slettet.
      * Logikken bag denne metode ses i AdminControlleren
      **/
@@ -108,22 +97,6 @@ public class TUIAdminMenu {
 
         return  idCourseChoice;
         }
-
-
-    /**
-     * Efter at have indsnævret antallet af reviews ved først at søge ud fra courses og derefter lectures,
-     * kan admin nu indtaste id på det review der ønskes slettet
-     * @param idReviewChoice er id på det review som slettes fra databasen, logikken der fører den videre findes i
-     * adminController
-     */
-    public int TUIChooseReviewId(int idReviewChoice) {
-
-        Scanner input = new Scanner(System.in);
-        System.out.println("Indtast id for ønskede review: ");
-
-        idReviewChoice = input.nextInt();
-        return  idReviewChoice;
-    }
 
     /**
      * TUICreateUser tager admins input som den nye brugers parametre: CBS mail, Password og Type
@@ -144,7 +117,7 @@ public class TUIAdminMenu {
         password = password_input.nextLine();
 
         Scanner type_input = new Scanner(System.in);
-        System.out.println("Indtast type (Student, Teacher, Admin): ");
+        System.out.println("Indtast type (student, teacher, admin): ");
         type = type_input.nextLine();
 
 
@@ -188,10 +161,11 @@ public class TUIAdminMenu {
         switch (choice) {
             case 0:
                 System.out.println("Programmet er stoppet.");
+                System.exit(0);
                 break;
             case 1:
                 int userId = 0;
-                adminController.deleteUser(userId, adminDTO);
+                adminController.deleteUser(adminDTO);
                 break;
             case 2:
                 Menu(adminDTO);
