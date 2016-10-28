@@ -58,23 +58,25 @@ public class MainController {
 
             ResultSet result = DBWrapper.getRecords("user", null, loginMail, null, 0);
 
-            UserDTO type = new UserDTO();
-            type.setType(result.getString("type"));
+            while (result.next()) {
+                UserDTO type = new UserDTO();
+                type.setType(result.getString("type"));
 
-            if (type.equals("teacher")) {
-                teacherCtrl = new TeacherController();
-                TeacherDTO teacherDTO = new TeacherDTO();
-                teacherDTO.setCbsMail(mail);
-                teacherDTO.setPassword(securedPassword);
-                teacherCtrl.loadTeacher(teacher);
+                if (type.equals("teacher")) {
+                    teacherCtrl = new TeacherController();
+                    TeacherDTO teacherDTO = new TeacherDTO();
+                    teacherDTO.setCbsMail(mail);
+                    teacherDTO.setPassword(securedPassword);
+                    teacherCtrl.loadTeacher(teacher);
 
-            }
-            if (type.equals("student")) {
-                studentCtrl = new StudentController();
-                StudentDTO studentDTO = new StudentDTO();
-                studentDTO.setCbsMail(mail);
-                studentDTO.setPassword(securedPassword);
-                studentCtrl.loadStudent(student);
+                }
+                if (type.equals("student")) {
+                    studentCtrl = new StudentController();
+                    StudentDTO studentDTO = new StudentDTO();
+                    studentDTO.setCbsMail(mail);
+                    studentDTO.setPassword(securedPassword);
+                    studentCtrl.loadStudent(student);
+                }
             }
         }
 
@@ -116,23 +118,25 @@ public class MainController {
             ResultSet result = DBWrapper.getRecords("user", null, loginMail, null, 0);
 
             //If login returned any rows
-            if(result.next()) {
+            while(result.next()) {
                 String type = result.getString("type");
 
                 /**
                  * En if statement der validere om brugeren der logger in er af typen admin eller kan der ikke logges ind i TUI.
                  */
                 if (type.equals("admin")) {
-                    adminDTO.setCbsMail(mail);
-                    adminDTO.setPassword(securedPassword);
+                    AdminDTO admin = new AdminDTO();
+                    admin.setCbsMail(mail);
+                    admin.setPassword(securedPassword);
 
                     TUIAdminMenu tuiAdminMenu = new TUIAdminMenu();
-                    tuiAdminMenu.Menu(adminDTO);
+                    tuiAdminMenu.menu(admin);
                 }
                 if (type != "admin") {
                     //Login error. No rows returned for username and password
+                    System.out.println("Forkert indtastet type. Prøv igen.");
                     TUIMainMenu tuiMainMenu = new TUIMainMenu();
-                    tuiMainMenu.TUILogIn(adminDTO);
+                    tuiMainMenu.tUILogIn(adminDTO);
                     return 10;
                 }
             }
@@ -143,8 +147,12 @@ public class MainController {
             System.out.print(e.getMessage());
             System.out.println("Du indtastede en forkert vaerdi, proev igen. \n");
             Logging.log(e,1,"Brugeren kunne ikke logge ind som admin");
-            tuiMainMenu.TUILogIn(adminDTO);
+            TUIMainMenu tuiMainMenu = new TUIMainMenu();
+            tuiMainMenu.tUILogIn(adminDTO);
         }
+        System.out.println("forkert login");
+        TUIMainMenu tuiMainMenu = new TUIMainMenu();
+        tuiMainMenu.tUILogIn(adminDTO);
         return 200;
 
     }

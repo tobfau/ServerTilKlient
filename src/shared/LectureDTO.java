@@ -35,11 +35,13 @@ public class LectureDTO {
     }
 
 
+
     public int getLectureId() {
         return id;
     }
 
     public void setLectureId(int id) {
+        this.id = id;
     }
 
     public int getCourseId() {

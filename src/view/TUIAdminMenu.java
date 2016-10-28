@@ -18,7 +18,7 @@ public class TUIAdminMenu {
     private AdminDTO adminDTO;
     private UserDTO userDTO;
 
-    public void Menu(AdminDTO adminDTO) {
+    public void menu(AdminDTO adminDTO) {
         adminController = new AdminController();
         Scanner input = new Scanner(System.in);
         try {
@@ -32,7 +32,8 @@ public class TUIAdminMenu {
             System.out.println("Tast 0 for at stoppe programmet og log ud.");
             System.out.println("Tast 1 for at oprette en ny bruger. ");
             System.out.println("Tast 2 for slet en bruger. ");
-            System.out.println("Tast 3 for slet en kommentar");
+            System.out.println("Tast 3 for slet en kommentar.");
+            System.out.println("Tast 4 for tildeling af kursus til bruger.");
 
             /**
              * Her modtager vi admins respons til ovenstående menu, og sender dem i gennem en switch som sender
@@ -63,12 +64,15 @@ public class TUIAdminMenu {
 
                 case 3:
                     adminController = new AdminController();
-                    adminController.deleteReview();
+                    adminController.deleteReview(adminDTO);
                     break;
+                case 4:
+                    adminController = new AdminController();
+                    adminController.courseAssign(adminDTO);
 
                 default:
                     System.out.println("Du indtastede en forkert vaerdi, proev igen.\n");
-                    Menu(adminDTO);
+                    menu(adminDTO);
             }
 
 	/**
@@ -77,7 +81,7 @@ public class TUIAdminMenu {
         } catch (InputMismatchException e) {
             System.out.printf("Systemet fandt fejlen: %s \n", e);
             System.out.println("Du indtastede ikke et heltal, menuen kører forfra");
-            input.nextLine();
+            menu(adminDTO);
         }
     }
 

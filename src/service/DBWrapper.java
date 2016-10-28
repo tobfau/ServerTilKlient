@@ -229,7 +229,7 @@ public class DBWrapper {
         StringBuilder builder = new StringBuilder(buildWhere(whereStmts, updateString));
         builder.append(";");
 
-        System.out.println(builder.toString());
+        //System.out.println(builder.toString());
 
         MYSQLDriver.updateSQL(builder.toString());
     }

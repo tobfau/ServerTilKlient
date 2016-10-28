@@ -23,7 +23,7 @@ public class TUIMainMenu {
  /**
  * TUILogin er menuen hvor Admin kan vælge mellem at logge ind eller lukke programmet.
  **/
-    public Object TUILogIn(AdminDTO adminDTO) {
+    public Object tUILogIn(AdminDTO adminDTO) {
         MainController mainController = new MainController();
         Scanner input = new Scanner(System.in);
         String mail="";
@@ -62,6 +62,7 @@ public class TUIMainMenu {
                     break;
                 default:
                     System.out.println("Du indtastede en forkert vaerdi, proev igen.\n");
+                    tUILogIn(adminDTO);
                     break;
 
             }
@@ -72,7 +73,7 @@ public class TUIMainMenu {
         catch (InputMismatchException e) {
             System.out.printf("Systemet fandt fejlen: %s \n", e);
             System.out.println("Du indtastede ikke et heltal, menuen kører forfra");
-            input.nextLine();
+            tUILogIn(adminDTO);
         }
 
     return adminDTO;

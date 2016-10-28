@@ -21,7 +21,7 @@ public class Run {
 
         AdminDTO adminDTO = new AdminDTO();
         TUIMainMenu tuiMainMenu = new TUIMainMenu();
-        tuiMainMenu.TUILogIn(adminDTO);
+        tuiMainMenu.tUILogIn(adminDTO);
 
        /*
         HttpServer server = null;
