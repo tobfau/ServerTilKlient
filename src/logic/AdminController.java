@@ -41,7 +41,7 @@ public class AdminController extends UserController {
          * Dette er en foreach løkke som printer alle lectures ud med tilhørende id
          **/
         for (CourseDTO courseDTO : getCourses(idStudyChoice)) {
-            System.out.println("Id: " + courseDTO.getName() + " - Name: " + courseDTO.getCode());
+            System.out.println("Id: " + courseDTO.getDisplaytext() + " - Name: " + courseDTO.getCode());
         }
                 /**
                  * Her kaldes tuiAdminMenuen, som spørger admin efter et id på den Course admin ønsker og se tilhørende lectures til
@@ -79,21 +79,10 @@ public class AdminController extends UserController {
                  * Nu har vi fået et id på et review fra TUIChooseReviewId, den indtastede id findes i review database-tabelen
                  * og her ændres værdien "is_deleted" til 1 dvs. den "soft deletes"
                  */
-                try {
 
-                    Map<String, String> id = new HashMap<String, String>();
+                UserController u = new UserController();
+                u.softDeleteReview(0,idReviewChoice);
 
-                    id.put("id", String.valueOf(idReviewChoice));
-
-                    Map<String, String> commentDelete = new HashMap<String, String>();
-
-                    commentDelete.put("is_deleted", "1");
-
-                    DBWrapper.updateRecords("review", commentDelete, id);
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                    Logging.log(e, 2, "Det indtastede id matcher ikke med nogle Review id i databsen");
-                }
                 TUIAdminMenu tuiAdminMenu = new TUIAdminMenu();
                 tuiAdminMenu.menu(adminDTO);
             }
@@ -219,7 +208,7 @@ public class AdminController extends UserController {
         int idStudyChoice = input1.nextInt();
 
         for (CourseDTO courseDTO : getCourseStudy(idStudyChoice)) {
-            System.out.println("Id: " + courseDTO.getId() + " - Name: " + courseDTO.getCode() + " " + courseDTO.getName());
+            System.out.println("Id: " + courseDTO.getId() + " - Name: " + courseDTO.getCode() + " " + courseDTO.getDisplaytext());
         }
 
         /**
@@ -250,9 +239,9 @@ public class AdminController extends UserController {
 
             while (rs.next()) {
                 CourseDTO courses1 = new CourseDTO();
-                courses1.setId(rs.getInt("id"));
+                //courses1.setId(rs.getInt("id"));
                 courses1.setCode(rs.getString("code"));
-                courses1.setName(rs.getString("name"));
+                courses1.setDisplaytext(rs.getString("name"));
 
                 courses.add(courses1);
             }
@@ -322,9 +311,9 @@ public class AdminController extends UserController {
             while (rs.next()) {
                 CourseDTO course = new CourseDTO();
 
-                course.setName(rs.getString("name"));
+                course.setDisplaytext(rs.getString("name"));
                 course.setCode(rs.getString("code"));
-                course.setId(rs.getInt("id"));
+                //course.setId(rs.getInt("id"));
                 courses.add(course);
             }
         } catch (SQLException e) {

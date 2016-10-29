@@ -3,6 +3,8 @@ import com.google.gson.Gson;
 import com.sun.jersey.api.container.httpserver.HttpServerFactory;
 import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
+
+import logic.CBSParser;
 import logic.ConfigLoader;
 import logic.MainController;
 import logic.UserController;
@@ -43,6 +45,14 @@ public class Run {
 
         //Setup logLevel and prepare to log
         Logging.initiateLog(ConfigLoader.DEBUG);
+
+
+        try {
+            //CBSParser.parseCBSData();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
 
         //Loader courses og lectures ind til databasen
         System.out.println("Server running");

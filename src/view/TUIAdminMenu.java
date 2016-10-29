@@ -32,7 +32,7 @@ public class TUIAdminMenu {
             System.out.println("Tast 0 for at stoppe programmet og log ud.");
             System.out.println("Tast 1 for at oprette en ny bruger. ");
             System.out.println("Tast 2 for slet en bruger. ");
-            System.out.println("Tast 3 for slet en kommentar.");
+            System.out.println("Tast 3 for slet et review.");
             System.out.println("Tast 4 for tildeling af kursus til bruger.");
 
             /**
