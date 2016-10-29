@@ -272,8 +272,6 @@ public class DBWrapper {
         StringBuilder builder = new StringBuilder(buildWhere(whereStmts, sql));
         builder.append(";");
 
-        System.out.println(builder.toString());
-
         MYSQLDriver.updateSQL(builder.toString());
     }
 
