@@ -60,7 +60,7 @@ public class UserEndpoint {
 
             return successResponse(200, toJson);
         } else {
-            return errorResponse(404, "Failed. Couldn't get reviews.");
+            return errorResponse(404, "Failed. Couldn't get courses.");
         }
     }
 
