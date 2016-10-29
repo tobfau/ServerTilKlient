@@ -31,10 +31,7 @@ public class UserEndpoint {
         ArrayList<LectureDTO> lectures = userCtrl.getLectures(code);
 
         if (!lectures.isEmpty()) {
-
-            String toJson = gson.toJson(Digester.encrypt(gson.toJson(lectures)));
-
-            return successResponse(200, toJson);
+            return successResponse(200, lectures);
         } else {
             return errorResponse(404, "Failed. Couldn't get lectures.");
         }
@@ -55,12 +52,9 @@ public class UserEndpoint {
         ArrayList<CourseDTO> courses = userCtrl.getCourses(userId);
 
         if (!courses.isEmpty()) {
-
-            String toJson = Digester.encrypt(gson.toJson(courses));
-
-            return successResponse(200, toJson);
+            return successResponse(200, courses);
         } else {
-            return errorResponse(404, "Failed. Couldn't get courses.");
+            return errorResponse(404, "Failed. Couldn't get reviews.");
         }
     }
 
@@ -73,9 +67,7 @@ public class UserEndpoint {
         ArrayList<ReviewDTO> reviews = userCtrl.getReviews(lectureId);
 
         if (!reviews.isEmpty()) {
-            String toJson = gson.toJson(Digester.encrypt(gson.toJson(reviews)));
-
-            return successResponse(200, toJson);
+            return successResponse(200, reviews);
         } else {
             return errorResponse(404, "Failed. Couldn't get reviews.");
         }
@@ -91,10 +83,7 @@ public class UserEndpoint {
         UserController userCtrl = new UserController();
 
         if (user != null) {
-
-            String toJson = gson.toJson(Digester.encrypt(gson.toJson(userCtrl.login(user.getCbsMail(), user.getPassword()))));
-
-            return successResponse(200, toJson);
+            return successResponse(200, userCtrl.login(user.getCbsMail(), user.getPassword()));
         } else {
             return errorResponse(401, "Couldn't login. Try again!");
         }
