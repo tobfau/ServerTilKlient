@@ -19,13 +19,8 @@ import java.io.PrintStream;
 //TODO: Missing documentation and use of config variables.
 public class Run {
 
-    public static void main(String[] args) /*throws IOException*/ {
+    public static void main(String[] args) throws IOException {
 
-        AdminDTO adminDTO = new AdminDTO();
-        TUIMainMenu tuiMainMenu = new TUIMainMenu();
-        tuiMainMenu.tUILogIn(adminDTO);
-
-       /*
         HttpServer server = null;
 
         //Loader configfilen
@@ -57,12 +52,15 @@ public class Run {
         //Loader courses og lectures ind til databasen
         System.out.println("Server running");
         System.out.println("Visit: http://" + ConfigLoader.SERVER_ADDRESS + ":" + ConfigLoader.SERVER_PORT + "/");
+
+        AdminDTO adminDTO = new AdminDTO();
+        TUIMainMenu tuiMainMenu = new TUIMainMenu();
+        tuiMainMenu.tUILogIn(adminDTO);
+
         System.out.println("Hit return to stop...");
         System.in.read();
         System.out.println("Stopping server");
         System.out.println("Server stopped");
         System.out.println();
-
-        */
     }
 }
