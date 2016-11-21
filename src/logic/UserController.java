@@ -1,7 +1,6 @@
 package logic;
 
 import shared.LectureDTO;
-import shared.Logging;
 import shared.ReviewDTO;
 
 import java.sql.Timestamp;
@@ -58,7 +57,7 @@ public class UserController {
 
         try {
             Map<String, String> params = new HashMap();
-            params.put("id", String.valueOf(lectureId));
+            params.put("lecture_id", String.valueOf(lectureId));
             params.put("is_deleted", "0");
             String[] attributes = {"id", "user_id", "lecture_id", "rating", "comment"};
 
@@ -77,7 +76,6 @@ public class UserController {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            Logging.log(e,2,"Kunne ikke hente getReviews");
         }
         return reviews;
     }
@@ -98,18 +96,14 @@ public class UserController {
 
                 lecture.setStartDate(rs.getTimestamp("start"));
                 lecture.setEndDate(rs.getTimestamp("end"));
-                //lecture.setId(rs.getInt("id"));
+                lecture.setLectureId(rs.getInt("id"));
                 lecture.setType(rs.getString("type"));
                 lecture.setDescription(rs.getString("description"));
 
                 lectures.add(lecture);
             }
 
-
-        }
-        catch (SQLException e){
-            e.printStackTrace();
-        Logging.log(e,2,"Kunne ikke hente getLecture");
+        } catch (SQLException e) {
 
         }
         return lectures;
@@ -126,11 +120,7 @@ public class UserController {
             isDeleted.put("is_deleted", "1");
 
             Map<String, String> whereParams = new HashMap();
-
-            if(userId != 0) {
-                whereParams.put("user_id", String.valueOf(userId));
-            }
-
+            whereParams.put("user_id", String.valueOf(userId));
             whereParams.put("id", String.valueOf(reviewId));
 
             DBWrapper.updateRecords("review", isDeleted, whereParams);
@@ -138,7 +128,6 @@ public class UserController {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            Logging.log(e,2,"Softdelete kunne ikke slette review, SoftDeleteReview.");
             isSoftDeleted = false;
         }
         return isSoftDeleted;
@@ -167,9 +156,7 @@ public class UserController {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            Logging.log(e,2,"Kunne ikke hente getCourses");
         }
         return courses;
     }
-
 }

@@ -18,9 +18,14 @@ public class CourseDTO {
     private String code;
     private String displaytext;
 
-    public CourseDTO() {
-    }
+   public CourseDTO() {
 
+   }
+
+
+    /*
+    dette gir absolutt ingen mening? Hvorfor er det metoden over som blir brukt til TUIAdminMenu?
+     */
     public CourseDTO(String id, String displaytext, String code) {
         this.id = id;
         this.displaytext = displaytext;

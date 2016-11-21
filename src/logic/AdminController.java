@@ -204,7 +204,7 @@ public class AdminController extends UserController {
         }
 
         Scanner input1 = new Scanner(System.in);
-        System.out.println("Indtast id for det studie brugeren skal tilknyttet: ");
+        System.out.println("Indtast id for det studie brugeren skal tilknyttes: ");
         int idStudyChoice = input1.nextInt();
 
         for (CourseDTO courseDTO : getCourseStudy(idStudyChoice)) {
@@ -219,7 +219,7 @@ public class AdminController extends UserController {
         int idCourseChoice = input2.nextInt();
 
         setUserCourse(idCourseChoice, idUserChoice);
-        System.out.println("Brugeren er tilknyttet " + idCourseChoice);
+        System.out.println("Brugeren er tilknyttet " + idCourseChoice + "\n");
 
         TUIAdminMenu tuiAdminMenu = new TUIAdminMenu();
         tuiAdminMenu.menu(adminDTO);

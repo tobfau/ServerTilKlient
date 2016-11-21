@@ -22,6 +22,17 @@ public class UserEndpoint {
      * @param code Fagkoden på det kursus man ønsker at hente.
      * @return En JSON String
      */
+
+    @OPTIONS
+    @Path("/lecture/{code}")
+    public Response OptionsGetLectures() {
+        return Response
+                .status(200)
+                .header("Access-Control-Allow-Origin", "*")
+                .header("Access-Control-Allow-Headers", "Content-Type")
+                .build();
+    }
+
     @GET
     @Consumes("applications/json")
     @Path("/lecture/{code}")
@@ -37,12 +48,25 @@ public class UserEndpoint {
         }
     }
 
+
     /**
      * En metode til at hente de kurser en bruger er tilmeldt.
      *
      * @param userId Id'et på den bruger man ønsker at hente kurser for.
      * @return De givne kurser i form af en JSON String.
      */
+/*
+    @OPTIONS
+    @Path("/course/{userId}")
+    public Response getCourses() {
+        return Response
+                .status(200)
+                .header("Access-Control-Allow-Origin", "*")
+                .header("Access-Control-Allow-Headers", "Content-Type")
+                .build();
+    }
+*/
+
     @GET
     @Path("/course/{userId}")
     public Response getCourses(@PathParam("userId") int userId) {
@@ -58,6 +82,18 @@ public class UserEndpoint {
         }
     }
 
+    @OPTIONS
+    @Path("/course/{userId}")
+    public Response getReviews() {
+        return Response
+                .status(200)
+                .header("Access-Control-Allow-Origin", "*")
+                .header("Access-Control-Allow-Headers", "Content-Type")
+                .build();
+
+    }
+
+
     @GET
     @Consumes("applications/json")
     @Path("/review/{lectureId}")
@@ -72,6 +108,26 @@ public class UserEndpoint {
             return errorResponse(404, "Failed. Couldn't get reviews.");
         }
     }
+
+
+    /**
+     *
+     * @param data
+     * @return returner ingenting på localhost?
+     */
+
+
+
+    @OPTIONS
+    @Path("/login")
+    public Response OptionsLogin() {
+        return Response
+                .status(200)
+                .header("Access-Control-Allow-Origin", "*")
+                .header("Access-Control-Allow-Headers", "Content-Type")
+                .build();
+    }
+
 
     @POST
     @Consumes("application/json")
@@ -92,13 +148,19 @@ public class UserEndpoint {
     protected Response errorResponse(int status, String message) {
 
         return Response.status(status).entity(new Gson().toJson(Digester.encrypt("{\"message\": \"" + message + "\"}"))).build();
-        //return Response.status(status).entity(new Gson().toJson("{\"message\": \"" + message + "\"}")).build());
+        //return Response.status(status).entity(new Gson().toJson("{\"message\": \"" + message + "\"}")).build();
     }
 
     protected Response successResponse(int status, Object data) {
         Gson gson = new Gson();
 
-        return Response.status(status).entity(gson.toJson(Digester.encrypt(gson.toJson(data)))).build();
-        //return Response.status(status).entity(gson.toJson(data)).build();
+        //Adding response headers to enable CORS in the Chrome browser
+        return Response.status(status).header("Access-Control-Allow-Origin", "*").header("Access-Control-Allow-Headers", "Content-Type").entity(gson.toJson(data)).build();
+
+
     }
-}
+               // return Response.status(status).entity(gson.toJson(data)).build();
+
+    //return Response.status(status).entity(gson.toJson(Digester.encrypt(gson.toJson(data)))).build();
+    }
+

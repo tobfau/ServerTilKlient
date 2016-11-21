@@ -225,7 +225,7 @@ public class CBSParser {
         //Byg Stringen så den matcher med formatet på et DateTime objekt som vi bruger i MySQL databasen
         dateBuilder.append(dateData.get(0));
         dateBuilder.append("-");
-        //Plusser 1 måned til månedsværdien, da dataen hos CBS åbenbart er fucked og er én måned bagud.
+        //Plusser 1 måned til månedsværdien, da dataen hos CBS åbenbart er fucked "quote emil" og er én måned bagud.
         int month = Integer.parseInt(dateData.get(1))+1;
         dateBuilder.append(String.valueOf(month));
         dateBuilder.append("-");
