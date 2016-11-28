@@ -56,6 +56,7 @@ public class UserEndpoint {
      * @return De givne kurser i form af en JSON String.
      */
 
+
     @OPTIONS
     @Path("/course/{userId}")
     public Response getCourses() {
@@ -66,6 +67,7 @@ public class UserEndpoint {
                 .build();
 
     }
+
 
     @GET
     @Path("/course/{userId}")
@@ -159,8 +161,7 @@ public class UserEndpoint {
 
 
     }
-               // return Response.status(status).entity(gson.toJson(data)).build();
+    // return Response.status(status).entity(gson.toJson(data)).build();
 
     //return Response.status(status).entity(gson.toJson(Digester.encrypt(gson.toJson(data)))).build();
-    }
-
+}
