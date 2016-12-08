@@ -114,7 +114,7 @@ public class TUIAdminMenu {
         String password = password_input.nextLine();
 
         Scanner type_input = new Scanner(System.in);
-        System.out.println("Indtast type (student, teacher, admin): ");
+        System.out.println("Indtast type (student, admin): ");
         String type = type_input.nextLine();
 
         newUser.setCbsMail(mail);
